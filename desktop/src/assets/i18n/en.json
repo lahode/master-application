@@ -1,0 +1,124 @@
+{
+  "HEADER": {
+    "MENU": {
+      "HOME" : "Home",
+      "ACCOUNTS" : "Accounts",
+      "EXPENSES" : "Expenses",
+      "LOGOUT" : "Log out",
+      "SEARCH" : "Search"
+    }
+  },
+  "LOGIN": {
+    "TAB": {
+      "SIGNIN" : "Sign in",
+      "REGISTER" : "Register",
+      "PASSWORD" : "Reset Password",
+      "CONFIRMATION" : "Resend confirmation instructions"
+    },
+    "SIGNINFORM" : {
+      "USERNAME" : "Username or email",
+      "PASSWORD" : "Password",
+      "REMEMBERME" : "Remember me",
+      "PASSWORDLOST" : "Forgot your password?",
+      "SUBMIT" : "Sign in"
+    },
+    "REGISTERFORM" : {
+      "NAME" : "Name",
+      "USERNAME" : "Username",
+      "EMAIL" : "Email",
+      "EMAILCONFIRM" : "Email confirmation",
+      "PASSWORD" : "Password",
+      "SUBMIT" : "Register"
+    },
+    "PASSWORDFORM" : {
+      "EMAIL" : "Email",
+      "SUBMIT" : "Reset password"
+    },
+    "CONFIRMATIONFORM" : {
+      "EMAIL" : "Email",
+      "SUBMIT" : "Resend"
+    },
+    "REQUESTCONFIRMATION" : {
+      "TEXT" : "Didn't receive a confirmation email?",
+      "ACTION" : "Request a new one"
+    },
+    "AUTHENTIFICATION_EXIST": {
+      "TEXT" : "Already have login and password?",
+      "ACTION" : "Sign in"
+    },
+    "SIGNINOAUTH" : {
+      "SIGNIN_TITLE" : "Sign in with ",
+      "SIGNIN_GOOGLE" : "Sign in with Google",
+      "SIGNIN_TWITTER" : "Sign in with Twitter",
+      "SIGNIN_FACEBOOK" : "Sign in with Facebook"
+    },
+    "ERRORS" : {
+      "SIGNIN_FAILED" : "An error occured during authentification.",
+      "REGISTER_FAILED" : "An error occured during the user creation.",
+      "PASSWORD_REQUEST_FAILED" : "An error occured during the password request.",
+      "CONFIRMATION_REQUEST_FAILED" : "An error occured during e-mail confirmation request."
+    }
+  },
+  "ACCOUNT" : {
+    "ACCOUNTFORM" : {
+      "REF" : "Reference",
+      "TITLE" : "Title",
+      "DESCRIPTION" : "Description",
+      "PARENT" : "Parent account",
+      "SELECT_PARENT" : "-- Select a parent --",
+      "SUBMIT" : "Save"
+    },
+    "ACCOUNTLIST" : {
+      "REF" : "Reference",
+      "TITLE" : "Title",
+      "DESCRIPTION" : "Description",
+      "PARENT" : "Parent account",
+      "ACTIONS" : "Actions",
+      "CREATE" : "Create a new account",
+      "EDIT" : "Edit"
+    },
+    "ERRORS" : {
+      "GET_ALL_FAILED" : "An error occured while retrieving the accounts.",
+      "GET_SINGLE_FAILED" : "An error occured while retrieving the account",
+      "SAVE_FAILED" : "An error occured while saving the account"
+    }
+  },
+  "EXPENSE" : {
+    "EXPENSEFORM" : {
+      "DATE" : "Date",
+      "TITLE" : "Title",
+      "DESCRIPTION" : "Description",
+      "AMOUNT" : "Amount",
+      "SOURCEACCOUNT" : "Source",
+      "TARGETACCOUNT" : "Target",
+      "REPEAT" : "Repeat",
+      "REPEATCYCLE" : "Repeat every",
+      "SELECT_ACCOUNT" : "-- Select an account --",
+      "SUBMIT" : "Save"
+    },
+    "EXPENSEREPEAT" : {
+      "DAILY" : "day",
+      "WEEKLY" : "week",
+      "MONTHLY" : "month",
+      "BIMONTHLY" : "every 2 months",
+      "QUARTERLY" : "every 3 months",
+      "HALFYEARLY" : "twice a year"
+    },
+    "EXPENSELIST" : {
+      "DATE" : "Date",
+      "TITLE" : "Title",
+      "DESCRIPTION" : "Description",
+      "AMOUNT" : "Amount",
+      "SOURCEACCOUNT" : "Source",
+      "TARGETACCOUNT" : "Target",
+      "ACTIONS" : "Actions",
+      "CREATE" : "Create a new expense",
+      "EDIT" : "Edit"
+    },
+    "ERRORS" : {
+      "GET_ALL_FAILED" : "An error occured while retrieving the expenses.",
+      "GET_SINGLE_FAILED" : "An error occured while retrieving the expense",
+      "SAVE_FAILED" : "An error occured while saving the expense"
+    }
+  }
+}

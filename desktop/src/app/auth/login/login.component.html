@@ -1,0 +1,97 @@
+<p *ngFor="let alert of alerts">
+  <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+</p>
+
+<div class="content">
+<div class="flash-container flash-container-page">
+</div>
+
+<div class="row">
+
+  <div class="col-sm-5 pull-right new-session-forms-container">
+
+    <div *ngIf="showBlock == 'login'">
+      <ngb-tabset>
+        <ngb-tab id="signin">
+          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.SIGNIN' | translate }}</ng-template>
+          <ng-template ngbTabContent>
+            <ob-signin [returnUrl]="returnUrl" (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></ob-signin>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="register">
+          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.REGISTER' | translate }}</ng-template>
+          <ng-template ngbTabContent>
+            <ob-register [returnUrl]="returnUrl" (alertReceived)="addAlert($event)"></ob-register>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+      <div class="clearfix submit-container">
+        <p>
+          <span>{{ 'LOGIN.REQUESTCONFIRMATION.TEXT' | translate }}</span>
+          <span class="link" (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</span>
+        </p>
+      </div>
+      <div class="clearfix">
+        <div class="omniauth-container">
+          <p>
+            <span class="light">
+              {{ 'LOGIN.SIGNINOAUTH.SIGNIN_TITLE' | translate }}
+            </span>
+            <span class="icon-oauth">
+              <a rel="nofollow">
+                 <img alt="Google" title="{{ 'LOGIN.SIGNINOAUTH.SIGNIN_GOOGLE' | translate }}" src="/assets/medias/icons/google_icon.png">
+              </a>
+            </span>
+            <span class="icon-oauth">
+              <a rel="nofollow">
+                 <img alt="Twitter" title="{{ 'LOGIN.SIGNINOAUTH.SIGNIN_TWITTER' | translate }}" src="/assets/medias/icons/twitter_icon.png">
+              </a>
+            </span>
+            <span class="icon-oauth">
+              <a rel="nofollow">
+                 <img alt="Facebook" title="{{ 'LOGIN.SIGNINOAUTH.SIGNIN_FACEBOOK' | translate }}" src="/assets/medias/icons/facebook_icon.png">
+              </a>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showBlock == 'password'">
+      <ngb-tabset>
+        <ngb-tab id="signin">
+          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
+          <ng-template ngbTabContent>
+            <ob-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></ob-password>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+      <div class="clearfix prepend-top-20">
+        <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
+        <span class="link" (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="showBlock == 'confirmation'">
+      <ngb-tabset>
+        <ngb-tab id="signin">
+          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
+          <ng-template ngbTabContent>
+            <ob-confirmation (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></ob-confirmation>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+      <div class="clearfix prepend-top-20">
+        <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
+        <span class="link" (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-7 brand-holder pull-left">
+    <h1>
+    Open Budget
+    </h1>
+    <p>Bienvenue</p>
+  </div>
+</div>
