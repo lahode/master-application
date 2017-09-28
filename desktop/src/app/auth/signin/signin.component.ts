@@ -1,31 +1,26 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Store, Action } from '@ngrx/store';
 
 import { User } from '../user.model';
 import { AuthActions } from '../../../core';
-
-import { MessageService } from '../../message/message.service';
 
 @Component({
   selector: 'ob-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, OnDestroy {
 
   public signInform: FormGroup;
   public loading;
-  public storeLogin;
+  private storeErrorSubscription;
 
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
 
   constructor(private store: Store<any>,
-              private authActions: AuthActions,
-              private router: Router,
-              private messageService: MessageService) { }
+              private authActions: AuthActions) { }
 
   ngOnInit() {
     // Authenticate form
@@ -36,12 +31,13 @@ export class SigninComponent implements OnInit {
       password: new FormControl(null, Validators.required)
     });
 
-/*
-    this.storeLogin = this.store.select(state => state.auth.authCheck);
-    this.storeLogin.subscribe(authCheck => {
-      console.log(authCheck)
+    // Managing error in app
+    this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
+      if (error) {
+        console.log('Ca ne fonctionne qu une fois, pourquoi?');
+        this.loading = false;
+      }
     });
-*/
   }
 
   // Change block
@@ -54,17 +50,12 @@ export class SigninComponent implements OnInit {
     this.loading = true;
     const user = new User(this.signInform.value.username, this.signInform.value.password);
     this.store.dispatch(<Action>this.authActions.login(this.signInform));
-    /*
-    this.authService.signin(user)
-      .subscribe(
-        () => this.router.navigate([this.returnUrl]),
-        err => {
-          this.messageService.error(err);
-          this.loading = false;
-        }
-      );
     this.signInform.reset();
-    */
+  }
+
+  // Destroy store subscription when leaving component
+  ngOnDestroy() {
+    this.storeErrorSubscription.unsubscribe();
   }
 
 }

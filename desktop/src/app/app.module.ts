@@ -65,7 +65,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     }),
     AuthModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
-    StoreModule.forRoot({ counter: coreApp.reducer }),
+    StoreModule.forRoot(coreApp.reducer),
     StoreDevtoolsModule.instrument(),
     EffectsModule.forRoot([coreApp.effect]),
     CoreModule.forRoot()

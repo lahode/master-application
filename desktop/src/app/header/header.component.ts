@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Router} from '@angular/router';
+import { Store } from '@ngrx/store';
 
 // import { AuthService } from "../auth/auth.service";
 
@@ -12,10 +13,10 @@ import { Router} from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
 
-  private isLoggedIn$ : Observable<boolean>;
+  private isLoggedIn$: Observable<boolean>;
 
   constructor(private translate: TranslateService,
-              // private authService: AuthService,
+              private store: Store<any>,
               private router: Router) {
     translate.addLangs(['en', 'fr']);
     translate.setDefaultLang('en');
@@ -24,12 +25,11 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.isLoggedIn$ = this.authService.user$.map(user => user !== null)
+    this.isLoggedIn$ = this.store.select(state => state.currentUser).map(user => {console.log(user); return user !== null})
   }
 
   logout() {
-    // this.authService.logout();
-    this.router.navigate(['/signin']);
+    this.store.dispatch({type: 'LOGOUT'});
   }
 
 }
