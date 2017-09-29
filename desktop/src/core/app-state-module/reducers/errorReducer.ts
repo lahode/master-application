@@ -19,6 +19,9 @@ export function reducer (state: IErrorState = intitialState, action: any): IErro
     case AuthActions.CREATE_USER_FAILED: {
       return Object.assign(action.payload);
     }
+    case AuthActions.GET_PASSWORD_FAILED: {
+      return Object.assign(action.payload);
+    }
     default: {
       return <IErrorState>intitialState;
     }

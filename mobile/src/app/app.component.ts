@@ -1,31 +1,22 @@
-/**
- * @Author: Nicolas Fazio <webmaster-fazio>
- * @Date:   26-05-2017
- * @Email:  contact@nicolasfazio.ch
- * @Last modified by:   webmaster-fazio
- * @Last modified time: 10-08-2017
- */
-
 import { Component, OnInit } from '@angular/core';
 import { Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { Store } from '@ngrx/store'
+import { Store, Action } from '@ngrx/store'
 import { Observable } from 'rxjs/Rx';
 
 import { AuthActions, AppStateI } from "../core";
 
-import { HomePage } from '../pages/home/home';
-
 @Component({
   templateUrl: 'app.html'
 })
-export class MyApp implements OnInit{
+export class MyApp implements OnInit {
 
   rootPage:any;
-  public storeInfo:Observable<AppStateI>;
-  public storeError:Observable<AppStateI>;
+  public user: any|null;
+  public storeUserSubscription;
+  public storeErrorSubscription;
 
   constructor(
     platform: Platform,
@@ -41,23 +32,25 @@ export class MyApp implements OnInit{
       statusBar.styleDefault();
       splashScreen.hide();
 
-      this.storeError = this.store.select(state => state.error)
-      this.storeError.subscribe(error => {
-        if(error){
-          this.displayError(error)
+      // Managing error in app
+      this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
+        if (error) {
+          this.displayError(error.toString());
         }
-      })
+      });
 
-      this.storeInfo = this.store.select((state:AppStateI) => state.currentUser)
-      this.storeInfo.subscribe(currentUser => {
-
-        if (currentUser) {
+      // Managing user auth statut
+      this.storeUserSubscription = this.store.select(state => state.currentUser).subscribe(user => {
+        if (user) {
           // If logged in go to Home page
-          this.rootPage = HomePage;
-        }
-        else {
-          // If not logged in go to Login page
-          this.rootPage = 'LoginPage';
+          this.user = user;
+          this.rootPage = 'HomePage';
+        } else {
+          // Redirect to login page if user is logged out
+          if (this.user) {
+            this.user = null;
+            this.rootPage = 'LoginPage';
+          }
         }
       });
     });
@@ -68,6 +61,10 @@ export class MyApp implements OnInit{
     this.store.dispatch(this.authActions.checkAuth());
   }
 
+  logout() {
+    this.store.dispatch(<Action>this.authActions.logout());
+  }
+
   displayError(error):void {
     let alert = this.alertCtrl.create({
       title: 'Error',
@@ -76,4 +73,11 @@ export class MyApp implements OnInit{
     });
     alert.present();
   }
+
+  // Destroy store subscriptions when leaving component
+  ngOnDestroy() {
+    this.storeErrorSubscription.unsubscribe();
+    this.storeUserSubscription.unsubscribe();
+  }
+
 }

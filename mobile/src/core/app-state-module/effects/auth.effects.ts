@@ -59,6 +59,19 @@ export class AuthEffects {
         return Observable.of({ type: AuthActions.CREATE_USER_FAILED, payload: res });
       });
 
+    // Listen for the 'GET_PASSWORD' action
+    @Effect() getPasswordAction$ = this.action$
+        .ofType(AuthActions.GET_PASSWORD)
+        .map<Action, any>(toPayload)
+        .switchMap((payload: Observable<any>) => this._auth.retrievePassword(payload))
+        .map<Action, any>((_result: any) => {
+          // If successful, dispatch GET_PASSWORD_SUCCESS
+          return <Action>{ type: AuthActions.GET_PASSWORD_SUCCESS, payload: _result };
+        }).catch((res: any) => {
+          // On errors dispatch GET_PASSWORD_FAILED action with result
+          return Observable.of({ type: AuthActions.GET_PASSWORD_FAILED, payload: res });
+        });
+
     constructor(
       private action$: Actions,
       private _auth: AuthService

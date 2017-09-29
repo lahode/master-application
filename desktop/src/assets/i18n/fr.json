@@ -2,8 +2,6 @@
   "HEADER": {
     "MENU": {
       "HOME" : "Accueil",
-      "ACCOUNTS" : "Comptes",
-      "EXPENSES" : "Charges",
       "LOGOUT" : "Se déconnecter",
       "SEARCH" : "Recherche"
     }
@@ -57,68 +55,6 @@
       "REGISTER_FAILED" : "Une erreur s'est produite lors de la création de l'utilisateur.",
       "PASSWORD_REQUEST_FAILED" : "Une erreur s'est produite lors de la demande de confirmation du nouveau mot de passe.",
       "CONFIRMATION_REQUEST_FAILED" : "Une erreur s'est produite lors de la demande de confirmation par e-mail."
-    }
-  },
-  "ACCOUNT" : {
-    "ACCOUNTFORM" : {
-      "REF" : "Référence",
-      "TITLE" : "Titre",
-      "DESCRIPTION" : "Description",
-      "PARENT" : "Compte parent",
-      "SELECT_PARENT" : "-- Sélectionner un parent --",
-      "SUBMIT" : "Enregistrer"
-    },
-    "ACCOUNTLIST" : {
-      "REF" : "Référence",
-      "TITLE" : "Titre",
-      "DESCRIPTION" : "Description",
-      "PARENT" : "Compte parent",
-      "ACTIONS" : "Actions",
-      "CREATE" : "Créer une nouveau compte",
-      "EDIT" : "Modifier"
-    },
-    "ERRORS" : {
-      "GET_ALL_FAILED" : "Une erreur s'est produite lors de la récupération des comptes.",
-      "GET_SINGLE_FAILED" : "Une erreur s'est produite lors de la récupération du compte",
-      "SAVE_FAILED" : "Une erreur sauvegarde de l'acompte"
-    }
-  },
-  "EXPENSE" : {
-    "EXPENSEFORM" : {
-      "DATE" : "Date",
-      "TITLE" : "Titre",
-      "DESCRIPTION" : "Description",
-      "AMOUNT" : "Montant",
-      "SOURCEACCOUNT" : "Source",
-      "TARGETACCOUNT" : "Destination",
-      "REPEAT" : "Réccurence",
-      "REPEATCYCLE" : "Répéter chaque",
-      "SELECT_ACCOUNT" : "-- Sélectionner un compte --",
-      "SUBMIT" : "Enregistrer"
-    },
-    "EXPENSEREPEAT" : {
-      "DAILY" : "jour",
-      "WEEKLY" : "semaine",
-      "MONTHLY" : "mois",
-      "BIMONTHLY" : "tous les 2 mois",
-      "QUARTERLY" : "tous les 3 mois",
-      "HALFYEARLY" : "2 fois dans l'année"
-    },
-    "EXPENSELIST" : {
-      "DATE" : "Date",
-      "TITLE" : "Titre",
-      "DESCRIPTION" : "Description",
-      "AMOUNT" : "Montant",
-      "SOURCEACCOUNT" : "Source",
-      "TARGETACCOUNT" : "Destination",
-      "ACTIONS" : "Actions",
-      "CREATE" : "Créer une nouvelle charge",
-      "EDIT" : "Modifier"
-    },
-    "ERRORS" : {
-      "GET_ALL_FAILED" : "Une erreur s'est produite lors de la récupération des charges.",
-      "GET_SINGLE_FAILED" : "Une erreur s'est produite lors de la récupération de la charge",
-      "SAVE_FAILED" : "Une erreur sauvegarde de la charge"
     }
   }
 

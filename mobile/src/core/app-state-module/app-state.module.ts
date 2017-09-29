@@ -38,7 +38,7 @@ export const providers = [
 
 @NgModule({
   imports: [
-    StoreModule.forFeature('auth', reducer),
+    StoreModule.forRoot(reducer),
     EffectsModule.forFeature([AuthEffects]),
   ],
 })

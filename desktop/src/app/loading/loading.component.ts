@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
 import { Router, NavigationStart, RoutesRecognized } from '@angular/router';
 
 @Component({
-  selector: 'ob-loading',
+  selector: 'app-loading',
   templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.css']
+  styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent implements OnInit {
 

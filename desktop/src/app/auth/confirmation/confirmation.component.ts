@@ -5,9 +5,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MessageService } from '../../message/message.service';
 
 @Component({
-  selector: 'ob-confirmation',
+  selector: 'app-confirmation',
   templateUrl: './confirmation.component.html',
-  styleUrls: ['./confirmation.component.css']
+  styleUrls: ['./confirmation.component.scss']
 })
 export class ConfirmationComponent implements OnInit {
 

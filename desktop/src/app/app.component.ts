@@ -5,14 +5,15 @@ import { Observable } from 'rxjs/Rx';
 
 import { AppStateI, AuthActions } from '../core';
 import { MessageService } from './message/message.service';
+import { User } from './auth/user.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  public user: any|null;
+  public user: User|null;
   private storeErrorSubscription;
   private storeUserSubscription;
 

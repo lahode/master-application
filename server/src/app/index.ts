@@ -29,7 +29,7 @@ export class Server {
   }
 
   // Set configuration parameters
-  private config():void{
+  private config():void {
     // define the app.server endpoints folder
     this.root = path.join(__dirname, '../api')
     // define prot & normalize value
@@ -81,7 +81,7 @@ export class Server {
   }
 
   // Bootstrap the application
-  bootstrap():void{
+  bootstrap():void {
     this.server.on('error', this.onError);
     this.server.listen(this.port, ()=>{
     	console.log("Listnening on port " + this.port)

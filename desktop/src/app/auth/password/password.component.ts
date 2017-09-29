@@ -1,23 +1,24 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Store, Action } from '@ngrx/store';
 
-/* import { AuthService } from "../auth.service"; */
-import { MessageService } from '../../message/message.service';
+import { AuthActions } from '../../../core';
 
 @Component({
-  selector: 'ob-password',
+  selector: 'app-password',
   templateUrl: './password.component.html',
-  styleUrls: ['./password.component.css']
+  styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent implements OnInit {
+export class PasswordComponent implements OnInit, OnDestroy {
 
   public passwordForm: FormGroup;
   public loading;
+  private storeErrorSubscription;
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
-  constructor(/* private authService: AuthService, */
-              private messageService: MessageService) { }
+  constructor(private store: Store<any>,
+              private authActions: AuthActions) { }
 
   ngOnInit() {
     // Define email validation pattern
@@ -30,22 +31,27 @@ export class PasswordComponent implements OnInit {
         Validators.pattern(emailpattern)
       ]),
     });
+
+    // Managing error in app
+    this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
+      if (error) {
+        console.log('Ca ne fonctionne qu une fois, pourquoi?');
+        this.loading = false;
+      }
+    });
   }
 
   // Request a new password
   onRequestPassword() {
-    /*
-    this.loading = true;
-    this.authService.requestPassword(this.passwordForm.value.email)
-      .subscribe(
-        data => this.changeBlock.emit('login'),
-        err => {
-          this.messageService.error(err);
-          this.loading = false;
-        }
-      );
-    this.passwordForm.reset();
-    */
+    if (this.passwordForm.valid) {
+      this.loading = true;
+      this.store.dispatch(<Action>this.authActions.getPassword(this.passwordForm.value));
+      this.passwordForm.reset();
+    }
+  }
+
+  ngOnDestroy() {
+    this.storeErrorSubscription.unsubscribe();
   }
 
 }

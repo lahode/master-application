@@ -1,6 +1,6 @@
-<p *ngFor="let alert of alerts">
-  <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
-</p>
+<div *ngFor="let alert of alerts">
+  {{ alert.message }}
+</div>
 
 <div class="content">
 <div class="flash-container flash-container-page">
@@ -11,26 +11,20 @@
   <div class="col-sm-5 pull-right new-session-forms-container">
 
     <div *ngIf="showBlock == 'login'">
-      <ngb-tabset>
-        <ngb-tab id="signin">
-          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.SIGNIN' | translate }}</ng-template>
-          <ng-template ngbTabContent>
-            <ob-signin [returnUrl]="returnUrl" (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></ob-signin>
-          </ng-template>
-        </ngb-tab>
-        <ngb-tab id="register">
-          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.REGISTER' | translate }}</ng-template>
-          <ng-template ngbTabContent>
-            <ob-register [returnUrl]="returnUrl" (alertReceived)="addAlert($event)"></ob-register>
-          </ng-template>
-        </ngb-tab>
-      </ngb-tabset>
-      <div class="clearfix submit-container">
-        <p>
-          <span>{{ 'LOGIN.REQUESTCONFIRMATION.TEXT' | translate }}</span>
-          <span class="link" (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</span>
-        </p>
-      </div>
+      <md-tab-group>
+        <md-tab id="signin">
+          <ng-template md-tab-label>{{ 'LOGIN.TAB.SIGNIN' | translate }}</ng-template>
+          <app-signin [returnUrl]="returnUrl" (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-signin>
+        </md-tab>
+        <md-tab id="register">
+          <ng-template md-tab-label>{{ 'LOGIN.TAB.REGISTER' | translate }}</ng-template>
+          <app-register [returnUrl]="returnUrl" (alertReceived)="addAlert($event)"></app-register>
+        </md-tab>
+      </md-tab-group>
+      <md-card>
+        <span>{{ 'LOGIN.REQUESTCONFIRMATION.TEXT' | translate }}</span>
+        <button md-button (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</button>
+      </md-card>
       <div class="clearfix">
         <div class="omniauth-container">
           <p>
@@ -39,17 +33,17 @@
             </span>
             <span class="icon-oauth">
               <a rel="nofollow">
-                 <img alt="Google" title="{{ 'LOGIN.SIGNINOAUTH.SIGNIN_GOOGLE' | translate }}" src="/assets/medias/icons/google_icon.png">
+                <i class="ion-social-googleplus"></i>
               </a>
             </span>
             <span class="icon-oauth">
               <a rel="nofollow">
-                 <img alt="Twitter" title="{{ 'LOGIN.SIGNINOAUTH.SIGNIN_TWITTER' | translate }}" src="/assets/medias/icons/twitter_icon.png">
+                 <i class="ion-social-twitter"></i>
               </a>
             </span>
             <span class="icon-oauth">
               <a rel="nofollow">
-                 <img alt="Facebook" title="{{ 'LOGIN.SIGNINOAUTH.SIGNIN_FACEBOOK' | translate }}" src="/assets/medias/icons/facebook_icon.png">
+                 <i class="icon ion-social-facebook"></i>
               </a>
             </span>
           </p>
@@ -58,40 +52,36 @@
     </div>
 
     <div *ngIf="showBlock == 'password'">
-      <ngb-tabset>
-        <ngb-tab id="signin">
-          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
-          <ng-template ngbTabContent>
-            <ob-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></ob-password>
-          </ng-template>
-        </ngb-tab>
-      </ngb-tabset>
+      <md-tab-group>
+        <md-tab id="password">
+          <ng-template md-tab-label>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
+          <app-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-password>
+        </md-tab>
+      </md-tab-group>
       <div class="clearfix prepend-top-20">
         <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-        <span class="link" (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</span>
+        <button md-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
       </div>
     </div>
 
     <div *ngIf="showBlock == 'confirmation'">
-      <ngb-tabset>
-        <ngb-tab id="signin">
-          <ng-template ngbTabTitle>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
-          <ng-template ngbTabContent>
-            <ob-confirmation (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></ob-confirmation>
-          </ng-template>
-        </ngb-tab>
-      </ngb-tabset>
+      <md-tab-group>
+        <md-tab id="confirmation">
+          <ng-template md-tab-label>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
+          <app-confirmation (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-confirmation>
+        </md-tab>
+      </md-tab-group>
       <div class="clearfix prepend-top-20">
         <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-        <span class="link" (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</span>
+        <button md-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
       </div>
     </div>
   </div>
 
   <div class="col-sm-7 brand-holder pull-left">
     <h1>
-    Open Budget
+    Master Application
     </h1>
-    <p>Bienvenue</p>
+    <p>Welcome, please sign in or create a new account</p>
   </div>
 </div>

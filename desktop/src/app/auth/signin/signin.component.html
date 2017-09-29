@@ -1,29 +1,31 @@
 <form [formGroup]="signInform">
-  <div class="form-group">
-    <label for="username">{{ 'LOGIN.SIGNINFORM.USERNAME' | translate }}</label>
-    <input type="username"
-           id="username"
-           class="form-control"
-           formControlName="username">
+  <div>
+    <md-form-field>
+      <input mdInput
+             placeholder="{{ 'LOGIN.SIGNINFORM.USERNAME' | translate }}"
+             id="username"
+             formControlName="username" />
+    </md-form-field>
   </div>
-  <div class="form-group">
-    <label for="password">{{ 'LOGIN.SIGNINFORM.PASSWORD' | translate }}</label>
-    <input type="password"
-           id="password"
-           class="form-control"
-           formControlName="password">
+  <div>
+    <md-form-field>
+      <input mdInput
+             placeholder="{{ 'LOGIN.SIGNINFORM.PASSWORD' | translate }}"
+             type="password"
+             id="password"
+             formControlName="password" />
+    </md-form-field>
   </div>
-  <div class="remember-me checkbox">
-      <label for="user_remember_me">
-      <input name="user[remember_me]" type="hidden" value="0"><input type="checkbox" value="1" name="user[remember_me]" id="user_remember_me">
-      <span>{{ 'LOGIN.SIGNINFORM.REMEMBERME' | translate }}</span>
-      </label>
-      <div class="pull-right forgot-password">
-        <span class="link" (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</span>
-      </div>
+  <div>
+    <md-checkbox id="user_remember_me" name="user[remember_me]">{{ 'LOGIN.SIGNINFORM.REMEMBERME' | translate }}</md-checkbox>
   </div>
-  <button class="btn btn-primary"
-          type="submit"
-          [disabled]="loading || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
-  <img *ngIf="loading" src="/assets/medias/icons/loading.gif" />
+  <div class="pull-right forgot-password">
+    <button md-button (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</button>
+  </div>
+  <div>
+    <button md-raised-button
+            color="primary"
+            [disabled]="loading || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
+    <md-spinner *ngIf="loading"></md-spinner>
+  </div>
 </form>

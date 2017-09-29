@@ -29,7 +29,11 @@ export class EndpointsService {
   }
 
   getSignup() {
-    return this._apiEndPoint + '/signin';
+    return this._apiEndPoint + '/signup';
+  }
+
+  getPassword() {
+    return this._apiEndPoint + '/retrieve-password';
   }
 
 }

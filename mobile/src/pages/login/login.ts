@@ -1,27 +1,11 @@
-/**
- * @Author: Nicolas Fazio <webmaster-fazio>
- * @Date:   26-05-2017
- * @Email:  contact@nicolasfazio.ch
- * @Last modified by:   webmaster-fazio
- * @Last modified time: 10-08-2017
- */
-
 import { Component } from '@angular/core';
 import { IonicPage, NavController, LoadingController, AlertController } from 'ionic-angular';
 import { Validators, FormBuilder } from '@angular/forms';
-
 import { Store, Action } from '@ngrx/store'
 
 import { AuthActions } from "../../core";
+import { User } from '../../models/user.model';
 
-// import { AppStateI } from "core";
-
-/**
- * Generated class for the Login page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
 @IonicPage({
   name: 'LoginPage',
   segment: 'login'
@@ -33,7 +17,10 @@ import { AuthActions } from "../../core";
 export class Login {
 
   public loginBtn:boolean = true;
-  public userForm:any;
+  public pswRecover:boolean = false;
+  public registerForm:any;
+  public passwordForm:any;
+  public signInform:any;
   public loader:any;
   public errorMessage:any;
 
@@ -45,30 +32,59 @@ export class Login {
     private store: Store<any>,
     private authActions: AuthActions
   ) {
-    this.userForm = this._formBuilder.group({
-      username: ['', Validators.compose([Validators.required, Validators.minLength(2)])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(10)])],
+    // Define email validation pattern
+    let emailpattern = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+
+    // Register form
+    this.registerForm = this._formBuilder.group({
+      name: ['', Validators.compose([Validators.required])],
+      username: ['', Validators.compose([Validators.required])],
+      email: ['', Validators.compose([Validators.required, Validators.pattern(emailpattern)])],
+      emailconfirm: ['', Validators.compose([Validators.required, Validators.pattern(emailpattern)])],
+      password: ['', Validators.compose([Validators.required])]
+    });
+
+    this.signInform = this._formBuilder.group({
+      username: ['', Validators.compose([Validators.required])],
+      password: ['', Validators.compose([Validators.required])]
+    });
+
+    // Password request form
+    this.passwordForm = this._formBuilder.group({
+      email: ['', Validators.compose([Validators.required, Validators.pattern(emailpattern)])],
     });
   }
 
-  ionViewDidLoad() {
-  }
-
   onLogin(){
-    //this.submitted = true;
-    if (this.userForm.valid) {
-      console.log(this.userForm)
-      this.store.dispatch(<Action>this.authActions.login(this.userForm));
+    if (this.signInform.valid) {
+      this.store.dispatch(<Action>this.authActions.login(this.signInform.value));
+      this.signInform.reset();
     }
   }
   onSignup(){
-    if (this.userForm.valid) {
-      this.store.dispatch(<Action>this.authActions.create_user(this.userForm));
+    if (this.registerForm.valid) {
+      const newUser = new User(this.registerForm.value.username, this.registerForm.value.password,
+                            this.registerForm.value.name, this.registerForm.value.email);
+      this.store.dispatch(<Action>this.authActions.signup(newUser));
+      this.registerForm.reset();
     }
+  }
+
+  // Request a new password
+  onRequestPassword() {
+    if (this.passwordForm.valid) {
+      this.store.dispatch(<Action>this.authActions.getPassword(this.passwordForm.value));
+      this.passwordForm.reset();
+    }
+    this.pswRecover = false;
   }
 
   toggleBtn(){
     this.loginBtn = !this.loginBtn
+  }
+
+  showPasswordRecovery() {
+    this.pswRecover = !this.pswRecover;
   }
 
   /* ErrorHandler Methode */

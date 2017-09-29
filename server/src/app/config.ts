@@ -16,3 +16,12 @@ export const BCRYPT_ROUND: number = 10;
 export const PASSWORD_MIN_LENGHT: number = 6;
 export const JWT_EXPIRE: number = 86400000;
 export const USERS_FILE: string = path.join(__dirname, '../../../../data/users.json');
+export const MAILER: any = {
+  host: '',
+  port: 587,
+  secure: false,
+  auth: {
+    user: '',
+    pass: ''
+  }
+}

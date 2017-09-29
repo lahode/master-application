@@ -4,9 +4,11 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MatSelectModule, MatButtonModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 /* Custom modules */
 import { AuthModule } from './auth/auth.module';
@@ -55,7 +57,6 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     FormsModule,
     HttpModule,
     HttpClientModule,
-    NgbModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -63,6 +64,9 @@ export function HttpOBLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
+    MatSelectModule,
+    MatButtonModule,
+    BrowserAnimationsModule,
     AuthModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
     StoreModule.forRoot(coreApp.reducer),

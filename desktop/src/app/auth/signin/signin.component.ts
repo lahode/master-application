@@ -6,9 +6,9 @@ import { User } from '../user.model';
 import { AuthActions } from '../../../core';
 
 @Component({
-  selector: 'ob-signin',
+  selector: 'app-signin',
   templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.css']
+  styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit, OnDestroy {
 
@@ -47,10 +47,11 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   // Sign in the user
   onSignIn() {
-    this.loading = true;
-    const user = new User(this.signInform.value.username, this.signInform.value.password);
-    this.store.dispatch(<Action>this.authActions.login(this.signInform));
-    this.signInform.reset();
+    if (this.signInform.valid) {
+      this.loading = true;
+      this.store.dispatch(<Action>this.authActions.login(this.signInform.value));
+      this.signInform.reset();
+    }
   }
 
   // Destroy store subscription when leaving component

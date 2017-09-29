@@ -6,13 +6,13 @@ import { Store } from '@ngrx/store';
 import { User } from '../user.model';
 
 @Component({
-  selector: 'ob-login',
+  selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private returnUrl: string;
-  private showBlock: string = 'login';
+  private showBlock = 'login';
   private storeUserSubscription;
 
   constructor(private route: ActivatedRoute,

@@ -1,30 +1,28 @@
-<nav class="navbar sticky-top navbar-toggleable-md navbar-inverse bg-inverse">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand" href="#">Open Budget</a>
-
-<!--  <div class="collapse navbar-collapse" id="navbarSupportedContent">dfdf -->
-    <ul class="navbar-nav mr-auto" *ngIf="isLoggedIn$ | async">
-        <li class="nav-item" routerLinkActive = "active">
-          <a class="nav-link" [routerLink]="['/']">{{ 'HEADER.MENU.HOME' | translate }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/account']">{{ 'HEADER.MENU.ACCOUNTS' | translate }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/expense']">{{ 'HEADER.MENU.EXPENSES' | translate }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="logout()">{{ 'HEADER.MENU.LOGOUT' | translate }}</a>
-        </li>
+<nav class="docs-navbar-header">
+  <a md-button class="docs-button" routerLink="/">Master application</a>
+  <div>
+    <ul *ngIf="isLoggedIn$ | async">
+      <li routerLinkActive = "active">
+        <a md-button class="docs-navbar-hide-small docs-button"
+           [routerLink]="['/']">{{ 'HEADER.MENU.HOME' | translate }}</a>
+      </li>
+      <li>
+        <a md-button class="docs-navbar-hide-small docs-button"
+           [routerLink]="['/account']">{{ 'HEADER.MENU.ACCOUNTS' | translate }}</a>
+      </li>
+      <li>
+        <a md-button class="docs-navbar-hide-small docs-button"
+           [routerLink]="['/expense']">{{ 'HEADER.MENU.EXPENSES' | translate }}</a>
+      </li>
+      <li>
+        <a md-button class="docs-navbar-hide-small docs-button"
+           (click)="logout()">{{ 'HEADER.MENU.LOGOUT' | translate }}</a>
+      </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="{{ 'HEADER.MENU.SEARCH' | translate }}">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{{ 'HEADER.MENU.SEARCH' | translate }}</button>
-    </form>
-    <select #langSelect (change)="translate.use(langSelect.value)">
-      <option *ngFor="let lang of translate.getLangs()" [value]="lang" [selected]="lang === translate.currentLang">{{ lang }}</option>
-    </select>
-  <!-- </div> -->
+  </div>
+  <div class="flex-spacer"></div>
+  <md-select #langSelect (change)="setLanguage(langSelect.value)" [(ngModel)]="currentLang">
+    <md-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</md-option>
+  </md-select>
 </nav>
+<!--  [selected]="lang === translate.currentLang" -->

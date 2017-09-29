@@ -17,6 +17,7 @@ export class APIRoutes {
     routes() {
       app.post("/login", UsersRoutes.loginRoute);
       app.post("/signup", UsersRoutes.signUpRoute);
+      app.post("/retrieve-password", UsersRoutes.getPswRoute);
       app.use('/api', Authentication.authenticatedRoute);
       app.get('/api/authenticate', (req, res) => res.json('ok'));
       return app;

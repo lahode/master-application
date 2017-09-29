@@ -1,25 +1,25 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Store, Action } from '@ngrx/store';
 
-import { User } from "../user.model";
-/* import { AuthService } from "../auth.service"; */
-import { MessageService } from '../../message/message.service';
+import { User } from '../user.model';
+import { AuthActions } from '../../../core';
 
 @Component({
-  selector: 'ob-register',
+  selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
   private registerForm: FormGroup;
   private loading;
+  private storeErrorSubscription;
+
   @Input() returnUrl: string;
 
-  constructor(/* private authService: AuthService, */
-              private router: Router,
-              private messageService: MessageService) { }
+  constructor(private store: Store<any>,
+              private authActions: AuthActions) { }
 
   ngOnInit() {
     // Define email validation pattern
@@ -41,24 +41,29 @@ export class RegisterComponent implements OnInit {
       ]),
       password: new FormControl(null, Validators.required)
     });
+
+    // Managing error in app
+    this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
+      if (error) {
+        console.log('Ca ne fonctionne qu une fois, pourquoi?');
+        this.loading = false;
+      }
+    });
   }
 
   // Register the new user
   onRegister() {
-    this.loading = true;
-    const user = new User(this.registerForm.value.username, this.registerForm.value.password,
-                          this.registerForm.value.name, this.registerForm.value.email);
-    /*
-    this.authService.register(user)
-      .subscribe(
-        () => this.router.navigate(['/login']),
-        err => {
-          this.messageService.error(err);
-          this.loading = false;
-        }
-      );
-    */
-    this.registerForm.reset();
+    if (this.registerForm.valid) {
+      this.loading = true;
+      const newUser = new User(this.registerForm.value.username, this.registerForm.value.password,
+                            this.registerForm.value.name, this.registerForm.value.email);
+      this.store.dispatch(<Action>this.authActions.signup(newUser));
+      this.registerForm.reset();
+    }
+  }
+
+  ngOnDestroy() {
+    this.storeErrorSubscription.unsubscribe();
   }
 
 }

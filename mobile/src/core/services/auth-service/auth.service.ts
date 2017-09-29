@@ -61,6 +61,14 @@ export class AuthService {
       .catch(err => Observable.throw(this.manageError(err)));
   }
 
+  // Retrieve password
+  public retrievePassword(values: any): Observable<any> {
+    return this.http.post(this.endpoints.getPassword(), values)
+      .map(response => response.json())
+      .switchMap(jwt => this.handleJwtResponse(jwt.token))
+      .catch(err => Observable.throw(this.manageError(err)));
+  }
+
   // Save JWT Token and return user object
   private handleJwtResponse(jwt: string): Observable<any> {
     return Observable.from(
