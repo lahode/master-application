@@ -15,8 +15,8 @@ export class MyApp implements OnInit {
 
   rootPage:any;
   public user: any|null;
-  public storeUserSubscription;
-  public storeErrorSubscription;
+  public storeUserSubscription$;
+  public storeErrorSubscription$;
 
   constructor(
     platform: Platform,
@@ -33,14 +33,16 @@ export class MyApp implements OnInit {
       splashScreen.hide();
 
       // Managing error in app
-      this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
+      this.storeErrorSubscription$ = this.store.select(state => state.error);
+      this.storeErrorSubscription$.subscribe(error => {
         if (error) {
           this.displayError(error.toString());
         }
       });
 
       // Managing user auth statut
-      this.storeUserSubscription = this.store.select(state => state.currentUser).subscribe(user => {
+      this.storeUserSubscription$ = this.store.select(state => state.currentUser);
+      this.storeUserSubscription$.subscribe(user => {
         if (user) {
           // If logged in go to Home page
           this.user = user;
@@ -76,8 +78,10 @@ export class MyApp implements OnInit {
 
   // Destroy store subscriptions when leaving component
   ngOnDestroy() {
-    this.storeErrorSubscription.unsubscribe();
-    this.storeUserSubscription.unsubscribe();
+/*
+    this.storeErrorSubscription$.unsubscribe();
+    this.storeUserSubscription$.unsubscribe();
+*/
   }
 
 }
