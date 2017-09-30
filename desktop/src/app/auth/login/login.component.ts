@@ -24,7 +24,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
     // Check if user is already authenticated and redirect to returnUrl page
-    this.storeUserSubscription = this.store.select(state => state.currentUser).subscribe(user => {
+    this.storeUserSubscription = this.store.select(state => state.currentUser)
+    this.storeUserSubscription.subscribe(user => {
+      console.log(user)
       if (user) {
         this.router.navigate([this.returnUrl]);
       }
@@ -38,7 +40,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // Destroy store subscription when leaving component
   ngOnDestroy() {
-    this.storeUserSubscription.unsubscribe();
+    //this.storeUserSubscription.unsubscribe();
   }
 
 }

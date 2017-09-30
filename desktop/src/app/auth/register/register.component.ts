@@ -14,7 +14,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   private registerForm: FormGroup;
   private loading;
-  private storeErrorSubscription;
+  private storeErrorSubscription$;
 
   @Input() returnUrl: string;
 
@@ -42,10 +42,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
       password: new FormControl(null, Validators.required)
     });
 
-    // Managing error in app
-    this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
-      if (error) {
-        console.log('Ca ne fonctionne qu une fois, pourquoi?');
+    // Disable spinner loader when complete
+    this.storeErrorSubscription$ = this.store.select(state => state.loading);
+    this.storeErrorSubscription$.subscribe(loading => {
+      console.log(loading)
+      if (loading) {
         this.loading = false;
       }
     });
@@ -63,7 +64,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.storeErrorSubscription.unsubscribe();
+    //this.storeErrorSubscription$.unsubscribe();
   }
 
 }

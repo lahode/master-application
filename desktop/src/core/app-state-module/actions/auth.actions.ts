@@ -28,6 +28,8 @@ export class AuthActions {
   static GET_PASSWORD_SUCCESS = 'GET_PASSWORD_SUCCESS';
   static GET_PASSWORD_FAILED = 'GET_PASSWORD_FAILED';
 
+  static ERROR_NULL = 'ERROR_NULL';
+
   login(_credentials ): Action {
     return <Action>{
       type: AuthActions.LOGIN,
@@ -65,6 +67,12 @@ export class AuthActions {
     return <Action>{
       type: AuthActions.GET_PASSWORD,
       payload: _credentials
+    }
+  }
+
+  resetError(): Action {
+    return <Action>{
+      type: AuthActions.ERROR_NULL
     }
   }
 }

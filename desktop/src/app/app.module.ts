@@ -6,7 +6,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { MatSelectModule, MatButtonModule } from '@angular/material';
+import { MatSelectModule, MatButtonModule, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routing';
 
 /* Components */
-import { AppComponent } from './app.component';
+import { AppComponent, AppErrorComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { MessageComponent } from './message/message.component';
@@ -47,6 +47,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
+    AppErrorComponent,
     HeaderComponent,
     HomeComponent,
     MessageComponent,
@@ -66,6 +67,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     }),
     MatSelectModule,
     MatButtonModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     AuthModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
@@ -73,6 +75,9 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     StoreDevtoolsModule.instrument(),
     EffectsModule.forRoot([coreApp.effect]),
     CoreModule.forRoot()
+  ],
+  entryComponents: [
+      AppErrorComponent
   ],
   providers: [
     LocalDataStorageService,
