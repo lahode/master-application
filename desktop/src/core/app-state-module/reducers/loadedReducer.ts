@@ -34,6 +34,26 @@ export function reducer (state: ILoadedState = intitialState, action: any): ILoa
       return true;
     }
 
+    case AuthActions.CREATE_USER: {
+      return false;
+    }
+    case AuthActions.CREATE_USER_SUCCESS: {
+      return true;
+    }
+    case AuthActions.CREATE_USER_FAILED: {
+      return false;
+    }
+
+    case AuthActions.GET_PASSWORD: {
+      return false;
+    }
+    case AuthActions.GET_PASSWORD_SUCCESS: {
+      return true;
+    }
+    case AuthActions.GET_PASSWORD_FAILED: {
+      return false;
+    }
+
     default: {
       return <ILoadedState>state;
     }

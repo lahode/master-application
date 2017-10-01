@@ -37,6 +37,26 @@ export function reducer (state: ILoadingState = intitialState, action: any): ILo
       return false;
     }
 
+    case AuthActions.CREATE_USER: {
+      return true;
+    }
+    case AuthActions.CREATE_USER_SUCCESS: {
+      return false;
+    }
+    case AuthActions.CREATE_USER_FAILED: {
+      return false;
+    }
+
+    case AuthActions.GET_PASSWORD: {
+      return true;
+    }
+    case AuthActions.GET_PASSWORD_SUCCESS: {
+      return false;
+    }
+    case AuthActions.GET_PASSWORD_FAILED: {
+      return false;
+    }
+
     default: {
       return <ILoadingState>state;
     }
