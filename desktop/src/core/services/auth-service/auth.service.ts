@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   // Log out
-  public logout() {
+  public logout(): Observable<any> {
     return Observable.fromPromise(this.storage.remove(STORAGE_ITEM).then(() => true));
   }
 

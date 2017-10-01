@@ -26,8 +26,8 @@ console.log("");
 console.log('[INSTALL] - Angular Core Seed installation:');
 
 installCore();
-//installMobile();
-installDesktop();
+installMobile();
+//installDesktop();
 installServer()
 //installElectron()
 displayFinalHelp();

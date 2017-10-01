@@ -10,9 +10,11 @@ export function reducer (state: ICurrentUserState = intitialState, action: any):
     case AuthActions.LOGIN_SUCCESS: {
       return Object.assign({}, state, action.payload);
     }
+
     case AuthActions.CHECK_AUTH_SUCCESS: {
       return Object.assign({}, state, action.payload);
     }
+
     case AuthActions.LOGOUT_SUCCESS: {
       return intitialState;
     }
@@ -20,6 +22,7 @@ export function reducer (state: ICurrentUserState = intitialState, action: any):
     case AuthActions.CREATE_USER_SUCCESS: {
       return Object.assign({},  action.payload);
     }
+
     default: {
       return <ICurrentUserState>state;
     }

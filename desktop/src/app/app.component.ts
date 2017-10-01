@@ -27,7 +27,6 @@ export class AppComponent implements OnInit, OnDestroy {
     // Managing error in app
     this.storeErrorSubscription$ = this.store.select(state => state.error)
     this.storeErrorSubscription$.subscribe(error => {
-      console.log(error)
       if (error) {
         const dialogRef = this.dialog.open(AppErrorComponent, {
           width: '250px',
@@ -41,7 +40,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.store.dispatch(this.authActions.checkAuth());
     this.storeUserSubscription$ = this.store.select(state => state.currentUser)
     this.storeUserSubscription$.subscribe(user => {
-      console.log(user)
       if (user) {
         // Redirect to returnUrl page if user exist
         this.user = user;

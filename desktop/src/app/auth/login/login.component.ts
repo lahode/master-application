@@ -26,7 +26,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     // Check if user is already authenticated and redirect to returnUrl page
     this.storeUserSubscription = this.store.select(state => state.currentUser)
     this.storeUserSubscription.subscribe(user => {
-      console.log(user)
       if (user) {
         this.router.navigate([this.returnUrl]);
       }

@@ -34,7 +34,6 @@ export class SigninComponent implements OnInit, OnDestroy {
     // Disable spinner loader when complete
     this.storeErrorSubscription$ = this.store.select(state => state.loading);
     this.storeErrorSubscription$.subscribe(loading => {
-      console.log(loading)
       if (!loading) {
         this.loading = false;
       }

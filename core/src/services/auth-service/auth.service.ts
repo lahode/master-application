@@ -49,13 +49,21 @@ export class AuthService {
   }
 
   // Log out
-  public logout() {
+  public logout(): Observable<any> {
     return Observable.fromPromise(this.storage.remove(STORAGE_ITEM).then(() => true));
   }
 
   // Sign up
   public signup(values: any): Observable<any> {
     return this.http.post(this.endpoints.getSignup(), values)
+      .map(response => response.json())
+      .switchMap(jwt => this.handleJwtResponse(jwt.token))
+      .catch(err => Observable.throw(this.manageError(err)));
+  }
+
+  // Retrieve password
+  public retrievePassword(values: any): Observable<any> {
+    return this.http.post(this.endpoints.getPassword(), values)
       .map(response => response.json())
       .switchMap(jwt => this.handleJwtResponse(jwt.token))
       .catch(err => Observable.throw(this.manageError(err)));
