@@ -1,4 +1,4 @@
-import { Server } from "./src/app";
+import { Server } from "./src";
 
 const NodeServer = new Server()
 NodeServer.bootstrap()

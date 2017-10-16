@@ -1,5 +1,3 @@
-/// <reference path="./@types/index.d.ts" />
-
 import * as express from 'express';
 import * as http  from "http";
 import * as bodyParser from 'body-parser';
@@ -11,7 +9,7 @@ import { APIRoutes }  from "./modules/routes/api.route";
 import { log }  from "./modules/log";
 
 // Import secretTokenKey config
-import { SECRET_TOKEN_KEY } from "./config";
+import { CONFIG } from "./config";
 
 export class Server {
 
@@ -47,7 +45,7 @@ export class Server {
       // use bodyParser middleware to decode urlencoded parameters
       .use(bodyParser.urlencoded({extended: false}))
       // secret variable for jwt
-      .set('superSecret', SECRET_TOKEN_KEY)
+      .set('superSecret', CONFIG.SECRET_TOKEN_KEY)
       // use morgan to log requests to the console
       .use(morgan('dev'))
       // cors domaine origin

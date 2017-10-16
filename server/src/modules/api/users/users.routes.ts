@@ -6,7 +6,7 @@ import { sign } from 'jsonwebtoken';
 import { log } from '../../log';
 
 // Import secretTokenKey config
-import { SECRET_TOKEN_KEY, MAILER, USERS_FILE } from "../../../config";
+import { CONFIG } from "../../../config";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ export class UsersRoutes {
 
     // Sign in and save token
     public static saveToken(req, cb: (tokenSaved: boolean|any) => void): void {
-      let token = sign(req, SECRET_TOKEN_KEY, {
+      let token = sign(req, CONFIG.SECRET_TOKEN_KEY, {
         expiresIn: 60 * 60 * 24 // Expire dans 24 heures
       }, (err: Error, token: any): void => {
         if (err) {
@@ -31,7 +31,7 @@ export class UsersRoutes {
       if (!req.body.username || !req.body.password) {
         return res.end(res.writeHead(400, "Tous les champs sont obligatoires."));
       }
-      fs.readFile(USERS_FILE, (err, data) => {
+      fs.readFile(CONFIG.USERS_FILE, (err, data) => {
         if (err) {
           return res.end(res.writeHead(500, "Une erreur lors de la récupération des utilisateurs."));
         }
@@ -70,7 +70,7 @@ export class UsersRoutes {
       if (!req.body.username || !req.body.password) {
         return res.end(res.writeHead(400, "Tous les champs sont obligatoires."));
       }
-      fs.readFile(USERS_FILE, (err, data) => {
+      fs.readFile(CONFIG.USERS_FILE, (err, data) => {
         if (err) {
           return res.end(res.writeHead(500, "Une erreur lors de la récupération des utilisateurs."));
         }
@@ -86,7 +86,7 @@ export class UsersRoutes {
             delete userAuth.password;
             users.push(req.body);
             let json = JSON.stringify(users);
-            fs.writeFile(USERS_FILE, json, 'utf8', (err) => {
+            fs.writeFile(CONFIG.USERS_FILE, json, 'utf8', (err) => {
               if (err) {
                 return res.end(res.writeHead(500, "Une erreur est survenu lors de l'inscription."));
               }
@@ -115,14 +115,14 @@ export class UsersRoutes {
       if (!req.body.email || !req.body.email) {
         return res.end(res.writeHead(400, "Aucun e-mail valide n'a été inséré."));
       }
-      const transporter = nodemailer.createTransport(MAILER);
+      const transporter = nodemailer.createTransport(CONFIG.MAILER);
       const mailOptions = {
-        from: MAILER.host.user,
+        from: CONFIG.MAILER.host.user,
         to: req.body.email,
         subject: 'Récupération du mot de passe',
         text: ''
       };
-      fs.readFile(USERS_FILE, (err, data) => {
+      fs.readFile(CONFIG.USERS_FILE, (err, data) => {
         if (err) {
           return res.end(res.writeHead(500, "Une erreur lors de la récupération des utilisateurs."));
         }
