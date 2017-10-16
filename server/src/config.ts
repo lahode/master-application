@@ -1,6 +1,6 @@
-import { devVariables } from './environment/development';
-import { prodVariables } from './environment/production';
-import { IEnvironment } from './environment/env-model';
+import { devVariables } from '../environment/development';
+import { prodVariables } from '../environment/production';
+import { IEnvironment } from '../environment/env-model';
 
 
 declare const process: any; // Typescript compiler will complain without this

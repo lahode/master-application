@@ -31,7 +31,7 @@ export class Server {
     // define the app.server endpoints folder
     this.root = path.join(__dirname, '../api')
     // define prot & normalize value
-    this.port = this.normalizePort(process.env.PORT|| 4300);
+    this.port = this.normalizePort(process.env.PORT|| CONFIG.PORT);
     // use the root path defined
     this.app.use(express.static(this.root))
   }
