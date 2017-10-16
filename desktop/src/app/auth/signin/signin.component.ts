@@ -13,8 +13,8 @@ import { AuthActions } from '../../../core';
 export class SigninComponent implements OnInit, OnDestroy {
 
   public signInform: FormGroup;
-  public loading;
-  private storeErrorSubscription$;
+  public loading$;
+  private storeErrorSubscription;
 
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
@@ -30,14 +30,7 @@ export class SigninComponent implements OnInit, OnDestroy {
       ]),
       password: new FormControl(null, Validators.required)
     });
-
-    // Disable spinner loader when complete
-    this.storeErrorSubscription$ = this.store.select(state => state.loading);
-    this.storeErrorSubscription$.subscribe(loading => {
-      if (!loading) {
-        this.loading = false;
-      }
-    });
+    this.loading$ = this.store.select(state => state.loading)
   }
 
   // Change block
@@ -48,7 +41,6 @@ export class SigninComponent implements OnInit, OnDestroy {
   // Sign in the user
   onSignIn() {
     if (this.signInform.valid) {
-      this.loading = true;
       this.store.dispatch(<Action>this.authActions.login(this.signInform.value));
       this.signInform.reset();
     }
@@ -56,7 +48,7 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   // Destroy store subscription when leaving component
   ngOnDestroy() {
-    //this.storeErrorSubscription$.unsubscribe();
+    this.storeErrorSubscription.unsubscribe();
   }
 
 }

@@ -3,7 +3,7 @@ import { IonicPage, NavController, LoadingController, AlertController } from 'io
 import { Validators, FormBuilder } from '@angular/forms';
 import { Store, Action } from '@ngrx/store'
 
-import { AuthActions } from "../../core";
+import { AuthActions } from '../../core';
 import { User } from '../../models/user.model';
 
 @IonicPage({

@@ -1,21 +1,9 @@
-/**
- * @Author: Nicolas Fazio <webmaster-fazio>
- * @Date:   09-04-2017
- * @Email:  contact@nicolasfazio.ch
- * @Last modified by:   webmaster-fazio
- * @Last modified time: 26-05-2017
- */
+import { IEnvironment } from "./env-model";
 
- import { IEnvironment } from "./env-model";
+export const devVariables:IEnvironment = {
+  environmentName: 'Development Environment',
+  ionicEnvName: 'dev',
 
- export const devVariables:IEnvironment = {
-   environmentName: 'Development Environment',
-   ionicEnvName: 'dev',
-
-   // Front-end
-   apiEndpoint: 'http://localhost:4300',
-
-   // Back-end
-   dbHost: 'mongodb://localhost:27017',
-   dbName: 'test'
- };
+  // Front-end
+  apiEndpoint: 'http://localhost:4300'
+};

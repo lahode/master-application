@@ -20,6 +20,7 @@
 var path = require('path');
 var webpack = require('../../mobile/node_modules/webpack');
 var ionicWebpackFactory = require(process.env.IONIC_WEBPACK_FACTORY);
+
 var ModuleConcatPlugin = require('../../mobile/node_modules/webpack/lib/optimize/ModuleConcatenationPlugin');
 var config = require('../../mobile/node_modules/@ionic/app-scripts/config/webpack.config.js')
 
@@ -38,9 +39,6 @@ config.plugins = [
   new webpack.EnvironmentPlugin(['IONIC_ENV', 'NODE_ENV']),
   ionicWebpackFactory.getIonicEnvironmentPlugin(),
   ionicWebpackFactory.getCommonChunksPlugin(),
-] //.concat(prodPlugins);
-// or other synthax:
-// config.plugins.push(new webpack.EnvironmentPlugin(['IONIC_ENV']))
-config.resolve.plugins = [new TsConfigPathsPlugin(/* { tsconfig, compiler } */)];
+].concat(prodPlugins);
 
 module.exports = config

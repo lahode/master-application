@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, IonicPage } from 'ionic-angular';
 
 import { Store, Action } from '@ngrx/store'
 import { Observable } from 'rxjs/Rx';
 
-import { AppStateI, AuthActions } from "../../core";
+import { AppStateI, AuthActions } from '../../core';
 
-
+@IonicPage({
+  name:'HomePage',
+  segment:'index'
+})
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage implements OnInit {
+export class HomePage {
 
   public user:any;
   public storeInfo:Observable<AppStateI>;
@@ -23,9 +26,6 @@ export class HomePage implements OnInit {
 ) {
     // use the object in the template since it is an observable
     this.storeInfo = this.store.select(state => state)
-  }
-
-  ngOnInit():void {
   }
 
   navToEdit(todo:any):void {

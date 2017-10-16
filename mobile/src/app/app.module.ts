@@ -10,7 +10,7 @@ import { MyApp } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
-import { CoreModule, coreApp } from 'core';
+import { CoreModule, coreApp } from '../core';
 
 const ionicAppConfig:Object = {
   tabsPlacement: 'bottom',

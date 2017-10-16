@@ -25,7 +25,7 @@
   <div>
     <button md-raised-button
             color="primary"
-            [disabled]="loading || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
-    <md-spinner *ngIf="loading"></md-spinner>
+            [disabled]="(loading$ | async) || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
+    <md-spinner *ngIf="(loading$ | async)"></md-spinner>
   </div>
 </form>

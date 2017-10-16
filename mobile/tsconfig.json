@@ -4,6 +4,8 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
     "lib": [
       "dom",
       "es2015"
@@ -11,22 +13,7 @@
     "module": "es2015",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es5",
-    "baseUrl": ".",
-    "typeRoots": [
-      "../core/node_modules/@types"
-    ],
-    "skipLibCheck": true,
-    "paths": {
-      "core": ["../core/src/index"],
-      "@angular/*": ["../core/node_modules/@angular/*"],
-      "@ngrx/*": ["../core/node_modules/@ngrx/*"],
-      "rxjs/*": ["../core/node_modules/rxjs/*"],
-      "ngrx-store-freeze" :["../core/node_modules/ngrx-store-freeze"],
-      "deep-*" :["../core/node_modules/deep-*"],
-      "tslint": ["../core/node_modules/tslint"],
-      "zone.js": ["../core/node_modules/zone.js"]
-    }
+    "target": "es5"
   },
   "include": [
     "src/**/*.ts"

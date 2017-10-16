@@ -14,8 +14,9 @@ import { User } from './auth/user.model';
 })
 export class AppComponent implements OnInit, OnDestroy {
   public user: User|null;
-  private storeErrorSubscription$;
-  private storeUserSubscription$;
+  private storeErrorSubscription;
+  private storeUserSubscription;
+  private storeLoaderSubscription;
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -25,8 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Managing error in app
-    this.storeErrorSubscription$ = this.store.select(state => state.error)
-    this.storeErrorSubscription$.subscribe(error => {
+    this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
       if (error) {
         const dialogRef = this.dialog.open(AppErrorComponent, {
           width: '250px',
@@ -38,8 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // Managing user auth statut
     this.store.dispatch(this.authActions.checkAuth());
-    this.storeUserSubscription$ = this.store.select(state => state.currentUser)
-    this.storeUserSubscription$.subscribe(user => {
+    this.storeUserSubscription = this.store.select(state => state.currentUser).subscribe(user => {
       if (user) {
         // Redirect to returnUrl page if user exist
         this.user = user;
@@ -57,8 +56,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // Destroy store subscriptions when leaving component
   ngOnDestroy() {
-    // this.storeErrorSubscription$.unsubscribe();
-    // this.storeUserSubscription$.unsubscribe();
+    this.storeErrorSubscription.unsubscribe();
+    this.storeUserSubscription.unsubscribe();
   }
 
 }

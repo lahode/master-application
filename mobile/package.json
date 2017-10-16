@@ -39,10 +39,5 @@
     "@ionic/app-scripts": "2.1.4",
     "typescript": "2.3.4"
   },
-  "description": "An Ionic project",
-  "config": {
-    "ionic_purge_decorators": false,
-    "ionic_watch": "../tools/config/ionic.watch.config.js",
-    "ionic_webpack": "../tools/config/ionic.webpack.config.js"
-  }
+  "description": "An Ionic project"
 }
