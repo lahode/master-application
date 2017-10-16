@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
 import { User } from '../user.model';
-import { AuthActions } from '../../../core';
+import { AuthActions } from '../store/actions/auth.actions';
 
 @Component({
   selector: 'app-register',

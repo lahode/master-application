@@ -3,7 +3,8 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Store, Action } from '@ngrx/store';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 
-import { AppStateI, AuthActions } from '../core';
+import { AppActions } from '../core/store';
+import { AuthActions } from './auth/store';
 import { MessageService } from './message/message.service';
 import { User } from './auth/user.model';
 
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               private route: ActivatedRoute,
               private store: Store<any>,
+              private appActions: AppActions,
               private authActions: AuthActions,
               private dialog: MdDialog) {}
 
@@ -32,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
           width: '250px',
           data: {error: error.toString()}
         });
-        dialogRef.afterClosed().subscribe(result => this.store.dispatch(<Action>this.authActions.resetError()));
+        dialogRef.afterClosed().subscribe(result => this.store.dispatch(<Action>this.appActions.resetError()));
       }
     });
 

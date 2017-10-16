@@ -1,20 +1,19 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
 import { User } from '../user.model';
-import { AuthActions } from '../../../core';
+import { AuthActions } from '../store/actions/auth.actions';
 
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss']
 })
-export class SigninComponent implements OnInit, OnDestroy {
+export class SigninComponent implements OnInit {
 
   public signInform: FormGroup;
   public loading$;
-  private storeErrorSubscription;
 
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
@@ -44,11 +43,6 @@ export class SigninComponent implements OnInit, OnDestroy {
       this.store.dispatch(<Action>this.authActions.login(this.signInform.value));
       this.signInform.reset();
     }
-  }
-
-  // Destroy store subscription when leaving component
-  ngOnDestroy() {
-    this.storeErrorSubscription.unsubscribe();
   }
 
 }

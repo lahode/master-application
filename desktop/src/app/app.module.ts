@@ -9,10 +9,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MatSelectModule, MatButtonModule, MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-
 /* Custom modules */
 import { AuthModule } from './auth/auth.module';
-import { AppStateModule } from '../core/app-state-module';
 
 /* Routing */
 import { RouterModule } from '@angular/router';
@@ -31,10 +29,11 @@ import { MessageService } from './message/message.service';
 
 /* Store */
 import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
-import { CoreModule, coreApp } from '../core';
+import { AppStoreModule } from '../core/store';
+import { AuthStoreModule } from './auth/store';
 
 /**
  * Custom Http Loader for translation
@@ -71,13 +70,12 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule,
     AuthModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
-    StoreModule.forRoot(coreApp.reducer),
     StoreDevtoolsModule.instrument(),
-    EffectsModule.forRoot([coreApp.effect]),
-    CoreModule.forRoot()
+    AppStoreModule.forRoot(),
+    AuthStoreModule.forRoot(),
   ],
   entryComponents: [
-      AppErrorComponent
+    AppErrorComponent
   ],
   providers: [
     LocalDataStorageService,
