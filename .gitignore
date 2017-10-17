@@ -33,7 +33,5 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 
-environment/*.js
-production.*
 server/dist
 dist/
