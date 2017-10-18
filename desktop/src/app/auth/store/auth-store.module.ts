@@ -31,7 +31,9 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 
 export const AuthProviders = [
   AuthService,
-  // AuthActions,
+  // StorageService,
+  // StorageService alerady import by core/store : have to choise which module import it.
+  // Or do an extendable service.
   AuthGuard,
   JwtHelper,
   AuthHttp,
@@ -47,7 +49,7 @@ export const AuthProviders = [
     HttpModule,
     StoreModule.forFeature('authCheck', AuthReducers.authCheck),
     StoreModule.forFeature('currentUser', AuthReducers.currentUser),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forFeature([AuthEffects]),
   ],
   exports: [
     StoreModule,
