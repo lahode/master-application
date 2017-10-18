@@ -1,7 +1,15 @@
+/**
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   18-10-2017
+ * @Email:  contact@nicolasfazio.ch
+ * @Last modified by:   webmaster-fazio
+ * @Last modified time: 18-10-2017
+ */
+
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Store, Action } from '@ngrx/store';
-import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AppActions } from '../core/store';
 import { AuthActions } from './auth/store';
@@ -24,7 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
               private store: Store<any>,
               private appActions: AppActions,
               private authActions: AuthActions,
-              private dialog: MdDialog) {}
+              private dialog: MatDialog) {}
 
   ngOnInit() {
     // Managing error in app
@@ -71,8 +79,8 @@ export class AppComponent implements OnInit, OnDestroy {
 export class AppErrorComponent {
 
   constructor(
-    public dialogRef: MdDialogRef<AppErrorComponent>,
-    @Inject(MD_DIALOG_DATA) public data: any) { }
+    public dialogRef: MatDialogRef<AppErrorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onNoClick(): void {
     this.dialogRef.close();

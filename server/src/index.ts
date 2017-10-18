@@ -1,3 +1,11 @@
+/**
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   18-10-2017
+ * @Email:  contact@nicolasfazio.ch
+ * @Last modified by:   webmaster-fazio
+ * @Last modified time: 18-10-2017
+ */
+
 import * as express from 'express';
 import * as http  from "http";
 import * as bodyParser from 'body-parser';
@@ -23,6 +31,7 @@ export class Server {
     this.server = http.createServer(this.app);
     this.config();
     this.middleware();
+    this.defaultServerRoute() // check if index server endpoint is working
     this.app.use( new APIRoutes().routes());
   }
 
@@ -52,6 +61,14 @@ export class Server {
       .use(cors())
   }
 
+  private defaultServerRoute(){
+    this.app.get( '/', log, (req, res) => {
+      res.json({
+        code: 200,
+        message: `master-application server work 👌`
+      });
+    });
+  }
   // React on errors
   private onError(error: NodeJS.ErrnoException): void {
     if (error.syscall !== 'listen') throw error;

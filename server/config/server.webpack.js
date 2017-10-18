@@ -1,3 +1,11 @@
+/**
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   18-10-2017
+ * @Email:  contact@nicolasfazio.ch
+ * @Last modified by:   webmaster-fazio
+ * @Last modified time: 18-10-2017
+ */
+
 const root = require('app-root-path').path;
 // all webpack import working cause we use Ionicframewok in front-side
 // Ionic allready have install all default webpack dependencies into our node_modules
@@ -48,7 +56,7 @@ function getProdLoaders() {
 // define webpack devConfig options
 const devConfig = {
     output: {
-        filename: 'server-dev.js', // output file
+        filename: 'server.js', // output file
         path: SERVER_CONFIG.output,
         libraryTarget: "commonjs",
     },
