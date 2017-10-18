@@ -12,7 +12,7 @@ import { Store, Action } from '@ngrx/store';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AppActions } from '../core/store';
-import { AuthActions } from './auth/store';
+import * as authAction from './auth/store/actions/auth.actions';
 import { MessageService } from './message/message.service';
 import { User } from './auth/user.model';
 
@@ -31,7 +31,6 @@ export class AppComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private store: Store<any>,
               private appActions: AppActions,
-              private authActions: AuthActions,
               private dialog: MatDialog) {}
 
   ngOnInit() {
@@ -47,7 +46,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     // Managing user auth statut
-    this.store.dispatch(this.authActions.checkAuth());
+    this.store.dispatch(<Action>new authAction.CheckAuthAction());
     this.storeUserSubscription = this.store.select(state => state.currentUser).subscribe(user => {
       if (user) {
         // Redirect to returnUrl page if user exist

@@ -1,9 +1,17 @@
+/**
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   18-10-2017
+ * @Email:  contact@nicolasfazio.ch
+ * @Last modified by:   webmaster-fazio
+ * @Last modified time: 18-10-2017
+ */
+
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
 import { User } from '../user.model';
-import { AuthActions } from '../store/actions/auth.actions';
+import * as authAction from '../store/actions/auth.actions';
 
 @Component({
   selector: 'app-signin',
@@ -18,8 +26,7 @@ export class SigninComponent implements OnInit {
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
 
-  constructor(private store: Store<any>,
-              private authActions: AuthActions) { }
+  constructor(private store: Store<any>) { }
 
   ngOnInit() {
     // Authenticate form
@@ -40,7 +47,7 @@ export class SigninComponent implements OnInit {
   // Sign in the user
   onSignIn() {
     if (this.signInform.valid) {
-      this.store.dispatch(<Action>this.authActions.login(this.signInform.value));
+      this.store.dispatch(<Action>new authAction.LoginAction(this.signInform.value));
       this.signInform.reset();
     }
   }

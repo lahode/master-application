@@ -1,3 +1,11 @@
+/**
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   18-10-2017
+ * @Email:  contact@nicolasfazio.ch
+ * @Last modified by:   webmaster-fazio
+ * @Last modified time: 18-10-2017
+ */
+
 /* Contrib modules */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -33,7 +41,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { AppStoreModule } from '../core/store';
-import { AuthStoreModule } from './auth/store';
+//import { AuthStoreModule } from './auth/store';
 
 /**
  * Custom Http Loader for translation
@@ -69,10 +77,9 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     MatDialogModule,
     BrowserAnimationsModule,
     AuthModule,
+    AppStoreModule.forRoot(),
     RouterModule.forRoot(appRoutes, { useHash: true }),
     StoreDevtoolsModule.instrument(),
-    AppStoreModule.forRoot(),
-    AuthStoreModule.forRoot(),
   ],
   entryComponents: [
     AppErrorComponent

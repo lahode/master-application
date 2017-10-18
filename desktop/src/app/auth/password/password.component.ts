@@ -1,8 +1,16 @@
+/**
+ * @Author: Nicolas Fazio <webmaster-fazio>
+ * @Date:   18-10-2017
+ * @Email:  contact@nicolasfazio.ch
+ * @Last modified by:   webmaster-fazio
+ * @Last modified time: 18-10-2017
+ */
+
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
-import { AuthActions } from '../store/actions/auth.actions';
+import * as authActions from '../store/actions/auth.actions';
 
 @Component({
   selector: 'app-password',
@@ -17,8 +25,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
-  constructor(private store: Store<any>,
-              private authActions: AuthActions) { }
+  constructor(private store: Store<any>) { }
 
   ngOnInit() {
     // Define email validation pattern
@@ -45,7 +52,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
   onRequestPassword() {
     if (this.passwordForm.valid) {
       this.loading = true;
-      this.store.dispatch(<Action>this.authActions.getPassword(this.passwordForm.value));
+      this.store.dispatch(<Action>new authActions.getPasswordAction(this.passwordForm.value));
       this.passwordForm.reset();
     }
   }

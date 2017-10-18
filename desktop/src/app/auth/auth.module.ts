@@ -21,6 +21,8 @@ import { RegisterComponent } from './register/register.component';
 import { PasswordComponent } from './password/password.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 
+import { AuthStoreModule } from './store';
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -40,6 +42,7 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    AuthStoreModule.forRoot()
   ],
 })
 export class AuthModule {}
