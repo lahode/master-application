@@ -1,51 +1,51 @@
 <form [formGroup]="registerForm">
   <div>
-    <md-form-field>
-      <input mdInput
+    <mat-form-field>
+      <input matInput
              placeholder="{{ 'LOGIN.REGISTERFORM.NAME' | translate }}"
              id="name"
              formControlName="name" />
-    </md-form-field>
+    </mat-form-field>
   </div>
   <div>
-    <md-form-field>
-      <input mdInput
+    <mat-form-field>
+      <input matInput
              placeholder="{{ 'LOGIN.REGISTERFORM.USERNAME' | translate }}"
              id="username"
              formControlName="username" />
-    </md-form-field>
+    </mat-form-field>
   </div>
   <div>
-    <md-form-field>
-      <input mdInput
+    <mat-form-field>
+      <input matInput
              placeholder="{{ 'LOGIN.REGISTERFORM.EMAIL' | translate }}"
              id="email"
              type="email"
              formControlName="email" />
-    </md-form-field>
+    </mat-form-field>
   </div>
   <div>
-    <md-form-field>
-      <input mdInput
+    <mat-form-field>
+      <input matInput
              placeholder="{{ 'LOGIN.REGISTERFORM.EMAILCONFIRM' | translate }}"
              id="emailconfirm"
              type="email"
              formControlName="emailconfirm" />
-    </md-form-field>
+    </mat-form-field>
   </div>
   <div>
-    <md-form-field>
-      <input mdInput
+    <mat-form-field>
+      <input matInput
              placeholder="{{ 'LOGIN.REGISTERFORM.PASSWORD' | translate }}"
              id="password"
              type="password"
              formControlName="password" />
-    </md-form-field>
+    </mat-form-field>
   </div>
   <div>
-    <button md-raised-button
+    <button mat-raised-button
             color="primary"
             [disabled]="loading || !registerForm.valid" (click)="onRegister()">{{ 'LOGIN.REGISTERFORM.SUBMIT' | translate }}</button>
-    <md-spinner *ngIf="loading"></md-spinner>
+    <mat-spinner *ngIf="loading"></mat-spinner>
   </div>
 </form>

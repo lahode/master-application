@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatInputModule, MdCheckboxModule, MatButtonModule, MatTabsModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatInputModule, MatCheckboxModule, MatButtonModule, MatTabsModule, MatProgressSpinnerModule, MatCardModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* Custom modules */
@@ -24,10 +24,11 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
   imports: [
     SharedModule,
     MatInputModule,
-    MdCheckboxModule,
+    MatCheckboxModule,
     MatButtonModule,
     MatTabsModule,
     MatProgressSpinnerModule,
+    MatCardModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,

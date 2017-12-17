@@ -1,5 +1,5 @@
 import * as express from 'express';
-import * as http  from "http";
+import * as http  from 'http';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as path from 'path';
@@ -7,8 +7,6 @@ import * as morgan from 'morgan';
 
 import { APIRoutes }  from "./modules/routes/api.route";
 import { log }  from "./modules/log";
-
-// Import secretTokenKey config
 import { CONFIG } from "./config";
 
 export class Server {
@@ -23,6 +21,7 @@ export class Server {
     this.server = http.createServer(this.app);
     this.config();
     this.middleware();
+    this.defaultServerRoute();
     this.app.use( new APIRoutes().routes());
   }
 
@@ -50,6 +49,16 @@ export class Server {
       .use(morgan('dev'))
       // cors domaine origin
       .use(cors())
+  }
+
+  // Default server route
+  private defaultServerRoute() {
+    this.app.get( '/', log, (req, res) => {
+      res.json({
+        code: 200,
+        message: `master-application server work 👌`
+      });
+    });
   }
 
   // React on errors

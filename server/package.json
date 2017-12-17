@@ -7,33 +7,35 @@
     "build:server": "NODE_ENV=prod webpack --config ./config/server.webpack.js --env.prod"
   },
   "engines": {
-    "node": "~7.0.0"
+    "node": "~8.5.0"
   },
   "version": "0.0.1",
   "description": "NodeJS REST TS for master-application",
   "dependencies": {
     "app-root-path": "^2.0.1",
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.17.2",
+    "body-parser": "^1.18.2",
     "cors": "^2.8.3",
-    "express": "^4.15.3",
+    "express": "^4.16.2",
     "fs": "0.0.1-security",
-    "jsonwebtoken": "^7.4.1",
-    "morgan": "^1.8.2",
-    "nodemailer": "^4.1.1"
+    "jsonwebtoken": "^8.1.0",
+    "morgan": "^1.9.0",
+    "nedb": "^1.8.0",
+    "nedb-promises": "^1.1.2",
+    "nodemailer": "^4.4.1"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.16.3",
-    "@types/cors": "^2.8.1",
-    "@types/express": "^4.0.35",
-    "@types/node": "^7.0.22",
-    "awesome-typescript-loader": "^3.2.3",
-    "copy-webpack-plugin": "^4.1.1",
-    "nodemon": "^1.11.0",
-    "nodemon-webpack-plugin": "^0.1.5",
-    "tslint": "^5.3.2",
+    "@types/body-parser": "^1.16.8",
+    "@types/cors": "^2.8.3",
+    "@types/express": "^4.0.39",
+    "@types/node": "^8.5.1",
+    "awesome-typescript-loader": "^3.4.1",
+    "copy-webpack-plugin": "^4.3.0",
+    "nodemon": "^1.13.3",
+    "nodemon-webpack-plugin": "^0.1.6",
+    "tslint": "^5.8.0",
     "tslint-eslint-rules": "^4.1.0",
-    "typescript": "^2.3.3",
-    "webpack": "^3.7.1"
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
   }
 }

@@ -11,20 +11,20 @@
   <div class="col-sm-5 pull-right new-session-forms-container">
 
     <div *ngIf="showBlock == 'login'">
-      <md-tab-group>
-        <md-tab id="signin">
-          <ng-template md-tab-label>{{ 'LOGIN.TAB.SIGNIN' | translate }}</ng-template>
+      <mat-tab-group>
+        <mat-tab id="signin">
+          <ng-template mat-tab-label>{{ 'LOGIN.TAB.SIGNIN' | translate }}</ng-template>
           <app-signin [returnUrl]="returnUrl" (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-signin>
-        </md-tab>
-        <md-tab id="register">
-          <ng-template md-tab-label>{{ 'LOGIN.TAB.REGISTER' | translate }}</ng-template>
+        </mat-tab>
+        <mat-tab id="register">
+          <ng-template mat-tab-label>{{ 'LOGIN.TAB.REGISTER' | translate }}</ng-template>
           <app-register [returnUrl]="returnUrl" (alertReceived)="addAlert($event)"></app-register>
-        </md-tab>
-      </md-tab-group>
-      <md-card>
+        </mat-tab>
+      </mat-tab-group>
+      <mat-card>
         <span>{{ 'LOGIN.REQUESTCONFIRMATION.TEXT' | translate }}</span>
-        <button md-button (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</button>
-      </md-card>
+        <button mat-button (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</button>
+      </mat-card>
       <div class="clearfix">
         <div class="omniauth-container">
           <p>
@@ -52,28 +52,28 @@
     </div>
 
     <div *ngIf="showBlock == 'password'">
-      <md-tab-group>
-        <md-tab id="password">
-          <ng-template md-tab-label>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
+      <mat-tab-group>
+        <mat-tab id="password">
+          <ng-template mat-tab-label>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
           <app-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-password>
-        </md-tab>
-      </md-tab-group>
+        </mat-tab>
+      </mat-tab-group>
       <div class="clearfix prepend-top-20">
         <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-        <button md-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
+        <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
       </div>
     </div>
 
     <div *ngIf="showBlock == 'confirmation'">
-      <md-tab-group>
-        <md-tab id="confirmation">
-          <ng-template md-tab-label>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
+      <mat-tab-group>
+        <mat-tab id="confirmation">
+          <ng-template mat-tab-label>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
           <app-confirmation (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-confirmation>
-        </md-tab>
-      </md-tab-group>
+        </mat-tab>
+      </mat-tab-group>
       <div class="clearfix prepend-top-20">
         <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-        <button md-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
+        <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
       </div>
     </div>
   </div>

@@ -1,153 +1,156 @@
 import * as express from 'express';
-const fs = require('fs'); /* module file system */
-const nodemailer = require('nodemailer');
-import { sign } from 'jsonwebtoken';
-
-import { log } from '../../log';
-
-// Import secretTokenKey config
+import { sign, verify } from 'jsonwebtoken';
 import { CONFIG } from "../../../config";
 
+const nodemailer = require('nodemailer');
+const Datastore = require('nedb-promises');
+const userDB = new Datastore(CONFIG.USERS_FILE);
 const router = express.Router();
 
 export class UsersRoutes {
 
-    // Sign in and save token
-    public static saveToken(req, cb: (tokenSaved: boolean|any) => void): void {
-      let token = sign(req, CONFIG.SECRET_TOKEN_KEY, {
-        expiresIn: 60 * 60 * 24 // Expire dans 24 heures
-      }, (err: Error, token: any): void => {
-        if (err) {
-          cb(false);
-        }
-        // Token success
-        cb({success:true, user: req, token: token});
-      });
-    }
-
-    // Log in route
-    public static loginRoute(req, res): void {
-      let userAuth;
-      if (!req.body.username || !req.body.password) {
-        return res.end(res.writeHead(400, "Tous les champs sont obligatoires."));
+  // Sign in and save token
+  public static saveToken(req, cb: (tokenSaved: boolean|any) => void): void {
+    let token = sign(req, CONFIG.SECRET_TOKEN_KEY, {
+      expiresIn: 60 * 60 * 24 // Expire dans 24 heures
+    }, (err: Error, token: any): void => {
+      if (err) {
+        cb(false);
       }
-      fs.readFile(CONFIG.USERS_FILE, (err, data) => {
-        if (err) {
-          return res.end(res.writeHead(500, "Une erreur lors de la récupération des utilisateurs."));
-        }
-        else {
-          let users = JSON.parse(data);
-          for (let user of users) {
-            if (req.body.username == user.username && req.body.password == user.password) {
-              userAuth = Object.assign({}, user);
-              delete userAuth.password;
-            }
-          }
+      // Token success
+      cb({success:true, user: req, token: token});
+    });
+  }
 
-          if(!userAuth) {
-            return res.end(res.writeHead(401, "Erreur d'authentification"));
+  // Get user by ID route
+  public static async getUsersByID(ids) {
+    let results = [];
+    for (let id of ids) {
+      let result = await userDB.findOne({ _id: id })
+        .then((user) => {
+          if (user) {
+            return {data: user, success: true};
+          } else {
+            return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
           }
-          else {
+        })
+        .catch((error) => {
+          return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}
+        });
+        if (result.hasOwnProperty('data')) {
+          results.push(result.data);
+        }
+    }
+    return results;
+  }
+
+  // Check Authentication and return the user
+  public static checkAuth(req, res): void {
+    if (req.headers && req.headers.authorization) {
+      var authorization = req.headers.authorization, decoded;
+      try {
+        let header = authorization.split(' ');
+        decoded = verify(header[1], CONFIG.SECRET_TOKEN_KEY);
+      } catch (e) {
+        return res.status(401).json({message: "Vous n'êtes pas autorisé à accéder.", success: false});
+      }
+      // Fetch the user by id
+      userDB.findOne({_id: decoded._id}).then(function(user) {
+        if (user) {
+          return res.json({success:true, user: user});
+        } else {
+          return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
+        }
+      })
+      .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
+    }
+    else {
+      return res.status(500).json({message: "Erreur, en-têtes manquantes ou invalides.", success: false});
+    }
+  }
+
+  // Log in route
+  public static loginRoute(req, res): void {
+    let userAuth;
+    if (!req.body.username || !req.body.password) {
+      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
+    }
+    userDB.findOne({ username: req.body.username, password: req.body.password }, { password: 0 })
+      .then((user) => {
+        if (user) {
+          let userAuth = Object.assign({}, user);
+          delete userAuth.password;
+          UsersRoutes.saveToken(userAuth, (tokenSaved: boolean|any): void => {
+            if (tokenSaved) {
+              return res.json(tokenSaved);
+            } else {
+              res.status(403).json({message: "Une erreur est survenue dans la génération du jeton d'authentification.", success: false});
+            }
+          });
+        } else {
+          return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
+        }
+      })
+      .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}));
+  }
+
+  // Sign up route
+  public static signUpRoute(req, res): void {
+    if (!req.body.username || !req.body.password) {
+      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
+    }
+    userDB.findOne({ username: req.body.username, password: req.body.password }, { password: 0 })
+      .then((user) => {
+        if (!user) {
+          return userDB.insert(req.body)
+          .then((userInserted) => {
+            let userAuth = Object.assign({}, userInserted);
+            delete userAuth.password;
             UsersRoutes.saveToken(userAuth, (tokenSaved: boolean|any): void => {
               if (tokenSaved) {
                 return res.json(tokenSaved);
               } else {
-                res.status(403).json({
-                  message: "Une erreur est survenue dans la génération du jeton d'authentification.",
-                  success: false
-                });
+                res.status(403).json({message: "Une erreur est survenue dans la génération du jeton d'authentification.", success: false});
               }
             });
-          }
+          })
+          .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
+        } else {
+          return res.status(403).json({message: "L'utilisateur existe déjà.", success: false});
         }
-      });
-    }
+      })
+      .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
+  }
 
-    // // Sign up route
-    public static signUpRoute(req, res): void {
-      let userExists;
-      //let users = []; /* récupère les utilisateurs */
-      if (!req.body.username || !req.body.password) {
-        return res.end(res.writeHead(400, "Tous les champs sont obligatoires."));
-      }
-      fs.readFile(CONFIG.USERS_FILE, (err, data) => {
-        if (err) {
-          return res.end(res.writeHead(500, "Une erreur lors de la récupération des utilisateurs."));
-        }
-        else {
-          let users = JSON.parse(data);
-          for (let user of users) {
-            if (req.body.username == user.username) {
-              userExists = user;
-            }
-          }
-          if(!userExists) {
-            let userAuth = Object.assign({}, req.body);
-            delete userAuth.password;
-            users.push(req.body);
-            let json = JSON.stringify(users);
-            fs.writeFile(CONFIG.USERS_FILE, json, 'utf8', (err) => {
-              if (err) {
-                return res.end(res.writeHead(500, "Une erreur est survenu lors de l'inscription."));
-              }
-              else {
-                UsersRoutes.saveToken(userAuth, (tokenSaved: boolean|any): void => {
-                  if (tokenSaved) {
-                    return res.json(tokenSaved);
-                  } else {
-                    res.status(403).json({
-                      message: "Une erreur est survenue dans la génération du jeton d'authentification.",
-                      success: false
-                    });
-                  }
-                });
-              }
-            });
-          } else {
-            return res.end(res.writeHead(403, "L'utilisateur existe déjà."));
-          }
-        }
-      });
+  // Get password route
+  public static getPswRoute(req, res): void {
+    let findPassword;
+    if (!req.body.email || !req.body.email) {
+      return res.status(400).json({message: "Aucun e-mail valide n'a été inséré.", success: false});
     }
-
-    public static getPswRoute(req, res): void {
-      let findPassword;
-      if (!req.body.email || !req.body.email) {
-        return res.end(res.writeHead(400, "Aucun e-mail valide n'a été inséré."));
+    const transporter = nodemailer.createTransport(CONFIG.MAILER);
+    const mailOptions = {
+      from: CONFIG.MAILER.host.user,
+      to: req.body.email,
+      subject: 'Récupération du mot de passe',
+      text: ''
+    };
+    userDB.findOne({ email: req.body.email}, { email: 1, password: 1, _id: 0 })
+    .then((user) => {
+      if (user) {
+        mailOptions.text = user.password;
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            return res.status(500).json({message: "Une erreur s'est produite lors de l'envoi du mail", success: false});
+          } else{
+            return res.json({mailID: info.response, success: true});
+          };
+        });
+      } else {
+        return res.status(401).json({message: "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré", success: false});
       }
-      const transporter = nodemailer.createTransport(CONFIG.MAILER);
-      const mailOptions = {
-        from: CONFIG.MAILER.host.user,
-        to: req.body.email,
-        subject: 'Récupération du mot de passe',
-        text: ''
-      };
-      fs.readFile(CONFIG.USERS_FILE, (err, data) => {
-        if (err) {
-          return res.end(res.writeHead(500, "Une erreur lors de la récupération des utilisateurs."));
-        }
-        else {
-          let users = JSON.parse(data);
-          for (let user of users) {
-            if (req.body.email == user.email) {
-              findPassword = user.password;
-            }
-          }
-          if(!findPassword) {
-            return res.end(res.writeHead(401, "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré"));
-          }
-          else {
-            mailOptions.text = findPassword;
-            transporter.sendMail(mailOptions, function(error, info) {
-              if (error) {
-                return res.end(res.writeHead(500, error));
-              }else{
-                return res.json({mailID: info.response});
-              };
-            });
-          }
-        }
-      });
-    }
+    })
+    .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false}));
+  }
 
 }

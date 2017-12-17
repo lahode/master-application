@@ -1,31 +1,31 @@
 <form [formGroup]="signInform">
   <div>
-    <md-form-field>
-      <input mdInput
+    <mat-form-field>
+      <input matInput
              placeholder="{{ 'LOGIN.SIGNINFORM.USERNAME' | translate }}"
              id="username"
              formControlName="username" />
-    </md-form-field>
+    </mat-form-field>
   </div>
   <div>
-    <md-form-field>
-      <input mdInput
+    <mat-form-field>
+      <input matInput
              placeholder="{{ 'LOGIN.SIGNINFORM.PASSWORD' | translate }}"
              type="password"
              id="password"
              formControlName="password" />
-    </md-form-field>
+    </mat-form-field>
   </div>
   <div>
-    <md-checkbox id="user_remember_me" name="user[remember_me]">{{ 'LOGIN.SIGNINFORM.REMEMBERME' | translate }}</md-checkbox>
+    <mat-checkbox id="user_remember_me" name="user[remember_me]">{{ 'LOGIN.SIGNINFORM.REMEMBERME' | translate }}</mat-checkbox>
   </div>
   <div class="pull-right forgot-password">
-    <button md-button (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</button>
+    <button mat-button (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</button>
   </div>
   <div>
-    <button md-raised-button
+    <button mat-raised-button
             color="primary"
             [disabled]="(loading$ | async) || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
-    <md-spinner *ngIf="(loading$ | async)"></md-spinner>
+    <mat-spinner *ngIf="(loading$ | async)"></mat-spinner>
   </div>
 </form>

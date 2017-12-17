@@ -1,20 +1,18 @@
 import { verify } from 'jsonwebtoken';
-
-// Import secretTokenKey config
 import { CONFIG } from "../config";
-
 
 // Export the authentication class
 export class Authentication {
   public static checkAuthentication(req, cb: (isAuth: boolean|any) => void): void {
     // look for the token in the incoming request:
-    let header = req.headers.authorization.split(' ');
     let token;
-    console.log(req.headers.authorization)
-    try {
-      token = JSON.parse(header[1]);
-    } catch (e) {
-      token = header[1];
+    if (req.headers.authorization) {
+      let header = req.headers.authorization.split(' ');
+      try {
+        token = JSON.parse(header[1]);
+      } catch (e) {
+        token = header[1];
+      }
     }
 
     if (token === undefined) {
@@ -40,7 +38,7 @@ export class Authentication {
         next();
       } else {
         res.status(403).json({
-          message: 'Access error: You need to authenticate.',
+          message: "Erreur d'accès, vous devez vous identifier",
           success: false
         });
       }
