@@ -6,7 +6,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { MatSelectModule, MatButtonModule, MatDialogModule } from '@angular/material';
+import { MatSelectModule, MatButtonModule, MatDialogModule, 
+         MatToolbarModule, MatMenuModule, MatIconModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* Custom modules */
@@ -66,6 +67,9 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     MatSelectModule,
     MatButtonModule,
     MatDialogModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatIconModule,
     BrowserAnimationsModule,
     AuthModule,
     AppStoreModule.forRoot(),

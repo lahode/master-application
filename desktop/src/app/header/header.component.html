@@ -1,20 +1,16 @@
-<nav class="docs-navbar-header">
-  <a mat-button class="docs-button" routerLink="/">Master application</a>
+<mat-toolbar color="primary">
   <div>
-    <ul *ngIf="isLoggedIn$ | async">
-      <li routerLinkActive = "active">
-        <a mat-button class="docs-navbar-hide-small docs-button"
-           [routerLink]="['/']">{{ 'HEADER.MENU.HOME' | translate }}</a>
-      </li>
-      <li>
-        <a mat-button class="docs-navbar-hide-small docs-button"
-           (click)="logout()">{{ 'HEADER.MENU.LOGOUT' | translate }}</a>
-      </li>
-    </ul>
+    <mat-select #langSelect (change)="setLanguage(langSelect.value)" [(ngModel)]="currentLang">
+      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</mat-option>
+    </mat-select>
   </div>
-  <div class="flex-spacer"></div>
-  <mat-select #langSelect (change)="setLanguage(langSelect.value)" [(ngModel)]="currentLang">
-    <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</mat-option>
-  </mat-select>
-</nav>
+  <div mat-button class="docs-button" routerLink="/">{{ 'APPLICATION.TITLE' | translate }}</div>
+  <button mat-icon-button [mat-menu-trigger-for]="menu" *ngIf="isLoggedIn$ | async">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-menu x-position="before" #menu="matMenu">
+  <button mat-menu-item [routerLink]="['/']" routerLinkActive = "active" [routerLinkActiveOptions]="{exact: true}">{{ 'HEADER.MENU.HOME' | translate }}</button>
+  <button mat-menu-item (click)="logout()">{{ 'HEADER.MENU.LOGOUT' | translate }}</button>
+</mat-menu>
 <!--  [selected]="lang === translate.currentLang" -->

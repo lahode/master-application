@@ -1,25 +1,7 @@
-
-.docs-navbar-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 8px 16px;
-
-  > .mat-button {
-    &:last-child {
-      margin-left: auto;
-    }
-  }
-
-  mat-select {
-    .mat-select-trigger,
-    .mat-select-value {
-      color: rgba(255, 255, 255, 1);
-    }
-  }
-
+mat-toolbar > * {
+  flex: 1 1 auto;
 }
 
-.flex-spacer {
-  flex-grow: 1;
+.mat-select {
+  max-width: 100px;
 }

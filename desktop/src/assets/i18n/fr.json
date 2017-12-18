@@ -1,4 +1,7 @@
 {
+  "APPLICATION" : {
+    "TITLE" : "Master Application"
+  },
   "HEADER": {
     "MENU": {
       "HOME" : "Accueil",
@@ -7,6 +10,7 @@
     }
   },
   "LOGIN": {
+    "WELCOME_TEXT" : "Bienvenue, veuillez-vous connecter ou créer un nouveau compte",
     "TAB": {
       "SIGNIN" : "Connexion",
       "REGISTER" : "Créer un compte",
