@@ -33,7 +33,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { AppStoreModule } from '../core/store';
-import { AuthStoreModule } from './auth/store';
 
 /**
  * Custom Http Loader for translation
@@ -69,10 +68,9 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     MatDialogModule,
     BrowserAnimationsModule,
     AuthModule,
+    AppStoreModule.forRoot(),
     RouterModule.forRoot(appRoutes, { useHash: true }),
     StoreDevtoolsModule.instrument(),
-    AppStoreModule.forRoot(),
-    AuthStoreModule.forRoot(),
   ],
   entryComponents: [
     AppErrorComponent

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
-import { AuthActions } from '../store/actions/auth.actions';
+import { AuthActions } from '../store';
 
 @Component({
   selector: 'app-password',
@@ -17,8 +17,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
-  constructor(private store: Store<any>,
-              private authActions: AuthActions) { }
+  constructor(private store: Store<any>) { }
 
   ngOnInit() {
     // Define email validation pattern
@@ -45,7 +44,7 @@ export class PasswordComponent implements OnInit, OnDestroy {
   onRequestPassword() {
     if (this.passwordForm.valid) {
       this.loading = true;
-      this.store.dispatch(<Action>this.authActions.getPassword(this.passwordForm.value));
+      this.store.dispatch(<Action>AuthActions.getPassword(this.passwordForm.value));
       this.passwordForm.reset();
     }
   }

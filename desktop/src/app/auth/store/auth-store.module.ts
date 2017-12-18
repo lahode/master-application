@@ -8,7 +8,6 @@ import { AuthEffects } from './effects/auth.effects';
 import { StorageService } from '../../../core/services/storage.service';
 
 import { AuthReducers } from './reducers';
-import { AuthActions } from './actions/auth.actions';
 import { Http, HttpModule, RequestOptions } from '@angular/http';
 import { JwtHelper, AuthHttp, AuthConfig } from 'angular2-jwt';
 
@@ -23,7 +22,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 
 export const AuthProviders = [
   AuthService,
-  AuthActions,
   AuthGuard,
   JwtHelper,
   AuthHttp,
@@ -36,10 +34,15 @@ export const AuthProviders = [
 
 @NgModule({
   imports: [
-    StoreModule.forRoot(AuthReducers),
-    EffectsModule.forRoot([AuthEffects]),
+    HttpModule,
+    StoreModule.forFeature('authCheck', AuthReducers.authCheck),
+    StoreModule.forFeature('currentUser', AuthReducers.currentUser),
+    EffectsModule.forFeature([AuthEffects]),
   ],
-  exports: [StoreModule, EffectsModule],
+  exports: [
+    StoreModule,
+    EffectsModule
+  ],
   providers: [AuthProviders]
 })
 export class AuthStoreModule {

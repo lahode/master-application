@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
 import { User } from '../user.model';
-import { AuthActions } from '../store/actions/auth.actions';
+import { AuthActions } from '../store';
 
 @Component({
   selector: 'app-register',
@@ -18,8 +18,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   @Input() returnUrl: string;
 
-  constructor(private store: Store<any>,
-              private authActions: AuthActions) { }
+  constructor(private store: Store<any>) { }
 
   ngOnInit() {
     // Define email validation pattern
@@ -57,7 +56,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.loading = true;
       const newUser = new User(this.registerForm.value.username, this.registerForm.value.password,
                             this.registerForm.value.name, this.registerForm.value.email);
-      this.store.dispatch(<Action>this.authActions.signup(newUser));
+      this.store.dispatch(<Action>AuthActions.signup(newUser));
       this.registerForm.reset();
     }
   }

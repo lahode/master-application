@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { AuthActions } from '../../../app/auth/store/actions/auth.actions';
+import { AuthActions } from '../../../app/auth/store';
 
 export interface ILoadingState extends Boolean {}
 

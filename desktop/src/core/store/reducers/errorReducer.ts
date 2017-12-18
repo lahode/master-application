@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { AppActions } from '../actions/app.actions';
-import { AuthActions } from '../../../app/auth/store/actions/auth.actions';
+import { AuthActions } from '../../../app/auth/store';
 
 export interface IErrorState extends String {}
 

@@ -11,7 +11,7 @@ export class EndpointsService {
   }
 
   getAuth() {
-    return this._apiEndPoint + '/api/authenticate';
+    return this._apiEndPoint + '/api/check-auth';
   }
 
   getLogin() {

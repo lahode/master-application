@@ -31,7 +31,7 @@ export class AuthService {
       }
 
       return this.authHttp.get(this.endpoints.getAuth())
-        .map(response => this.jwtHelper.decodeToken(jwt) /*response.json()*/ )
+        .map(response => this.jwtHelper.decodeToken(jwt))
         .catch(err => {
           this.storage.remove(STORAGE_ITEM).then(() => true);
           return Observable.throw(this.manageError(err))}

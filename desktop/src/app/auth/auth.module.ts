@@ -7,6 +7,7 @@ import { MatInputModule, MatCheckboxModule, MatButtonModule, MatTabsModule, MatP
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* Custom modules */
+import { AuthStoreModule } from './store';
 import { LoginComponent } from './login/login.component';
 import { SigninComponent } from './signin/signin.component';
 import { RegisterComponent } from './register/register.component';
@@ -33,6 +34,7 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    AuthStoreModule.forRoot()
   ],
 })
 export class AuthModule {}

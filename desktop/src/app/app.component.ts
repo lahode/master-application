@@ -22,8 +22,6 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               private route: ActivatedRoute,
               private store: Store<any>,
-              private appActions: AppActions,
-              private authActions: AuthActions,
               private dialog: MatDialog) {}
 
   ngOnInit() {
@@ -34,12 +32,12 @@ export class AppComponent implements OnInit, OnDestroy {
           width: '250px',
           data: {error: error.toString()}
         });
-        dialogRef.afterClosed().subscribe(result => this.store.dispatch(<Action>this.appActions.resetError()));
+        dialogRef.afterClosed().subscribe(result => this.store.dispatch(<Action>AppActions.resetError()));
       }
     });
 
     // Managing user auth statut
-    this.store.dispatch(this.authActions.checkAuth());
+    this.store.dispatch(<Action>AuthActions.checkAuth());
     this.storeUserSubscription = this.store.select(state => state.currentUser).subscribe(user => {
       if (user) {
         // Redirect to returnUrl page if user exist
