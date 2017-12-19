@@ -7,7 +7,7 @@ import { AuthGuard } from '../services/authguard.service';
 import { AuthEffects } from './effects/auth.effects';
 import { StorageService } from '../../../core/services/storage.service';
 
-import { AuthReducers } from './reducers';
+import { reducers } from './reducers';
 import { Http, HttpModule, RequestOptions } from '@angular/http';
 import { JwtHelper, AuthHttp, AuthConfig } from 'angular2-jwt';
 
@@ -35,8 +35,8 @@ export const AuthProviders = [
 @NgModule({
   imports: [
     HttpModule,
-    StoreModule.forFeature('authCheck', AuthReducers.authCheck),
-    StoreModule.forFeature('currentUser', AuthReducers.currentUser),
+    StoreModule.forFeature('authCheck', reducers.authCheck),
+    StoreModule.forFeature('currentUser', reducers.currentUser),
     EffectsModule.forFeature([AuthEffects]),
   ],
   exports: [

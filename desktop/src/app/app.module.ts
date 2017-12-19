@@ -3,10 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { MatSelectModule, MatButtonModule, MatDialogModule, 
+import { MatSelectModule, MatButtonModule, MatDialogModule,
          MatToolbarModule, MatMenuModule, MatIconModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -55,6 +55,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     HttpClientModule,
     TranslateModule.forRoot({
@@ -73,7 +74,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule,
     AuthModule,
     AppStoreModule.forRoot(),
-    RouterModule.forRoot(appRoutes, { useHash: true }),
+    RouterModule.forRoot(appRoutes, { useHash: false }),
     StoreDevtoolsModule.instrument(),
   ],
   entryComponents: [

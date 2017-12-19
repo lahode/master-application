@@ -8,14 +8,9 @@ import { AuthStateI, AuthRecucerStateI } from '../auth-state';
 
 declare const process: any;
 
-// const reducers: AuthRecucerStateI = {
-const reducers = {
+export const reducer:AuthRecucerStateI = {
   authCheck: fromAuthCheck.reducer,
   currentUser: fromCurrentUser.reducer,
 };
 
-const developmentReducer: ActionReducerMap<AuthStateI> = reducers;
-const productionReducer: ActionReducerMap<AuthStateI> = reducers;
-
-// export const reducer: ActionReducerMap<AppStateI> = process.env.IONIC_ENV === 'prod' ? productionReducer :  developmentReducer;
-export const AuthReducers: ActionReducerMap<AuthStateI> = developmentReducer;
+export const reducers:ActionReducerMap<AuthStateI> = reducer;

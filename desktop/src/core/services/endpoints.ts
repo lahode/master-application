@@ -10,6 +10,7 @@ export class EndpointsService {
     this._apiEndPoint = environment.apiEndpoint;
   }
 
+  // Endpoint for AuthService
   getAuth() {
     return this._apiEndPoint + '/api/check-auth';
   }

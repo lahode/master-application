@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { AppReducers } from './reducers';
+import { reducers, metaReducers } from './reducers';
 import { EndpointsService } from '../services/endpoints';
 import { StorageService } from '../services/storage.service';
 
@@ -13,7 +13,7 @@ export const AppProviders = [
 
 @NgModule({
   imports: [
-    StoreModule.forRoot(AppReducers),
+    StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([])
   ],
 })

@@ -1,4 +1,4 @@
-import { ActionReducerMap, combineReducers, ActionReducer, Action } from '@ngrx/store';
+import { MetaReducer, ActionReducerMap, combineReducers, ActionReducer, Action } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import * as fromLoading from './loadingReducer';
@@ -10,15 +10,12 @@ import { AppStateI, AppRecucerStateI } from '../app-states';
 
 declare const process: any;
 
-const reducers = {
+export const reducer:AppRecucerStateI = {
   loading: fromLoading.reducer,
   loaded: fromLoaded.reducer,
   queryParams: fromQueryParams.reducer,
   error: fromError.reducer
 };
 
-const developmentReducer: ActionReducerMap<AppStateI> = reducers;
-const productionReducer: ActionReducerMap<AppStateI> = reducers;
-
-// export const reducer: ActionReducerMap<AppStateI> = process.env.IONIC_ENV === 'prod' ? productionReducer :  developmentReducer;
-export const AppReducers: ActionReducerMap<AppStateI> = developmentReducer;
+export const reducers:ActionReducerMap<AppStateI> = reducer;
+export const metaReducers: MetaReducer<AppStateI>[] = process.env.NODE_ENV == 'development' ? [storeFreeze]: [];
