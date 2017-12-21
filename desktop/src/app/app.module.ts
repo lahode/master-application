@@ -27,6 +27,7 @@ import { LoadingComponent } from './loading/loading.component';
 /* Services */
 import { LocalDataStorageService } from './shared/localdata-storage.service';
 import { MessageService } from './message/message.service';
+import { FileService } from '../core/services/file.service';
 
 /* Store */
 import { StoreModule } from '@ngrx/store';
@@ -83,6 +84,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
   providers: [
     LocalDataStorageService,
     MessageService,
+    FileService
   ],
   bootstrap: [AppComponent]
 })

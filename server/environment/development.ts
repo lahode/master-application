@@ -7,7 +7,10 @@ export const devVariables:IEnvironment = {
   BCRYPT_ROUND: 10,
   PASSWORD_MIN_LENGHT: 6,
   JWT_EXPIRE: 86400000,
-  USERS_FILE: `${root}/data/users.json`,
+  DATABASE: {
+    USERS: `${root}/data/users.json`,
+  },
+  UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,
   MAILER: {
     host: '',

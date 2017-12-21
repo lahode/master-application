@@ -4,7 +4,7 @@ import { CONFIG } from "../../../config";
 
 const nodemailer = require('nodemailer');
 const Datastore = require('nedb-promises');
-const userDB = new Datastore(CONFIG.USERS_FILE);
+const userDB = new Datastore(CONFIG.DATABASE.USERS);
 const router = express.Router();
 
 export class UsersRoutes {

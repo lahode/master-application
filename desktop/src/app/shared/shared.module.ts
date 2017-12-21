@@ -4,9 +4,6 @@ import { GetkeyPipe } from './getkey.pipe';
 import { OrderByPipe } from './orderby.pipe';
 import { ObjtoarrayPipe } from './objtoarray.pipe';
 import { Nl2brPipe } from './nl2br.pipe';
-import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
-import { FileUploaderComponent } from './file-uploader/file-uploader.component';
-// import { FileUploaderService } from './file-uploader/file-uploader.service';
 
 @NgModule({
   imports: [
@@ -17,18 +14,13 @@ import { FileUploaderComponent } from './file-uploader/file-uploader.component';
     GetkeyPipe,
     OrderByPipe,
     ObjtoarrayPipe,
-    Nl2brPipe,
-    FileUploaderComponent
+    Nl2brPipe
   ],
   declarations: [
     GetkeyPipe,
     OrderByPipe,
     ObjtoarrayPipe,
-    Nl2brPipe,
-    FileUploaderComponent
-  ],
-  providers: [
-    // FileUploaderService,
-  ],
+    Nl2brPipe
+  ]
 })
 export class SharedModule {}

@@ -27,4 +27,8 @@ export class EndpointsService {
     return this._apiEndPoint + '/retrieve-password';
   }
 
+  fileUpload() {
+    return this._apiEndPoint + '/api/files/upload';
+  }
+
 }

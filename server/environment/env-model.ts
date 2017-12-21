@@ -4,7 +4,8 @@ export interface IEnvironment {
   BCRYPT_ROUND: number,
   PASSWORD_MIN_LENGHT: number,
   JWT_EXPIRE: number,
-  USERS_FILE: string
+  DATABASE: any,
+  UPLOAD_DIRECTORY: string;
   PORT: number,
   MAILER: any
 }
