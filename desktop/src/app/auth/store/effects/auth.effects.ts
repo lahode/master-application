@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Action } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
 import { AuthService } from '../../services/auth.service';
@@ -33,6 +34,8 @@ export class AuthEffects {
         .map<Action, any>((_result: any) => <Action>{ type: AuthActions.LOGIN_SUCCESS, payload: _result })
         // On errors dispatch LOGIN_FAILED action with result
         .catch((res: any) => Observable.of({ type: AuthActions.LOGIN_FAILED, payload: res }))
+        // Redirect to Home page
+        .do(() => this.router.navigate(['/']))
       );
 
   // Listen for the 'LOGOUT' action
@@ -43,6 +46,8 @@ export class AuthEffects {
         .map<Action, any>(() => <Action>{ type: AuthActions.LOGOUT_SUCCESS, payload: null })
         // On errors dispatch LOGOUT_FAILED action with result
         .catch((res: any) => Observable.of({ type: AuthActions.LOGOUT_FAILED, payload: res }))
+        // Redirect to Sign In page
+        .do(() => this.router.navigate(['/signin']))
       );
 
   // Listen for the 'CREATE_USER' action
@@ -54,6 +59,8 @@ export class AuthEffects {
         .map<Action, any>((_result: any) => <Action>{ type: AuthActions.CREATE_USER_SUCCESS, payload: _result })
         // On errors dispatch CREATE_USER_FAILED action with result
         .catch((res: any) => Observable.of({ type: AuthActions.CREATE_USER_FAILED, payload: res }))
+        // Redirect to Home page
+        .do(() => this.router.navigate(['/']))
       );
 
     // Listen for the 'GET_PASSWORD' action
@@ -68,8 +75,9 @@ export class AuthEffects {
         );
 
     constructor(
-      private action$: Actions,
-      private _auth: AuthService
+      private readonly action$: Actions,
+      private readonly _auth: AuthService,
+      private readonly router: Router
     ) {}
 
 }

@@ -33,7 +33,6 @@ import { FileService } from '../core/services/file.service';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-// import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { AppStoreModule } from '../core/store';
 
 /**

@@ -10,11 +10,10 @@ import { AuthActions } from '../store';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class RegisterComponent implements OnInit {
 
   private registerForm: FormGroup;
   private loading;
-  private storeErrorSubscription$;
 
   @Input() returnUrl: string;
 
@@ -40,14 +39,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       ]),
       password: new FormControl(null, Validators.required)
     });
-
-    // Disable spinner loader when complete
-    this.storeErrorSubscription$ = this.store.select(state => state.loading);
-    this.storeErrorSubscription$.subscribe(loading => {
-      if (loading) {
-        this.loading = false;
-      }
-    });
   }
 
   // Register the new user
@@ -59,10 +50,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.store.dispatch(<Action>AuthActions.signup(newUser));
       this.registerForm.reset();
     }
-  }
-
-  ngOnDestroy() {
-    //this.storeErrorSubscription$.unsubscribe();
   }
 
 }

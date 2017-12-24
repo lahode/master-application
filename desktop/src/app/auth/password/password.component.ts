@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
@@ -9,11 +9,10 @@ import { AuthActions } from '../store';
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss']
 })
-export class PasswordComponent implements OnInit, OnDestroy {
+export class PasswordComponent implements OnInit {
 
   public passwordForm: FormGroup;
   public loading;
-  private storeErrorSubscription;
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
@@ -31,13 +30,6 @@ export class PasswordComponent implements OnInit, OnDestroy {
       ]),
     });
 
-    // Managing error in app
-    this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
-      if (error) {
-        console.log('Ca ne fonctionne qu une fois, pourquoi?');
-        this.loading = false;
-      }
-    });
   }
 
   // Request a new password
@@ -47,10 +39,6 @@ export class PasswordComponent implements OnInit, OnDestroy {
       this.store.dispatch(<Action>AuthActions.getPassword(this.passwordForm.value));
       this.passwordForm.reset();
     }
-  }
-
-  ngOnDestroy() {
-    this.storeErrorSubscription.unsubscribe();
   }
 
 }

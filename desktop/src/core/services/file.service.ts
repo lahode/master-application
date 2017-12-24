@@ -20,6 +20,14 @@ export class FileService {
       );
   }
 
+  public uploadMultiple(files) {
+    return this.authHttp.post(this.endpoints.fileMultipleUpload(), files)
+      .map(response => response.json())
+      .catch(err => {
+        return Observable.throw(this.manageError(err))}
+      );
+  }
+
   // Manage back-end error
   private manageError(err) {
     if (err.ok === 0 && err.statusText.length === 0) {
