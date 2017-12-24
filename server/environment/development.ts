@@ -9,6 +9,7 @@ export const devVariables:IEnvironment = {
   JWT_EXPIRE: 86400000,
   DATABASE: {
     USERS: `${root}/data/users.json`,
+    FILES: `${root}/data/files.json`,
   },
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,

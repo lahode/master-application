@@ -17,6 +17,9 @@ export class APIRoutes {
 
       // Files
       app.post("/api/files/upload", FilesRoutes.uploadFile);
+      app.post("/api/files/multiple-upload", FilesRoutes.uploadFiles)
+      app.get("/files/view/:id", FilesRoutes.viewFile);
+
       return app;
     }
 
