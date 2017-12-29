@@ -20,7 +20,7 @@
     <mat-checkbox id="user_remember_me" name="user[remember_me]">{{ 'LOGIN.SIGNINFORM.REMEMBERME' | translate }}</mat-checkbox>
   </div>
   <div class="pull-right forgot-password">
-    <button mat-button (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</button>
+    <span mat-button (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</span>
   </div>
   <div>
     <button mat-raised-button

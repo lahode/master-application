@@ -1,9 +1,9 @@
-<h2>Roles List</h2>
+<h2>{{ 'ROLES.LIST.TITLE' | translate }}</h2>
 <div class="example-container mat-elevation-z8">
   <table>
     <thead>
-      <th>Nom</th>
-      <th>Actions</th>
+      <th>{{ 'ROLES.LIST.NAME' | translate }}</th>
+      <th>{{ 'ROLES.LIST.ACTIONS' | translate }}</th>
     </thead>
     <tbody>
       <tr *ngFor="let role of roles">
@@ -11,11 +11,11 @@
           {{ role.name }}
         </td>
         <td>
-          <span class="action" (click)="manageRole(role._id)">[ MODIFIER ]</span>
-          <span class="action" (click)="deleteRole(role._id)">[ SUPPRIMER ]</span>
+          <span class="action" (click)="manageRole(role._id)">[ {{ 'ROLES.LIST.EDIT' | translate }} ]</span>
+          <span class="action" (click)="deleteRole(role._id)">[ {{ 'ROLES.LIST.DELETE' | translate }} ]</span>
         </td>
       </tr>
     </tbody>
   </table>
-  <button mat-button (click)="manageRole()">Ajouter un rôle</button>
+  <button mat-button (click)="manageRole()">{{ 'ROLES.LIST.ADD' | translate }}</button>
 </div>

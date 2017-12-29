@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
 import { AuthActions } from '../../store';
+import { DoubleValidation } from '../../../shared/custom-validation';
 
 @Component({
   selector: 'app-register',
@@ -16,27 +17,23 @@ export class RegisterComponent implements OnInit {
 
   @Input() returnUrl: string;
 
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>,
+              private readonly _fb: FormBuilder) { }
 
   ngOnInit() {
     // Define email validation pattern
     let emailpattern = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
     // Register form
-    this.registerForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      username: new FormControl(null, [
-        Validators.required
-      ]),
-      email: new FormControl(null, [
-        Validators.required,
-        Validators.pattern(emailpattern)
-      ]),
-      emailconfirm: new FormControl(null, [
-        Validators.required,
-        Validators.pattern(emailpattern)
-      ]),
-      password: new FormControl(null, Validators.required)
+    this.registerForm = this._fb.group({
+      fistname: ['', [Validators.required, <any>Validators.minLength(2)]],
+      lastname: ['', [Validators.required, <any>Validators.minLength(2)]],
+      username: ['', [Validators.required, <any>Validators.minLength(5)]],
+      email: ['', [Validators.required, Validators.pattern(emailpattern)]],
+      emailconfirm: ['', [Validators.required, Validators.pattern(emailpattern)]],
+      password: ['', Validators.required],
+    }, {
+      validator: DoubleValidation.MatchEmail
     });
   }
 

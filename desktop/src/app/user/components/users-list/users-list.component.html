@@ -1,9 +1,9 @@
-<h2>Users List</h2>
+<h2>{{ 'USERS.LIST.TITLE' | translate }}</h2>
 <div class="example-container mat-elevation-z8">
   <table>
     <thead>
-      <th>Nom d'utilisateur</th>
-      <th>Actions</th>
+      <th>{{ 'USERS.LIST.USERNAME' | translate }}</th>
+      <th>{{ 'USERS.LIST.ACTIONS' | translate }}</th>
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
@@ -11,11 +11,11 @@
           {{ user.username }}
         </td>
         <td>
-          <span class="action" (click)="manageUser(user._id)">[ MODIFIER ]</span>
-          <span class="action" (click)="deleteUser(user._id)">[ SUPPRIMER ]</span>
+          <span class="action" (click)="manageUser(user._id)">[ {{ 'USERS.LIST.EDIT' | translate }} ]</span>
+          <span class="action" (click)="deleteUser(user._id)">[ {{ 'USERS.LIST.DELETE' | translate }} ]</span>
         </td>
       </tr>
     </tbody>
   </table>
-  <button mat-button (click)="manageUser()">Ajouter un utilisateur</button>
+  <button mat-button (click)="manageUser()">{{ 'USERS.LIST.ADD' | translate }}</button>
 </div>
