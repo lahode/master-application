@@ -7,7 +7,7 @@ export interface IRolesState extends Array<Role> {}
 
 export const initialState: IRolesState = [];
 
-export function reducer (state: IRolesState = initialState, action: any): IRolesState {
+export function reducer (state: any = initialState, action: any): IRolesState {
   switch (action.type) {
     case RoleActions.ROLELIST_LOAD: {
       return Object.assign([], action.payload)
@@ -17,7 +17,6 @@ export function reducer (state: IRolesState = initialState, action: any): IRoles
       return Object.assign([], action.payload)
     }
 
-    /*
     case RoleActions.ROLE_CREATE_SUCCESS: {
       const newState = Object.assign({}, state);
       newState.roles.push(action.payload);
@@ -39,7 +38,6 @@ export function reducer (state: IRolesState = initialState, action: any): IRoles
       }));
       return newState;
     }
-    */
 
     default: {
       return <IRolesState>state;

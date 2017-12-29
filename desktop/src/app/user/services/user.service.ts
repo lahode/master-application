@@ -59,10 +59,11 @@ export class UserService {
 
   // Manage back-end error
   private manageError(err) {
-    if (err.ok === 0 && err.statusText.length === 0) {
-      err.statusText = 'Erreur de connexion avec le back-end';
+    const error = err.json();
+    if (error.hasOwnProperty('message') && error.message) {
+      return error.message;
     }
-    return err;
+    return 'Erreur de connexion avec le serveur';
   }
 
 }

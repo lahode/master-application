@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
 import { AuthActions } from '../../store';
@@ -17,16 +17,16 @@ export class SigninComponent implements OnInit {
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
 
-  constructor(private store: Store<any>) {}
+  constructor(private readonly store: Store<any>,
+              private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     // Authenticate form
-    this.signInform = new FormGroup({
-      username: new FormControl(null, [
-        Validators.required
-      ]),
-      password: new FormControl(null, Validators.required)
+    this.signInform = this._fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
     });
+
     this.loading$ = this.store.select(state => state.loading)
   }
 

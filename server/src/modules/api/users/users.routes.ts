@@ -121,6 +121,7 @@ export class UsersRoutes {
       userDB.findOne({ _id: user._id })
       .then((checkUser) => {
         if (checkUser) {
+          user.password = checkUser.password;
           return userDB.update({ _id: user._id }, user)
             .then((updated) => {
               if (updated) {

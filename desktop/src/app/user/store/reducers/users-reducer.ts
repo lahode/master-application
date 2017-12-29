@@ -7,7 +7,7 @@ export interface IUsersState extends Array<User> {}
 
 export const initialState: IUsersState = [];
 
-export function reducer (state: IUsersState = initialState, action: any): IUsersState {
+export function reducer (state: any = initialState, action: any): IUsersState {
   switch (action.type) {
     case UserActions.USERLIST_LOAD: {
       return Object.assign([], action.payload)
@@ -17,7 +17,6 @@ export function reducer (state: IUsersState = initialState, action: any): IUsers
       return Object.assign([], action.payload)
     }
 
-    /*
     case UserActions.USER_CREATE_SUCCESS: {
       const newState = Object.assign({}, state);
       newState.users.push(action.payload);
@@ -39,7 +38,6 @@ export function reducer (state: IUsersState = initialState, action: any): IUsers
       }));
       return newState;
     }
-    */
 
     default: {
       return <IUsersState>state;

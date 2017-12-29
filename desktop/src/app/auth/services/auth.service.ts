@@ -15,7 +15,7 @@ const STORAGE_ITEM = 'jwt';
 @Injectable()
 export class AuthService {
 
-  constructor(public readonly authHttp: AuthHttp,
+  constructor(private readonly authHttp: AuthHttp,
               private readonly http: Http,
               private readonly endpoints: EndpointsService,
               private readonly storage: StorageService,
@@ -84,10 +84,11 @@ export class AuthService {
 
   // Manage back-end error
   private manageError(err) {
-    if (err.ok === 0 && err.statusText.length === 0) {
-      err.statusText = 'Erreur de connexion avec le back-end';
+    const error = err.json();
+    if (error.hasOwnProperty('message') && error.message) {
+      return error.message;
     }
-    return err;
+    return 'Erreur de connexion avec le serveur';
   }
 
 }

@@ -1,5 +1,7 @@
 import { Action } from '@ngrx/store';
 import { AuthActions } from '../../../app/auth/store';
+import { UserActions } from '../../../app/user/store';
+import { RoleActions } from '../../../app/user/store';
 
 export interface ILoadingState extends Boolean {}
 
@@ -55,6 +57,106 @@ export function reducer (state: ILoadingState = intitialState, action: any): ILo
       return false;
     }
     case AuthActions.GET_PASSWORD_FAILED: {
+      return false;
+    }
+
+    case UserActions.USERLIST_LOAD: {
+      return true;
+    }
+    case UserActions.USERLIST_LOAD_SUCCESS: {
+      return false;
+    }
+    case UserActions.USERLIST_LOAD_FAILED: {
+      return false;
+    }
+
+    case UserActions.USER_LOAD: {
+      return true;
+    }
+    case UserActions.USER_LOAD_SUCCESS: {
+      return false;
+    }
+    case UserActions.USER_LOAD_FAILED: {
+      return false;
+    }
+
+    case UserActions.USER_CREATE: {
+      return true;
+    }
+    case UserActions.USER_CREATE_SUCCESS: {
+      return false;
+    }
+    case UserActions.USER_CREATE_FAILED: {
+      return false;
+    }
+
+    case UserActions.USER_UPDATE: {
+      return true;
+    }
+    case UserActions.USER_UPDATE_SUCCESS: {
+      return false;
+    }
+    case UserActions.USER_UPDATE_FAILED: {
+      return false;
+    }
+
+    case UserActions.USER_REMOVE: {
+      return true;
+    }
+    case UserActions.USER_REMOVE_SUCCESS: {
+      return false;
+    }
+    case UserActions.USER_REMOVE_FAILED: {
+      return false;
+    }
+
+    case RoleActions.ROLELIST_LOAD: {
+      return true;
+    }
+    case RoleActions.ROLELIST_LOAD_SUCCESS: {
+      return false;
+    }
+    case RoleActions.ROLELIST_LOAD_FAILED: {
+      return false;
+    }
+
+    case RoleActions.ROLE_LOAD: {
+      return true;
+    }
+    case RoleActions.ROLE_LOAD_SUCCESS: {
+      return false;
+    }
+    case RoleActions.ROLE_LOAD_FAILED: {
+      return false;
+    }
+
+    case RoleActions.ROLE_CREATE: {
+      return true;
+    }
+    case RoleActions.ROLE_CREATE_SUCCESS: {
+      return false;
+    }
+    case RoleActions.ROLE_CREATE_FAILED: {
+      return false;
+    }
+
+    case RoleActions.ROLE_UPDATE: {
+      return true;
+    }
+    case RoleActions.ROLE_UPDATE_SUCCESS: {
+      return false;
+    }
+    case RoleActions.ROLE_UPDATE_FAILED: {
+      return false;
+    }
+
+    case RoleActions.ROLE_REMOVE: {
+      return true;
+    }
+    case RoleActions.ROLE_REMOVE_SUCCESS: {
+      return false;
+    }
+    case RoleActions.ROLE_REMOVE_FAILED: {
       return false;
     }
 
