@@ -17,7 +17,7 @@ export class SigninComponent implements OnInit {
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
 
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>) {}
 
   ngOnInit() {
     // Authenticate form

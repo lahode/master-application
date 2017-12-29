@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Action } from '@ngrx/store';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
 import { AuthService } from '../../services/auth.service';
@@ -35,7 +35,10 @@ export class AuthEffects {
         // On errors dispatch LOGIN_FAILED action with result
         .catch((res: any) => Observable.of({ type: AuthActions.LOGIN_FAILED, payload: res }))
         // Redirect to Home page
-        .do(() => this.router.navigate(['/']))
+        .do(() => {
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '';
+          this.router.navigate([`/${returnUrl}`]);
+        })
       );
 
   // Listen for the 'LOGOUT' action
@@ -60,7 +63,10 @@ export class AuthEffects {
         // On errors dispatch CREATE_USER_FAILED action with result
         .catch((res: any) => Observable.of({ type: AuthActions.CREATE_USER_FAILED, payload: res }))
         // Redirect to Home page
-        .do(() => this.router.navigate(['/']))
+        .do(() => {
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '';
+          this.router.navigate([`/${returnUrl}`]);
+        })
       );
 
     // Listen for the 'GET_PASSWORD' action
@@ -77,7 +83,8 @@ export class AuthEffects {
     constructor(
       private readonly action$: Actions,
       private readonly _auth: AuthService,
-      private readonly router: Router
+      private readonly router: Router,
+      private route: ActivatedRoute
     ) {}
 
 }

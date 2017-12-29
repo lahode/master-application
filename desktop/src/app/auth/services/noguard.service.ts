@@ -5,27 +5,23 @@ import { Store, Action } from '@ngrx/store';
 import { AuthActions } from '../store/actions/auth.actions';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class NoGuard implements CanActivate {
 
   constructor(private readonly router: Router,
               private readonly store: Store<any>) {}
 
     canActivate(route: ActivatedRouteSnapshot,
                 routerState: RouterStateSnapshot): Observable<boolean> {
-      // Manage redirect link
-      const path = routerState.url.indexOf('?') > 0 ? routerState.url.substring(0, routerState.url.indexOf('?')).slice(1)
-                   : routerState.url.slice(1);
-      const queryParams = path.length > 0 ? { queryParams: { returnUrl: path }} : {};
       // Dispatch check auth action
       this.store.dispatch(<Action>AuthActions.checkAuth());
       // Check Auth on store select
       return this.store.select(state => state)
         .filter((state) => !state.loading)
         .map((state) => {
-          if (state.currentUser !== null) {
+          if (state.currentUser === null) {
             return true;
           }
-          this.router.navigate(['/signin'], queryParams);
+          this.router.navigate(['/']);
           return false;
         }).take(1);
   }
