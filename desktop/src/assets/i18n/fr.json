@@ -11,6 +11,15 @@
     }
   },
   "USERS": {
+    "TAB" : "Utilisateurs",
+    "LIST": {
+      "TITLE" : "Liste des utilisateurs",
+      "USERNAME" : "Nom d'utilisateur",
+      "ACTIONS" : "Actions",
+      "EDIT" : "MODIFIER",
+      "DELETE" : "SUPPRIMER",
+      "ADD" : "Ajouter un utilisateur"
+    },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Modifier l'utilisateur",
       "PAGETITLE_ADD" : "Créer un nouvel utilisateur",
@@ -27,6 +36,15 @@
     }
   },
   "ROLES": {
+    "TAB" : "Rôles",
+    "LIST": {
+      "TITLE" : "Liste des rôles",
+      "NAME" : "Nom",
+      "ACTIONS" : "Actions",
+      "EDIT" : "MODIFIER",
+      "DELETE" : "SUPPRIMER",
+      "ADD" : "Ajouter un rôle"
+    },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Modifier le rôle",
       "PAGETITLE_ADD" : "Créer un nouveau rôle",
@@ -52,7 +70,8 @@
       "SUBMIT" : "Se connecter"
     },
     "REGISTERFORM" : {
-      "NAME" : "Nom",
+      "FIRSTNAME" : "Prénom",
+      "LASTNAME" : "Nom",
       "USERNAME" : "Nom d'utilisateur",
       "EMAIL" : "E-mail",
       "EMAILCONFIRM" : "E-mail de confirmation",

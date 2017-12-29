@@ -11,6 +11,15 @@
     }
   },
   "USERS": {
+    "TAB" : "Users",
+    "LIST": {
+      "TITLE" : "Users List",
+      "USERNAME" : "Username",
+      "ACTIONS" : "Actions",
+      "EDIT" : "EDIT",
+      "DELETE" : "DELETE",
+      "ADD" : "Add a user"
+    },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Edit user",
       "PAGETITLE_ADD" : "Add user",
@@ -27,6 +36,15 @@
     }
   },
   "ROLES": {
+    "TAB" : "Roles",
+    "LIST": {
+      "TITLE" : "Roles List",
+      "NAME" : "Name",
+      "ACTIONS" : "Actions",
+      "EDIT" : "EDIT",
+      "DELETE" : "DELETE",
+      "ADD" : "Add a role"
+    },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Edit role",
       "PAGETITLE_ADD" : "Add role",
@@ -52,7 +70,8 @@
       "SUBMIT" : "Sign in"
     },
     "REGISTERFORM" : {
-      "NAME" : "Name",
+      "FIRSTNAME" : "First name",
+      "LASTNAME" : "Last name",
       "USERNAME" : "Username",
       "EMAIL" : "Email",
       "EMAILCONFIRM" : "Email confirmation",
