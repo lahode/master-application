@@ -9,6 +9,7 @@ const Datastore = require('nedb-promises');
 const fileDB = new Datastore(CONFIG.DATABASE.FILES);
 const router = express.Router();
 const upload = multer({dest: CONFIG.UPLOAD_DIRECTORY}).single('file');
+const uploads = multer({dest: CONFIG.UPLOAD_DIRECTORY}).array('files');
 
 export class FilesRoutes {
 
