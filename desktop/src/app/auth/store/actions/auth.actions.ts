@@ -51,19 +51,19 @@ export const AuthActions = {
       type: AuthActions.LOGOUT
     };
   },
-  
+
   signup(_credentials)  {
     return <Action>{
       type: AuthActions.CREATE_USER,
       payload: _credentials
     };
   },
-  
+
   getPassword(_credentials)  {
     return <Action>{
       type: AuthActions.GET_PASSWORD,
       payload: _credentials
     };
   }
-  
+
 }

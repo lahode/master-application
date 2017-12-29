@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AppActions } from '../core/store';
 import { MessageService } from './message/message.service';
-import { User } from './auth/user.model';
+import { User } from './user/models/user';
 
 @Component({
   selector: 'app-root',

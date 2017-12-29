@@ -16,20 +16,12 @@ export class FileService {
     return this.authHttp.post(this.endpoints.fileUpload(), file)
       .map(response => response.json())
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
-      );
-  }
-
-  public uploadMultiple(files) {
-    return this.authHttp.post(this.endpoints.fileMultipleUpload(), files)
-      .map(response => response.json())
-      .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
   // Manage back-end error
-  private manageError(err) {
+  private _manageError(err) {
     if (err.ok === 0 && err.statusText.length === 0) {
       err.statusText = 'Erreur de connexion avec le back-end';
     }

@@ -1,0 +1,27 @@
+<div *ngIf="data; then editFormTitle; else addFormTitle"></div>
+<ng-template #editFormTitle><h2 mat-dialog-title>{{ 'ROLES.EDIT.PAGETITLE_EDIT' | translate }}</h2></ng-template>
+<ng-template #addFormTitle><h2 mat-dialog-title>{{ 'ROLES.EDIT.PAGETITLE_ADD' | translate }}</h2></ng-template>
+<div mat-dialog-content>
+  <form novalidate [formGroup]="editRoleForm">
+    <fieldset>
+      <div class="input-field col s12">
+        <label>{{ 'ROLES.EDIT.NAME' | translate }}</label>
+        <input type="text"
+               class="form-control"
+               formControlName="name">
+        <small *ngIf="!editRoleForm.controls.name.valid">{{ 'ROLES.EDIT.NAME' | translate }}</small>
+      </div>
+
+      <div *ngFor="let perm of editRoleForm.controls.permissions.controls; let i=index">
+        <br />
+        <mat-checkbox [formControl]="perm">{{ permsOptions[i] }}</mat-checkbox>
+      </div>
+
+    </fieldset>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()" tabindex="2">{{ 'ROLES.EDIT.CANCEL' | translate }}</button>
+  <button mat-button (click)="save()" tabindex="2" [disabled]="!editRoleForm.valid">{{ 'ROLES.EDIT.SAVE' | translate }}</button>
+</div>
+{{ editRoleForm.value | json }}

@@ -11,6 +11,7 @@
 </mat-toolbar>
 <mat-menu x-position="before" #menu="matMenu">
   <button mat-menu-item [routerLink]="['/']" routerLinkActive = "active" [routerLinkActiveOptions]="{exact: true}">{{ 'HEADER.MENU.HOME' | translate }}</button>
+  <button mat-menu-item [routerLink]="['/users']">{{ 'HEADER.MENU.USERS' | translate }}</button>
   <button mat-menu-item (click)="logout()">{{ 'HEADER.MENU.LOGOUT' | translate }}</button>
 </mat-menu>
 <!--  [selected]="lang === translate.currentLang" -->

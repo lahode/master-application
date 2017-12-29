@@ -37,6 +37,12 @@ export class Server {
 
   // Configure middleware
   private middleware() {
+    // Set cors Options
+    const corsOptions = {
+      origin: CONFIG.FRONTEND,
+      credentials: true,
+    }
+
     this.app
       // use bodyParser middleware to decode json parameters
       .use(bodyParser.json())
@@ -48,7 +54,7 @@ export class Server {
       // use morgan to log requests to the console
       .use(morgan('dev'))
       // cors domaine origin
-      .use(cors())
+      .use(cors(corsOptions))
   }
 
   // Default server route

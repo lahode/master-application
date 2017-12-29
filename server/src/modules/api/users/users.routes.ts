@@ -9,19 +9,6 @@ const router = express.Router();
 
 export class UsersRoutes {
 
-  // Sign in and save token
-  public static saveToken(req, cb: (tokenSaved: boolean|any) => void): void {
-    let token = sign(req, CONFIG.SECRET_TOKEN_KEY, {
-      expiresIn: 60 * 60 * 24 // Expire dans 24 heures
-    }, (err: Error, token: any): void => {
-      if (err) {
-        cb(false);
-      }
-      // Token success
-      cb({success:true, user: req, token: token});
-    });
-  }
-
   // Get user by ID route
   public static async getUsersByID(ids) {
     let results = [];
@@ -44,113 +31,136 @@ export class UsersRoutes {
     return results;
   }
 
-  // Check Authentication and return the user
-  public static checkAuth(req, res): void {
-    if (req.headers && req.headers.authorization) {
-      var authorization = req.headers.authorization, decoded;
-      try {
-        let header = authorization.split(' ');
-        decoded = verify(header[1], CONFIG.SECRET_TOKEN_KEY);
-      } catch (e) {
-        return res.status(401).json({message: "Vous n'êtes pas autorisé à accéder.", success: false});
-      }
-      // Fetch the user by id
-      userDB.findOne({_id: decoded._id}).then(function(user) {
-        if (user) {
-          return res.json({success:true, user: user});
-        } else {
-          return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
-        }
-      })
-      .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
+  // Get user by ID route
+  public static get(req, res) {
+    if (!req.params.id) {
+      return res.status(400).json({message: "Aucun ID n'a été trouvé dans la requête.", success: false});
     }
-    else {
-      return res.status(500).json({message: "Erreur, en-têtes manquantes ou invalides.", success: false});
-    }
-  }
-
-  // Log in route
-  public static loginRoute(req, res): void {
-    let userAuth;
-    if (!req.body.username || !req.body.password) {
-      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
-    }
-    userDB.findOne({ username: req.body.username, password: req.body.password }, { password: 0 })
+    // Find a user by it's ID
+    userDB.findOne({ _id: req.params.id })
       .then((user) => {
-        if (user) {
-          let userAuth = Object.assign({}, user);
-          delete userAuth.password;
-          UsersRoutes.saveToken(userAuth, (tokenSaved: boolean|any): void => {
-            if (tokenSaved) {
-              return res.json(tokenSaved);
-            } else {
-              res.status(403).json({message: "Une erreur est survenue dans la génération du jeton d'authentification.", success: false});
-            }
-          });
-        } else {
-          return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
-        }
+        return res.json({user: user, success: true});
       })
       .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}));
   }
 
-  // Sign up route
-  public static signUpRoute(req, res): void {
-    if (!req.body.username || !req.body.password) {
-      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
-    }
-    userDB.findOne({ username: req.body.username, password: req.body.password }, { password: 0 })
-      .then((user) => {
-        if (!user) {
-          return userDB.insert(req.body)
-          .then((userInserted) => {
-            let userAuth = Object.assign({}, userInserted);
-            delete userAuth.password;
-            UsersRoutes.saveToken(userAuth, (tokenSaved: boolean|any): void => {
-              if (tokenSaved) {
-                return res.json(tokenSaved);
-              } else {
-                res.status(403).json({message: "Une erreur est survenue dans la génération du jeton d'authentification.", success: false});
-              }
-            });
-          })
-          .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
-        } else {
-          return res.status(403).json({message: "L'utilisateur existe déjà.", success: false});
-        }
-      })
-      .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
-  }
-
-  // Get password route
-  public static getPswRoute(req, res): void {
-    let findPassword;
-    if (!req.body.email || !req.body.email) {
-      return res.status(400).json({message: "Aucun e-mail valide n'a été inséré.", success: false});
-    }
-    const transporter = nodemailer.createTransport(CONFIG.MAILER);
-    const mailOptions = {
-      from: CONFIG.MAILER.host.user,
-      to: req.body.email,
-      subject: 'Récupération du mot de passe',
-      text: ''
-    };
-    userDB.findOne({ email: req.body.email}, { email: 1, password: 1, _id: 0 })
-    .then((user) => {
-      if (user) {
-        mailOptions.text = user.password;
-        transporter.sendMail(mailOptions, function(error, info) {
-          if (error) {
-            return res.status(500).json({message: "Une erreur s'est produite lors de l'envoi du mail", success: false});
-          } else{
-            return res.json({mailID: info.response, success: true});
-          };
+  // Get all users route
+  public static list(req, res): void {
+    // Find all users
+    userDB.find({}, {username: 1, active: 1})
+    .sort({title: 1})
+    .then((users) => {
+      if (users) {
+        let results = [];
+        // Loop on each users and limit of "from" and "to" parameters have been set
+        users.map((users, index) => {
+          if (req.params.from && req.params.to) {
+            if (index >= parseInt(req.params.from) && index <= parseInt(req.params.to)) {
+              results.push(users);
+            }
+          }
+          else {
+            results.push(users);
+          }
         });
+        return res.json({users: results, total: users.length, success: true});
       } else {
-        return res.status(401).json({message: "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré", success: false});
+        return res.status(404).json({message: "Aucun utilisateur n'a été trouvée.", success: false});
       }
     })
-    .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false}));
+    .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération des utilisateurs.", success: false}));
+  }
+
+  // Create user route
+  public static create(req, res): void {
+    if (!req.body.username) {
+      return res.status(400).json({message: "Un utilisateur doit avoir au moins un nom d'utilisateur.", success: false});
+    }
+    let user = Object.assign({}, req.body);
+
+    // Check if ID exists
+    if (!user._id) {
+      if (typeof user.owner !== 'string') {
+        user.owner = user.owner._id;
+      }
+      user.created = new Date().toISOString();
+      user.updated = new Date().toISOString();
+      user.active = true;
+      return userDB.insert(user)
+        .then((inserted) => {
+          if (inserted) {
+            return res.json({user: inserted, success: true});
+          }
+          return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de l'utilisateur", success: false});
+        })
+        .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
+    }
+    else {
+      return res.status(500).json({message: "Impossible d'insérer cet utilisateur, l'utilisateur existe déjà.", success: false});
+    }
+
+  }
+
+  // Save user route
+  public static update(req, res): void {
+    if (!req.body.username) {
+      return res.status(400).json({message: "Un utilisateur doit avoir au moins un nom d'utilisateur.", success: false});
+    }
+    let user = Object.assign({}, req.body);
+
+    // Manage the update
+    if (user._id) {
+      if (user.owner) {
+        if (typeof user.owner !== 'string') {
+          user.owner = user.owner._id;
+        }
+      } else {
+        user.owner = user._id;
+      }
+      user.updated = new Date().toISOString();
+      userDB.findOne({ _id: user._id })
+      .then((checkUser) => {
+        if (checkUser) {
+          return userDB.update({ _id: user._id }, user)
+            .then((updated) => {
+              if (updated) {
+                return res.json({user: user, success: true});
+              }
+              return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de l'utilisateur", success: false});
+            })
+            .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", success: false}));
+        } else {
+          return res.status(404).json({message: "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.", success: false});
+        }
+      });
+    }
+    else {
+      return res.status(500).json({message: "Impossible de modifier cet utilisateur, l'utilisateur n'a pas d'identifiant.", success: false});
+    }
+
+  }
+
+  // Delete user route
+  public static remove(req, res): void {
+    if (!req.params.id) {
+      return res.status(400).json({message: "Aucun ID n'a été trouvé dans la requête.", success: false});
+    }
+    userDB.findOne({ _id: req.params.id })
+    .then((checkUser) => {
+      if (checkUser) {
+        return userDB.remove({ _id: req.params.id })
+          .then((deleted) => {
+            if (!deleted) {
+              return res.status(404).json({message: "Aucun utilisateur n'a été trouvée.", success: false});
+            } else {
+              return res.json({deleted: req.params.id, success: true});
+            }
+          })
+          .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la suppression de l'utilisateur.", success: false}));
+      } else {
+        return res.status(404).json({message: "Impossible de supprimer cet utilisateur, aucun utilisateur n'a été trouvé.", success: false});
+      }
+    });
   }
 
 }

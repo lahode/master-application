@@ -7,6 +7,7 @@ export const intitialState: ILoadedState = false;
 
 export function reducer (state: ILoadedState = intitialState, action: any): ILoadedState {
   switch (action.type) {
+
     case AuthActions.CHECK_AUTH_SUCCESS: {
       return true;
     }
@@ -57,5 +58,6 @@ export function reducer (state: ILoadedState = intitialState, action: any): ILoa
     default: {
       return <ILoadedState>state;
     }
+
   }
 }

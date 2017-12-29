@@ -1,0 +1,21 @@
+<h2>Roles List</h2>
+<div class="example-container mat-elevation-z8">
+  <table>
+    <thead>
+      <th>Nom</th>
+      <th>Actions</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let role of roles">
+        <td>
+          {{ role.name }}
+        </td>
+        <td>
+          <span class="action" (click)="manageRole(role._id)">[ MODIFIER ]</span>
+          <span class="action" (click)="deleteRole(role._id)">[ SUPPRIMER ]</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button mat-button (click)="manageRole()">Ajouter un rôle</button>
+</div>

@@ -8,9 +8,9 @@ import { AuthStateI, AuthRecucerStateI } from '../auth-state';
 
 declare const process: any;
 
-export const reducer:AuthRecucerStateI = {
+export const reducer: AuthRecucerStateI = {
   authCheck: fromAuthCheck.reducer,
-  currentUser: fromCurrentUser.reducer,
+  currentUser: fromCurrentUser.reducer
 };
 
-export const reducers:ActionReducerMap<AuthStateI> = reducer;
+export const reducers: ActionReducerMap<AuthStateI> = reducer;

@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
-import { User } from '../user.model';
-import { AuthActions } from '../store';
+import { AuthActions } from '../../store';
 
 @Component({
   selector: 'app-register',
@@ -45,9 +44,7 @@ export class RegisterComponent implements OnInit {
   onRegister() {
     if (this.registerForm.valid) {
       this.loading = true;
-      const newUser = new User(this.registerForm.value.username, this.registerForm.value.password,
-                            this.registerForm.value.name, this.registerForm.value.email);
-      this.store.dispatch(<Action>AuthActions.signup(newUser));
+      this.store.dispatch(<Action>AuthActions.signup(this.registerForm.value));
       this.registerForm.reset();
     }
   }

@@ -1,9 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-/* import { AuthService } from "../auth.service"; */
-import { MessageService } from '../../message/message.service';
-
 @Component({
   selector: 'app-confirmation',
   templateUrl: './confirmation.component.html',
@@ -16,8 +13,7 @@ export class ConfirmationComponent implements OnInit {
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
-  constructor(/* private authService: AuthService,*/
-              private messageService: MessageService) { }
+  constructor() { }
 
   ngOnInit() {
     // Define email validation pattern

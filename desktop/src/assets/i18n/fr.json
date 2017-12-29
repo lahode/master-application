@@ -5,8 +5,35 @@
   "HEADER": {
     "MENU": {
       "HOME" : "Accueil",
+      "USERS" : "Gestion utilisateur",
       "LOGOUT" : "Se déconnecter",
       "SEARCH" : "Recherche"
+    }
+  },
+  "USERS": {
+    "EDIT" : {
+      "PAGETITLE_EDIT" : "Modifier l'utilisateur",
+      "PAGETITLE_ADD" : "Créer un nouvel utilisateur",
+      "USERNAME" : "Nom d'utilisateur",
+      "USERNAME_VALID" : "Insérer un nom d'utilisateur au minimum avec 5 caractères.",
+      "FIRSTNAME" : "Prénom",
+      "FIRSTNAME_VALID" : "Insérer un prénom au minimum avec 2 caractères.",
+      "LASTNAME" : "Nom",
+      "LASTNAME_VALID" : "Insérer un nom au minimum avec 2 caractères.",
+      "EMAIL" : "E-mail",
+      "EMAIL_VALID" : "Insérer un e-mail valide.",
+      "CANCEL" : "Annuler",
+      "SAVE" : "Sauver"
+    }
+  },
+  "ROLES": {
+    "EDIT" : {
+      "PAGETITLE_EDIT" : "Modifier le rôle",
+      "PAGETITLE_ADD" : "Créer un nouveau rôle",
+      "NAME" : "Nom",
+      "NAME_VALID" : "Insérer un nom au minimum avec 5 caractères.",
+      "CANCEL" : "Annuler",
+      "SAVE" : "Sauver"
     }
   },
   "LOGIN": {

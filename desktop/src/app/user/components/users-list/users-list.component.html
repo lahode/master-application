@@ -1,0 +1,21 @@
+<h2>Users List</h2>
+<div class="example-container mat-elevation-z8">
+  <table>
+    <thead>
+      <th>Nom d'utilisateur</th>
+      <th>Actions</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>
+          {{ user.username }}
+        </td>
+        <td>
+          <span class="action" (click)="manageUser(user._id)">[ MODIFIER ]</span>
+          <span class="action" (click)="deleteUser(user._id)">[ SUPPRIMER ]</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button mat-button (click)="manageUser()">Ajouter un utilisateur</button>
+</div>

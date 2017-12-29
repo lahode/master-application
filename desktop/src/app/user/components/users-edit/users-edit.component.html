@@ -1,0 +1,51 @@
+<div *ngIf="data; then editFormTitle; else addFormTitle"></div>
+<ng-template #editFormTitle><h2 mat-dialog-title>{{ 'USERS.EDIT.PAGETITLE_EDIT' | translate }}</h2></ng-template>
+<ng-template #addFormTitle><h2 mat-dialog-title>{{ 'USERS.EDIT.PAGETITLE_ADD' | translate }}</h2></ng-template>
+<div mat-dialog-content>
+  <form novalidate [formGroup]="editUserForm">
+    <fieldset>
+      <div class="input-field col s12">
+        <label>{{ 'USERS.EDIT.USERNAME' | translate }}</label>
+        <input type="text"
+               class="form-control"
+               formControlName="username">
+        <small *ngIf="!editUserForm.controls.username.valid">{{ 'USERS.EDIT.USERNAME_VALID' | translate }}</small>
+      </div>
+
+      <div class="input-field col s12">
+        <label>{{ 'USERS.EDIT.FIRSTNAME' | translate }}</label>
+        <input type="text"
+               class="form-control"
+               formControlName="firstname">
+        <small *ngIf="!editUserForm.controls.firstname.valid">{{ 'USERS.EDIT.FIRSTNAME_VALID' | translate }}</small>
+      </div>
+
+      <div class="input-field col s12">
+        <label>{{ 'USERS.EDIT.LASTNAME' | translate }}</label>
+        <input type="text"
+               class="form-control"
+               formControlName="lastname">
+        <small *ngIf="!editUserForm.controls.lastname.valid">{{ 'USERS.EDIT.LASTNAME_VALID' | translate }}</small>
+      </div>
+
+      <div class="input-field col s12">
+        <label>{{ 'USERS.EDIT.EMAIL' | translate }}</label>
+        <input type="text"
+               class="form-control"
+               formControlName="email">
+        <small *ngIf="!editUserForm.controls.email.valid">{{ 'USERS.EDIT.EMAIL_VALID' | translate }}</small>
+      </div>
+
+      <div *ngFor="let role of editUserForm.controls.roles.controls; let i=index">
+        <br />
+        <mat-checkbox [formControl]="role">{{ rolesOptions[i].name }}</mat-checkbox>
+      </div>
+
+    </fieldset>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()" tabindex="2">{{ 'USERS.EDIT.CANCEL' | translate }}</button>
+  <button mat-button (click)="save()" tabindex="2" [disabled]="!editUserForm.valid">{{ 'USERS.EDIT.SAVE' | translate }}</button>
+</div>
+{{ editUserForm.value | json }}

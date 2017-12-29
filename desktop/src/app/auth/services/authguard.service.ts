@@ -11,7 +11,10 @@ export class AuthGuard implements CanActivate {
               private readonly store: Store<any>) {}
 
     canActivate(route: ActivatedRouteSnapshot,
-                state: RouterStateSnapshot): Observable<boolean> {
+                routerState: RouterStateSnapshot): Observable<boolean> {
+      const path = routerState.url.substring(0, routerState.url.indexOf('?'));
+      const queryParams = Object.keys(routerState.root.queryParams).length > 0 ? { queryParams: routerState.root.queryParams }
+       : (path ? { queryParams: { returnUrl: path }} : {}) ;
       this.store.dispatch(<Action>AuthActions.checkAuth());
       return this.store.select(state => state)
         .filter((state) => !state.loading)
@@ -19,7 +22,7 @@ export class AuthGuard implements CanActivate {
           if (state.currentUser !== null) {
             return true;
           }
-          this.router.navigate(['/signin'], { queryParams: { returnUrl: state.url }});
+          this.router.navigate(['/signin'], queryParams);
           return false;
         }).take(1);
   }

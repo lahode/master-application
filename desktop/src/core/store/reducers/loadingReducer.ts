@@ -7,6 +7,7 @@ export const intitialState: ILoadingState = false;
 
 export function reducer (state: ILoadingState = intitialState, action: any): ILoadingState {
   switch (action.type) {
+
     case AuthActions.CHECK_AUTH: {
       return true;
     }
@@ -60,5 +61,6 @@ export function reducer (state: ILoadingState = intitialState, action: any): ILo
     default: {
       return <ILoadingState>state;
     }
+
   }
 }

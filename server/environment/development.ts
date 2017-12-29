@@ -9,7 +9,10 @@ export const devVariables:IEnvironment = {
   JWT_EXPIRE: 86400000,
   DATABASE: {
     USERS: `${root}/data/users.json`,
+    ROLES: `${root}/data/roles.json`,
+    FILES: `${root}/data/files.json`,
   },
+  FRONTEND: 'http://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,
   MAILER: {

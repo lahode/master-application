@@ -3,16 +3,17 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatInputModule, MatCheckboxModule, MatButtonModule, MatTabsModule, MatProgressSpinnerModule, MatCardModule } from '@angular/material';
+import { MatInputModule, MatCheckboxModule, MatButtonModule,
+         MatTabsModule, MatProgressSpinnerModule, MatCardModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* Custom modules */
 import { AuthStoreModule } from './store';
-import { LoginComponent } from './login/login.component';
-import { SigninComponent } from './signin/signin.component';
-import { RegisterComponent } from './register/register.component';
-import { PasswordComponent } from './password/password.component';
-import { ConfirmationComponent } from './confirmation/confirmation.component';
+import { LoginComponent } from './components/login/login.component';
+import { SigninComponent } from './components/signin/signin.component';
+import { RegisterComponent } from './components/register/register.component';
+import { PasswordComponent } from './components/password/password.component';
+import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 
 @NgModule({
   declarations: [

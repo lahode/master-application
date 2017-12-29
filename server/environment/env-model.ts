@@ -5,6 +5,7 @@ export interface IEnvironment {
   PASSWORD_MIN_LENGHT: number,
   JWT_EXPIRE: number,
   DATABASE: any,
+  FRONTEND: string,
   UPLOAD_DIRECTORY: string;
   PORT: number,
   MAILER: any

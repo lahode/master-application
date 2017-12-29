@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
 
-import { AuthActions } from '../store';
+import { AuthActions } from '../../store';
 
 @Component({
   selector: 'app-password',

@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* Custom modules */
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 /* Routing */
 import { RouterModule } from '@angular/router';
@@ -27,7 +28,6 @@ import { LoadingComponent } from './loading/loading.component';
 /* Services */
 import { LocalDataStorageService } from './shared/localdata-storage.service';
 import { MessageService } from './message/message.service';
-import { FileService } from '../core/services/file.service';
 
 /* Store */
 import { StoreModule } from '@ngrx/store';
@@ -73,6 +73,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     MatIconModule,
     BrowserAnimationsModule,
     AuthModule,
+    UserModule,
     AppStoreModule.forRoot(),
     RouterModule.forRoot(appRoutes, { useHash: false }),
     StoreDevtoolsModule.instrument(),
@@ -82,8 +83,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
   ],
   providers: [
     LocalDataStorageService,
-    MessageService,
-    FileService
+    MessageService
   ],
   bootstrap: [AppComponent]
 })
