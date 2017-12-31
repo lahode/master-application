@@ -10,6 +10,9 @@ export const intitialState: ILoadedState = false;
 export function reducer (state: ILoadedState = intitialState, action: any): ILoadedState {
   switch (action.type) {
 
+    case AuthActions.CHECK_AUTH: {
+      return false;
+    }
     case AuthActions.CHECK_AUTH_SUCCESS: {
       return true;
     }
@@ -17,6 +20,16 @@ export function reducer (state: ILoadedState = intitialState, action: any): ILoa
       return false;
     }
     case AuthActions.CHECK_AUTH_NO_USER: {
+      return false;
+    }
+
+    case AuthActions.CHECK_PERMISSIONS: {
+      return false;
+    }
+    case AuthActions.CHECK_PERMISSIONS_SUCCESS: {
+      return true;
+    }
+    case AuthActions.CHECK_PERMISSIONS_FAILED: {
       return false;
     }
 

@@ -17,6 +17,7 @@ export class APIRoutes {
       app.post("/retrieve-password", AuthRoutes.getPswRoute);
       app.use("/api", Authentication.authenticatedRoute);
       app.get("/api/check-auth", AuthRoutes.checkAuth);
+      app.post("/api/check-permissions", RolesRoutes.checkPermissions);
 
       // Permission
       app.use("/api", Permissions.permissionOnRoute);

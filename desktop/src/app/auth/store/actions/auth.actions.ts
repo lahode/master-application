@@ -18,6 +18,10 @@ export const AuthActions = {
   CHECK_AUTH_FAILED : 'CHECK_AUTH_FAILED',
   CHECK_AUTH_NO_USER : 'CHECK_AUTH_NO_USER',
 
+  CHECK_PERMISSIONS : 'CHECK_PERMISSIONS',
+  CHECK_PERMISSIONS_SUCCESS : 'CHECK_PERMISSIONS_SUCCESS',
+  CHECK_PERMISSIONS_FAILED : 'CHECK_PERMISSIONS_FAILED',
+
   CREATE_USER : 'CREATE_USER',
   CREATE_USER_SUCCESS : 'CREATE_USER_SUCCESS',
   CREATE_USER_FAILED : 'CREATE_USER_FAILED',
@@ -36,6 +40,13 @@ export const AuthActions = {
   checkAuth() {
     return <Action>{
       type: AuthActions.CHECK_AUTH,
+    };
+  },
+
+  checkPermission(_credentials) {
+    return <Action>{
+      type: AuthActions.CHECK_PERMISSIONS,
+      payload: _credentials
     };
   },
 

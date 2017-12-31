@@ -1,30 +1,32 @@
 import { Action } from '@ngrx/store';
 import { AuthActions } from '../actions/auth.actions';
 
-export interface IAuthCheckedState extends Boolean {}
+export interface IAuthCheckedState extends Number {}
 
-export const initialState: IAuthCheckedState = false;
+export const initialState: IAuthCheckedState = -1;
 
 export function reducer (state: IAuthCheckedState = initialState, action: any): IAuthCheckedState {
   switch (action.type) {
-    case AuthActions.LOGIN_SUCCESS: {
-      return true;
+    case AuthActions.LOGIN:
+    case AuthActions.CHECK_AUTH: {
+      return -1;
     }
 
+    case AuthActions.LOGIN_SUCCESS:
     case AuthActions.CHECK_AUTH_SUCCESS: {
-      return true;
+      return 1;
     }
 
-    case AuthActions.CHECK_AUTH_FAILED: {
-      return false;
-    }
-
+    case AuthActions.LOGIN_FAILED:
+    case AuthActions.CHECK_AUTH_FAILED:
+    case AuthActions.CHECK_AUTH_NO_USER:
     case AuthActions.LOGOUT_SUCCESS: {
-      return Object.assign(initialState);
+      return 0;
     }
 
     default: {
-      return <IAuthCheckedState>state;
+      return Object.assign({}, <IAuthCheckedState>state);
     }
+
   }
 }

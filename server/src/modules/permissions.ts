@@ -20,12 +20,25 @@ export class Permissions {
     const url = Permissions.sanitizeUrl(req.originalUrl) || '';
     const permissions = Permissions.permissions.get(url) || [];
     const user = req.isAuth.user || {};
-    let ids = [];
+    Permissions.checkPermissionOnUser(user, permissions).then(check => {
+      next();
+    })
+    .catch(error => {
+      res.status(403).json({
+        message: "Erreur, vous n'avez pas les droits requis.",
+        success: false
+      });
+    })
+  }
+
+  // Check if a user has permissions to get further
+  public static async checkPermissionOnUser(user, permissions) {
+    let roleIds = [];
     let access = false;
     if (user.hasOwnProperty('roles')) {
-      user.roles.map(r => ids.push(r.role));
+      user.roles.map(r => roleIds.push(r.role));
     }
-    RolesRoutes.getPermissionsByID(ids).then(roles => {
+    return await RolesRoutes.getPermissionsByID(roleIds).then(roles => {
       for (let role of roles) {
         role.permissions.map(p => {
           if (permissions.indexOf(p)) {
@@ -34,19 +47,12 @@ export class Permissions {
         });
       }
       if (access) {
-        next();
+        return true;
       } else {
-        res.status(403).json({
-          message: "Erreur, vous n'avez pas les droits requis.",
-          success: false
-        });
+        throw false;
       }
-    }, error => {
-      res.status(403).json({
-        message: "Erreur, vous n'avez pas les droits requis.",
-        success: false
-      });
     })
+    .catch(error => Promise.reject(false));
   }
 
   public static sanitizeUrl(url: string): string {

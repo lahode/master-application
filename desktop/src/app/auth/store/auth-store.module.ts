@@ -38,6 +38,7 @@ export const AuthProviders = [
   imports: [
     HttpModule,
     StoreModule.forFeature('authCheck', reducers.authCheck),
+    StoreModule.forFeature('permissionCheck', reducers.permissionCheck),
     StoreModule.forFeature('currentUser', reducers.currentUser),
     EffectsModule.forFeature([AuthEffects]),
   ],

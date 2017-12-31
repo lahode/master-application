@@ -13,8 +13,12 @@ export class EndpointsService {
   }
 
   // Endpoint for AuthService
-  getAuth() {
+  checkAuth() {
     return this._apiEndPoint + '/api/check-auth';
+  }
+
+  checkPermissions() {
+    return this._apiEndPoint + '/api/check-permissions';
   }
 
   getLogin() {

@@ -30,13 +30,26 @@ export class AuthService {
         return Observable.of(false);
       }
 
-      return this.authHttp.get(this.endpoints.getAuth())
-        .map(response => this.jwtHelper.decodeToken(jwt))
+      return this.authHttp.get(this.endpoints.checkAuth())
+        .map(response => response.json())
+        .map(response => {
+          this.jwtHelper.decodeToken(jwt)
+          return response;
+        })
         .catch(err => {
           this.storage.remove(STORAGE_ITEM).then(() => true);
           return Observable.throw(this._manageError(err))}
         );
     });
+  }
+
+  // Check permissions
+  public checkPermissions(permissions: string[]): Observable<any> {
+    return this.authHttp.post(this.endpoints.checkPermissions(), permissions)
+      .map(response => response.json())
+      .catch(err => {
+        return Observable.throw(this._manageError(err))}
+      );
   }
 
   // Log in

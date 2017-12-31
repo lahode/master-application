@@ -15,6 +15,7 @@ export function reducer (state: IErrorState = intitialState, action: any): IErro
     case AuthActions.LOGIN_FAILED:
     case AuthActions.LOGOUT_FAILED:
     case AuthActions.CHECK_AUTH_FAILED:
+    case AuthActions.CHECK_PERMISSIONS_FAILED:
     case AuthActions.CREATE_USER_FAILED:
     case AuthActions.GET_PASSWORD_FAILED:
     case UserActions.USERLIST_LOAD_FAILED:
@@ -35,7 +36,7 @@ export function reducer (state: IErrorState = intitialState, action: any): IErro
     }
 
     default: {
-      return <IErrorState>intitialState;
+      return <IErrorState>state;
     }
   }
 }

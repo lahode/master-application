@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { sign, verify } from 'jsonwebtoken';
 import { CONFIG } from "../../../config";
+import { Permissions } from "../../permissions";
 
 const nodemailer = require('nodemailer');
 const Datastore = require('nedb-promises');
@@ -21,7 +22,7 @@ export class RolesRoutes {
             return {error: 404, message: "Aucun rôle n'a été trouvé.", success: false};
           }
         })
-        .catch((error) => {
+        .catch(error => {
           return {error: 500, message: "Une erreur s'est produite lors de la récupération de le rôle.", success: false}
         });
         if (result.hasOwnProperty('data')) {
@@ -29,6 +30,24 @@ export class RolesRoutes {
         }
     }
     return results;
+  }
+
+  // Check permissions
+  public static checkPermissions(req, res) {
+    // Check if permissions has been set
+    if (!Array.isArray(req.body)) {
+      return res.json({success: true});
+    }
+    const user = req.isAuth.user || {};
+    Permissions.checkPermissionOnUser(user, req.body).then(check => {
+      return res.json({success: true});
+    })
+    .catch(error => {
+      res.status(403).json({
+        message: "Vous n'êtes pas autorisé à accéder.",
+        success: false
+      });
+    });
   }
 
   // Get role by ID route
@@ -41,7 +60,7 @@ export class RolesRoutes {
       .then((role) => {
         return res.json({role: role, success: true});
       })
-      .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de le rôle.", success: false}));
+      .catch(error => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de le rôle.", success: false}));
   }
 
   // Get all roles route
@@ -68,7 +87,7 @@ export class RolesRoutes {
         return res.status(404).json({message: "Aucun rôle n'a été trouvée.", success: false});
       }
     })
-    .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération des rôles.", success: false}));
+    .catch(error => res.status(500).json({message: "Une erreur s'est produite lors de la récupération des rôles.", success: false}));
   }
 
   // Create role route
@@ -93,7 +112,7 @@ export class RolesRoutes {
           }
           return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de le rôle", success: false});
         })
-        .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de le rôle", success: false}));
+        .catch(error => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de le rôle", success: false}));
     }
     else {
       return res.status(500).json({message: "Impossible d'insérer cet rôle, le rôle existe déjà.", success: false});
@@ -124,7 +143,7 @@ export class RolesRoutes {
               }
               return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de le rôle", success: false});
             })
-            .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de le rôle.", success: false}));
+            .catch(error => res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de le rôle.", success: false}));
         } else {
           return res.status(404).json({message: "Impossible de modifier cet rôle, aucun rôle n'a été trouvé.", success: false});
         }
@@ -152,7 +171,7 @@ export class RolesRoutes {
               return res.json({deleted: req.params.id, success: true});
             }
           })
-          .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la suppression de le rôle.", success: false}));
+          .catch(error => res.status(500).json({message: "Une erreur s'est produite lors de la suppression de le rôle.", success: false}));
       } else {
         return res.status(404).json({message: "Impossible de supprimer cet rôle, aucun rôle n'a été trouvé.", success: false});
       }

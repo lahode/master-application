@@ -23,6 +23,16 @@ export function reducer (state: ILoadingState = intitialState, action: any): ILo
       return false;
     }
 
+    case AuthActions.CHECK_PERMISSIONS: {
+      return true;
+    }
+    case AuthActions.CHECK_PERMISSIONS_SUCCESS: {
+      return false;
+    }
+    case AuthActions.CHECK_PERMISSIONS_FAILED: {
+      return false;
+    }
+
     case AuthActions.LOGIN: {
       return true;
     }

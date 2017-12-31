@@ -16,13 +16,19 @@ export class AuthGuard implements CanActivate {
       const path = routerState.url.indexOf('?') > 0 ? routerState.url.substring(0, routerState.url.indexOf('?')).slice(1)
                    : routerState.url.slice(1);
       const queryParams = path.length > 0 ? { queryParams: { returnUrl: path }} : {};
+
       // Dispatch check auth action
       this.store.dispatch(<Action>AuthActions.checkAuth());
+
+      // Dispatch check permissions action
+      const permissions = route.data['perms'];
+      this.store.dispatch(<Action>AuthActions.checkPermission(permissions));
+
       // Check Auth on store select
       return this.store.select(state => state)
-        .filter((state) => !state.loading)
+        .filter((state) => !state.loading && state.permissionCheck > -1 && state.authCheck > -1)
         .map((state) => {
-          if (state.currentUser !== null) {
+          if (state.authCheck && state.permissionCheck) {
             return true;
           }
           this.router.navigate(['/signin'], queryParams);

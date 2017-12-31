@@ -17,12 +17,23 @@ export class AuthEffects {
       .map<Action, any>((_result: any) => {
           // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_NO_USER
           if (_result) {
-            return <Action>{ type: AuthActions.CHECK_AUTH_SUCCESS, payload: _result };
+            return <Action>{ type: AuthActions.CHECK_AUTH_SUCCESS, payload: _result.user };
           } else {
             return <Action>{ type: AuthActions.CHECK_AUTH_NO_USER, payload: null };
           }
           // On errors dispatch CHECK_AUTH_FAILED action with result
         }).catch((res: any) => Observable.of({ type: AuthActions.CHECK_AUTH_FAILED, payload: res }))
+      );
+
+  // Listen for the 'CHECK_PERMISSIONS' action
+  @Effect() checkPermissionsAction$ = this.action$
+      .ofType(AuthActions.CHECK_PERMISSIONS)
+      .map<Action, any>(toPayload)
+      .switchMap((payload: string[]) => this._auth.checkPermissions(payload)
+      // If successful, dispatch CHECK_PERMISSIONS_SUCCESS action with result else CHECK_AUTH_NO_USER
+        .map<Action, any>((_result: any) => <Action>{ type: AuthActions.CHECK_PERMISSIONS_SUCCESS, payload: _result })
+        // On errors dispatch CHECK_PERMISSIONS_FAILED action with result
+        .catch((res: any) => Observable.of({ type: AuthActions.CHECK_PERMISSIONS_FAILED, payload: res }))
       );
 
   // Listen for the 'LOGIN' action

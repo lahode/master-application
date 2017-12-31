@@ -7,8 +7,22 @@ import { AuthGuard } from './auth/services/authguard.service';
 import { NoGuard } from './auth/services/noguard.service';
 
 export const appRoutes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'signin', component: LoginComponent, canActivate: [NoGuard] },
-  { path: 'users', component: ManageUsersComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: '' }
+  { path: '',
+    component: HomeComponent,
+    canActivate: [AuthGuard]
+  },
+  { path: 'signin',
+    component: LoginComponent,
+    canActivate: [NoGuard]
+  },
+  { path: 'users',
+    component: ManageUsersComponent,
+    canActivate: [AuthGuard],
+    data: {
+       perms: ['manage users']
+    }
+  },
+  { path: '**',
+    redirectTo: ''
+  }
 ];
