@@ -35,6 +35,7 @@ export class Authentication {
   public static authenticatedRoute(req, res, next): void {
     Authentication.checkAuthentication(req,  (isAuth: boolean|any): void =>{
       if (isAuth) {
+        req.isAuth = isAuth;
         next();
       } else {
         res.status(403).json({

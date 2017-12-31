@@ -1,1 +1,2 @@
-{"username":"admin","password":"admin","firstname":"Admin","lastname":"Admin","email":"admin@admin.com","roles":[],"owner":"vFJlPsTWUJb8rVoe","created":"2017-12-29T19:04:24.276Z","updated":"2017-12-29T19:04:24.276Z","active":true,"_id":"vFJlPsTWUJb8rVoe"}
+{"fistname":"Firstname","lastname":"Lastname","username":"contributor","email":"contributor@test.ch","emailconfirm":"contributor@test.ch","password":"test","_id":"mSiDkyBvmE3YltwV"}
+{"username":"admin","password":"admin","firstname":"Admin","lastname":"Admin","email":"admin@admin.com","roles":[{"role":"vFJlPsTWUJb8rVoe"}],"owner":"vFJlPsTWUJb8rVoe","created":"2017-12-29T19:04:24.276Z","updated":"2017-12-29T19:04:24.276Z","active":true,"_id":"vFJlPsTWUJb8rVoe"}

@@ -21,7 +21,7 @@ export class FileService {
   }
 
   // Manage back-end error
-  private manageError(err) {
+  private _manageError(err) {
     const error = err.json();
     if (error.hasOwnProperty('message') && error.message) {
       return error.message;

@@ -16,7 +16,7 @@ export class RoleService {
     return this.authHttp.get(this.endpoints.roleList())
       .map(response => response.json())
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -25,7 +25,7 @@ export class RoleService {
     return this.authHttp.get(this.endpoints.roleDetail(id))
       .map(response => response.json().role)
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -34,7 +34,7 @@ export class RoleService {
     return this.authHttp.post(this.endpoints.roleCreate(), values)
       .map(response => response.json().role)
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -43,7 +43,7 @@ export class RoleService {
     return this.authHttp.post(this.endpoints.roleUpdate(), values)
       .map(response => response.json().role)
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -52,12 +52,12 @@ export class RoleService {
     return this.authHttp.get(this.endpoints.roleRemove(id))
       .map(response => response.json())
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
   // Manage back-end error
-  private manageError(err) {
+  private _manageError(err) {
     const error = err.json();
     if (error.hasOwnProperty('message') && error.message) {
       return error.message;

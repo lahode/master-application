@@ -9,8 +9,8 @@ const router = express.Router();
 
 export class RolesRoutes {
 
-  // Get role by ID route
-  public static async getRolesByID(ids) {
+  // Get permissions by ID route
+  public static async getPermissionsByID(ids) {
     let results = [];
     for (let id of ids) {
       let result = await roleDB.findOne({ _id: id })

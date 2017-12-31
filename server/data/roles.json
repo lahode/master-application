@@ -1,1 +1,1 @@
-{"name":"administrator","permissions":[],"owner":"qaJNuj8SZv5QJsRE","created":"2017-12-29T19:03:34.336Z","updated":"2017-12-29T19:03:34.336Z","active":true,"_id":"vFJlPsTWUJb8rVoe"}
+{"name":"administrator","permissions":["manage users","manage roles"],"owner":"qaJNuj8SZv5QJsRE","created":"2017-12-29T19:03:34.336Z","updated":"2017-12-29T19:03:34.336Z","active":true,"_id":"vFJlPsTWUJb8rVoe"}

@@ -34,7 +34,7 @@ export class AuthService {
         .map(response => this.jwtHelper.decodeToken(jwt))
         .catch(err => {
           this.storage.remove(STORAGE_ITEM).then(() => true);
-          return Observable.throw(this.manageError(err))}
+          return Observable.throw(this._manageError(err))}
         );
     });
   }
@@ -46,7 +46,7 @@ export class AuthService {
       .switchMap(jwt => this.handleJwtResponse(jwt.token))
       .catch(err => {
         this.storage.remove(STORAGE_ITEM).then(() => true);
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -60,7 +60,7 @@ export class AuthService {
     return this.http.post(this.endpoints.getSignup(), values)
       .map(response => response.json())
       .switchMap(jwt => this.handleJwtResponse(jwt.token))
-      .catch(err => Observable.throw(this.manageError(err)));
+      .catch(err => Observable.throw(this._manageError(err)));
   }
 
   // Retrieve password
@@ -68,7 +68,7 @@ export class AuthService {
     return this.http.post(this.endpoints.getPassword(), values)
       .map(response => response.json())
       .switchMap(jwt => this.handleJwtResponse(jwt.token))
-      .catch(err => Observable.throw(this.manageError(err)));
+      .catch(err => Observable.throw(this._manageError(err)));
   }
 
   // Save JWT Token and return user object
@@ -77,13 +77,13 @@ export class AuthService {
       this.storage.set('jwt', jwt)
         .then(
           () => this.jwtHelper.decodeToken(jwt),
-          (err) => this.manageError(err)
+          (err) => this._manageError(err)
         )
       );
   }
 
   // Manage back-end error
-  private manageError(err) {
+  private _manageError(err) {
     const error = err.json();
     if (error.hasOwnProperty('message') && error.message) {
       return error.message;

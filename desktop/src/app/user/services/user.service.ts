@@ -17,7 +17,7 @@ export class UserService {
     return this.authHttp.get(this.endpoints.userList(range))
       .map(response => response.json())
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -26,7 +26,7 @@ export class UserService {
     return this.authHttp.get(this.endpoints.userDetail(id))
       .map(response => response.json().user)
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -35,7 +35,7 @@ export class UserService {
     return this.authHttp.post(this.endpoints.userCreate(), values)
       .map(response => response.json().user)
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -44,7 +44,7 @@ export class UserService {
     return this.authHttp.post(this.endpoints.userUpdate(), values)
       .map(response => response.json().user)
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
@@ -53,12 +53,12 @@ export class UserService {
     return this.authHttp.get(this.endpoints.userRemove(id))
       .map(response => response.json())
       .catch(err => {
-        return Observable.throw(this.manageError(err))}
+        return Observable.throw(this._manageError(err))}
       );
   }
 
   // Manage back-end error
-  private manageError(err) {
+  private _manageError(err) {
     const error = err.json();
     if (error.hasOwnProperty('message') && error.message) {
       return error.message;
