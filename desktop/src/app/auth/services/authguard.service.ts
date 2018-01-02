@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
       return this.store.select(state => state)
         .filter((state) => !state.loading && state.permissionCheck > -1 && state.authCheck > -1)
         .map((state) => {
-          if (state.authCheck && state.permissionCheck) {
+          if (state.authCheck && state.permissionCheck === 1) {
             return true;
           }
           this.router.navigate(['/signin'], queryParams);

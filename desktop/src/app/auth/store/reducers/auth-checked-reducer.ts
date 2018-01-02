@@ -6,6 +6,7 @@ export interface IAuthCheckedState extends Number {}
 export const initialState: IAuthCheckedState = -1;
 
 export function reducer (state: IAuthCheckedState = initialState, action: any): IAuthCheckedState {
+  //console.log('XXXX->',state)
   switch (action.type) {
     case AuthActions.LOGIN:
     case AuthActions.CHECK_AUTH: {
@@ -24,9 +25,10 @@ export function reducer (state: IAuthCheckedState = initialState, action: any): 
       return 0;
     }
 
-    default: {
-      return Object.assign({}, <IAuthCheckedState>state);
-    }
+    // default: {
+    //   return Object.assign({}, <IAuthCheckedState>state);
+    // }
 
   }
+  return <IAuthCheckedState>state;
 }

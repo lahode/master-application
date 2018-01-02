@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
 
@@ -48,19 +48,25 @@ export class UsersEditComponent implements OnInit, OnDestroy {
         this.userEdit = state.userEdit;
         this.rolesOptions = state.roleList.roles;
         // Set role data to user form or reset roles form.
-        if (Object.keys(this.userEdit).length > 0) {
-          Object.keys(this.userEdit).forEach(key => {
-            if (this.editUserForm.controls.hasOwnProperty(key)) {
-              if (key === 'roles') {
-                this.editUserForm.controls['roles'] = this._fb.array(this.initRoles(this.userEdit[key]));
-              } else {
-                this.editUserForm.controls[key].setValue(this.userEdit[key]);
-              }
-            }
-          });
-        } else {
-          this.editUserForm.controls['roles'] = this._fb.array(this.initRoles());
-        }
+        // if (Object.keys(this.userEdit).length > 0) {
+        //   Object.keys(this.userEdit).forEach(key => {
+        //     if (this.editUserForm.controls.hasOwnProperty(key)) {
+        //       if (key === 'roles') {
+        //         this.editUserForm.controls['roles'] = this._fb.array(this.initRoles(this.userEdit[key]));
+        //       } else {
+        //         this.editUserForm.controls[key].setValue(this.userEdit[key]);
+        //       }
+        //     }
+        //   });
+        // } else {
+          console.log(this.rolesOptions)
+          console.log(this.editUserForm.controls.roles)
+          // this.editUserForm.controls['roles'].patchValue(
+          //   [true]
+          // )
+
+          //this.editUserForm.controls['roles'] = this._fb.array(this.initRoles());
+        // }
       });
   }
 
@@ -75,7 +81,31 @@ export class UsersEditComponent implements OnInit, OnDestroy {
 
   // Cancel the changes.
   cancel(): void {
-    this.dialogRef.close();
+    //this.dialogRef.close();
+    let roles = this.editUserForm.get('roles') as FormArray;
+    roles.push(this._fb.array([this.roleFill()]))
+  //   this.editUserForm.patchValue({
+  //   username: 'toto titi',
+  //   roles: []
+  // })
+  }
+
+  roleFill() {
+    return this._fb.group({
+        role: true,
+      });
+  }
+
+// https://stackoverflow.com/questions/43423333/angular-how-to-get-the-multiple-checkbox-value
+  onChange(email:string, isChecked: boolean) {
+    const emailFormArray = <FormArray>this.myForm.controls.useremail;
+
+    if(isChecked) {
+      emailFormArray.push(new FormControl(email));
+    } else {
+      let index = emailFormArray.controls.findIndex(x => x.value == email)
+      emailFormArray.removeAt(index);
+    }
   }
 
   // Save the user form.
