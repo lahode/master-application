@@ -16,7 +16,6 @@ export function reducer (state: ICurrentUserState = initialState, action: any): 
 
     case AuthActions.LOGIN_FAILED:
     case AuthActions.CHECK_AUTH_FAILED:
-    case AuthActions.CHECK_AUTH_NO_USER:
     case AuthActions.LOGOUT_SUCCESS: {
       return null;
     }

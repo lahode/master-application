@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
 
       // Check Auth on store select
       return this.store.select(state => state)
-        .filter((state) => !state.loading && state.permissionCheck > -1 && state.authCheck > -1)
+        .filter((state) => state.loading.length === 0)
         .map((state) => {
           if (state.authCheck && state.permissionCheck) {
             return true;

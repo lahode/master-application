@@ -13,7 +13,7 @@ export function reducer (state: IRoleState = initialState, action: any): IRoleSt
       return Object.assign({}, null)
     }
 
-    case RoleActions.ROLE_LOAD: {
+    case RoleActions.ROLE_LOAD_START: {
       return Object.assign({}, state)
     }
 

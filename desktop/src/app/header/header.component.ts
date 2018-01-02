@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.store.dispatch({type: 'LOGOUT'});
+    this.store.dispatch({type: 'LOGOUT_START'});
   }
 
   setLanguage(value) {

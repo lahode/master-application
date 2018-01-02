@@ -13,7 +13,7 @@ export function reducer (state: IUserState = initialState, action: any): IUserSt
       return Object.assign({}, null)
     }
 
-    case UserActions.USER_LOAD: {
+    case UserActions.USER_LOAD_START: {
       return Object.assign({}, state)
     }
 

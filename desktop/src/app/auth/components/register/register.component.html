@@ -53,7 +53,7 @@
   <div>
     <button mat-raised-button
             color="primary"
-            [disabled]="loading || !registerForm.valid" (click)="onRegister()">{{ 'LOGIN.REGISTERFORM.SUBMIT' | translate }}</button>
-    <mat-spinner *ngIf="loading"></mat-spinner>
+            [disabled]="(loading$ | async).length!==0 || !registerForm.valid" (click)="onRegister()">{{ 'LOGIN.REGISTERFORM.SUBMIT' | translate }}</button>
+    <mat-spinner *ngIf="(loading$ | async).length!==0"></mat-spinner>
   </div>
 </form>

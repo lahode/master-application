@@ -25,7 +25,7 @@
   <div>
     <button mat-raised-button
             color="primary"
-            [disabled]="(loading$ | async) || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
-    <mat-spinner *ngIf="(loading$ | async)"></mat-spinner>
+            [disabled]="(loading$ | async).length!==0 || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
+    <mat-spinner *ngIf="(loading$ | async).length!==0"></mat-spinner>
   </div>
 </form>

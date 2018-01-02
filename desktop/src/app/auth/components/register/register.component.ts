@@ -13,7 +13,7 @@ import { DoubleValidation } from '../../../shared/custom-validation';
 export class RegisterComponent implements OnInit {
 
   private registerForm: FormGroup;
-  private loading;
+  public loading$;
 
   @Input() returnUrl: string;
 
@@ -35,12 +35,14 @@ export class RegisterComponent implements OnInit {
     }, {
       validator: DoubleValidation.MatchEmail
     });
+
+    // Start loading
+    this.loading$ = this.store.select(state => state.loading)
   }
 
   // Register the new user
   onRegister() {
     if (this.registerForm.valid) {
-      this.loading = true;
       this.store.dispatch(<Action>AuthActions.signup(this.registerForm.value));
       this.registerForm.reset();
     }

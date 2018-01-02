@@ -27,6 +27,7 @@ export class SigninComponent implements OnInit {
       password: ['', Validators.required],
     });
 
+    // Start loading
     this.loading$ = this.store.select(state => state.loading)
   }
 

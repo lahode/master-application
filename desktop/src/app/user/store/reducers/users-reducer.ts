@@ -9,7 +9,7 @@ export const initialState: IUsersState = [];
 
 export function reducer (state: any = initialState, action: any): IUsersState {
   switch (action.type) {
-    case UserActions.USERLIST_LOAD: {
+    case UserActions.USERLIST_LOAD_START: {
       return Object.assign([], action.payload)
     }
 

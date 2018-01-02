@@ -4,19 +4,36 @@ import { Action } from '@ngrx/store';
  * Define every actions globally for application
  */
 export const AppActions = {
-  ERROR_NULL : 'ERROR_NULL',
-  ERROR_SET: 'ERROR_SET',
+  NO_ERROR : 'NO_ERROR',
+  ERROR: 'ERROR',
+  LOADING: 'LOADING',
+  LOADED: 'LOADED',
 
   resetError() {
     return <Action>{
-      type: AppActions.ERROR_NULL
+      type: AppActions.NO_ERROR
     };
   },
 
   setError(_credentials)  {
     return <Action>{
-      type: AppActions.ERROR_SET,
+      type: AppActions.ERROR,
+      payload: _credentials
+    };
+  },
+
+  loading(_credentials)  {
+    return <Action>{
+      type: AppActions.LOADING,
+      payload: _credentials
+    };
+  },
+
+  loaded(_credentials)  {
+    return <Action>{
+      type: AppActions.LOADED,
       payload: _credentials
     };
   }
+
 }

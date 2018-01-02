@@ -16,7 +16,7 @@ export class NoGuard implements CanActivate {
       this.store.dispatch(<Action>AuthActions.checkAuth());
       // Check Auth on store select
       return this.store.select(state => state)
-        .filter((state) => !state.loading)
+        .filter((state) => state.loading.length === 0)
         .map((state) => {
           if (state.currentUser === null) {
             return true;

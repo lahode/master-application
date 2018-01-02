@@ -9,7 +9,7 @@ export const initialState: IRolesState = [];
 
 export function reducer (state: any = initialState, action: any): IRolesState {
   switch (action.type) {
-    case RoleActions.ROLELIST_LOAD: {
+    case RoleActions.ROLELIST_LOAD_START: {
       return Object.assign([], action.payload)
     }
 
