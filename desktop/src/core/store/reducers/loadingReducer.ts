@@ -10,7 +10,6 @@ export function reducer (state: ILoadingState = initialState, action: any): ILoa
   const actionType = actionTab.pop();
   const actionName = actionTab.join('_');
   switch (actionType) {
-
     case 'START': {
       return Object.assign([], [...state, actionName]);
     }
@@ -22,10 +21,8 @@ export function reducer (state: ILoadingState = initialState, action: any): ILoa
         return item !== actionName;
       })]);
     }
-
-    default : {
-      return <ILoadingState>state;
-    }
-
   }
+
+  return <ILoadingState>state;
+
 }

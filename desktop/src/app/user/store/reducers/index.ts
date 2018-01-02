@@ -5,16 +5,18 @@ import * as fromUsers from './users-reducer';
 import * as fromUser from './user-reducer';
 import * as fromRoles from './roles-reducer';
 import * as fromRole from './role-reducer';
+import * as fromPermissions from './permissions-reducer';
 
 import { UserStateI, UserRecucerStateI } from '../user-state';
 
 declare const process: any;
 
 export const reducer: UserRecucerStateI = {
-  userList: fromUsers.reducer,
+  usersList: fromUsers.reducer,
   userEdit: fromUser.reducer,
-  roleList: fromRoles.reducer,
-  roleEdit: fromRole.reducer
+  rolesList: fromRoles.reducer,
+  roleEdit: fromRole.reducer,
+  permissionsList: fromPermissions.reducer,
 };
 
 export const reducers: ActionReducerMap<UserStateI> = reducer;

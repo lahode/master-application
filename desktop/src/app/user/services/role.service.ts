@@ -11,10 +11,19 @@ export class RoleService {
   constructor(private readonly authHttp: AuthHttp,
               private readonly endpoints: EndpointsService) {}
 
-  // List all roles or a range of roles
+  // List all roles
   public list(): Observable<any> {
     return this.authHttp.get(this.endpoints.roleList())
-      .map(response => response.json())
+      .map(response => response.json().roles)
+      .catch(err => {
+        return Observable.throw(this._manageError(err))}
+      );
+  }
+
+  // List all permissions
+  public getPermissions(): Observable<any> {
+    return this.authHttp.get(this.endpoints.getPermissions())
+      .map(response => response.json().permissions)
       .catch(err => {
         return Observable.throw(this._manageError(err))}
       );

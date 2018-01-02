@@ -19,9 +19,8 @@ export function reducer (state: ICurrentUserState = initialState, action: any): 
     case AuthActions.LOGOUT_SUCCESS: {
       return null;
     }
-
-    default: {
-      return <ICurrentUserState>state;
-    }
   }
+
+  return <ICurrentUserState>state;
+
 }

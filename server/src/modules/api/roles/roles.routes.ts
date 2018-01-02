@@ -50,6 +50,11 @@ export class RolesRoutes {
     });
   }
 
+  // Get all permissions
+  public static getPermissions(req, res) {
+    return res.json({permissions: Permissions.permissionsList, success: true});
+  }
+
   // Get role by ID route
   public static get(req, res) {
     if (!req.params.id) {

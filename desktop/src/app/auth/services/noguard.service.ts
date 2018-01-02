@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import { Store, Action } from '@ngrx/store';
-import { AuthActions } from '../store/actions/auth.actions';
+import { AuthActions } from '../store';
 
 @Injectable()
 export class NoGuard implements CanActivate {

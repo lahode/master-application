@@ -29,8 +29,9 @@ export class APIRoutes {
       this.callRoute('post', "/api/users/update", UsersRoutes.update, ["manage users"]);
       this.callRoute('get', "/api/users/remove/:id", UsersRoutes.remove, ["manage users"]);
 
-      // Users
-      this.callRoute('get', "/api/roles/list/:from?/:to?", RolesRoutes.list, ["manage roles"]);
+      // Roles
+      this.callRoute('get', "/api/roles/list", RolesRoutes.list, ["manage roles"]);
+      this.callRoute('get', "/api/roles/get-permissions", RolesRoutes.getPermissions, ["manage roles"]);
       this.callRoute('get', "/api/roles/get/:id", RolesRoutes.get, ["manage roles"]);
       this.callRoute('post', "/api/roles/create", RolesRoutes.create, ["manage roles"]);
       this.callRoute('post', "/api/roles/update", RolesRoutes.update, ["manage roles"]);

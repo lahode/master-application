@@ -20,7 +20,7 @@ export class UsersListComponent implements OnInit {
   constructor(private readonly store: Store<any>,
               private readonly dialog: MatDialog,
               private readonly router: Router) {
-    this.store.select(state => state.userList).subscribe(userList => {
+    this.store.select(state => state.usersList).subscribe(userList => {
       this.users = userList.users;
       this.total = userList.total;
     });

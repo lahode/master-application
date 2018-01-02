@@ -54,9 +54,13 @@ export class EndpointsService {
     return this._apiEndPoint + `/api/users/remove/${id}`;
   }
 
-  // Endpoint for UserService
+  // Endpoint for RoleService
   roleList() {
     return this._apiEndPoint + '/api/roles/list';
+  }
+
+  getPermissions() {
+    return this._apiEndPoint + '/api/roles/get-permissions';
   }
 
   roleDetail(id: string) {

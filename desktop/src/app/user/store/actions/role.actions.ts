@@ -9,6 +9,10 @@ export const RoleActions = {
   ROLELIST_LOAD_SUCCESS : 'ROLELIST_LOAD_SUCCESS',
   ROLELIST_LOAD_FAILED : 'ROLELIST_LOAD_FAILED',
 
+  PERMISSIONLIST_LOAD_START : 'PERMISSIONLIST_LOAD_START',
+  PERMISSIONLIST_LOAD_SUCCESS : 'PERMISSIONLIST_LOAD_SUCCESS',
+  PERMISSIONLIST_LOAD_FAILED : 'PERMISSIONLIST_LOAD_FAILED',
+
   ROLE_NEW : 'ROLE_NEW',
 
   ROLE_LOAD_START : 'ROLE_LOAD_START',
@@ -30,6 +34,12 @@ export const RoleActions = {
   list() {
     return <Action>{
       type: RoleActions.ROLELIST_LOAD_START
+    };
+  },
+
+  getPermissions() {
+    return <Action>{
+      type: RoleActions.PERMISSIONLIST_LOAD_START
     };
   },
 

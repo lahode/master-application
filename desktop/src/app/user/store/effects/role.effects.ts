@@ -19,6 +19,16 @@ export class RoleEffects {
         .catch((res: any) => Observable.of({ type: RoleActions.ROLELIST_LOAD_FAILED, payload: res }))
       );
 
+  // Listen for the 'PERMISSIONLIST_LOAD_START' action
+  @Effect() permissionListAction$ = this.action$
+      .ofType(RoleActions.PERMISSIONLIST_LOAD_START)
+      .switchMap<Action, any>(() => this._role.getPermissions()
+        // If successful, dispatch PERMISSIONLIST_LOAD_SUCCESS
+        .map<Action, any>((_result: any) => <Action>{ type: RoleActions.PERMISSIONLIST_LOAD_SUCCESS, payload: _result })
+          // On errors dispatch PERMISSIONLIST_LOAD_FAILED action with result
+        .catch((res: any) => Observable.of({ type: RoleActions.PERMISSIONLIST_LOAD_FAILED, payload: res }))
+      );
+
   // Listen for the 'ROLE_LOAD_START' action
   @Effect() roleLoadAction$ = this.action$
       .ofType(RoleActions.ROLE_LOAD_START)

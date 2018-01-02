@@ -15,15 +15,13 @@ import { RolesEditComponent } from '../roles-edit/roles-edit.component';
 export class RolesListComponent implements OnInit {
 
   roles: Role[];
-  total: number;
 
   constructor(private readonly store: Store<any>,
               private readonly dialog: MatDialog,
               private readonly router: Router) {
-    this.store.select(state => state.roleList).subscribe(roleList => {
+    this.store.select(state => state.rolesList).subscribe(roleList => {
       if (Object.keys(roleList).length > 0) {
-        this.roles = roleList.roles;
-        this.total = roleList.total;
+        this.roles = roleList;
       }
     });
   }

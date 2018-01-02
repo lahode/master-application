@@ -32,9 +32,8 @@ export function reducer (state: IRoleState = initialState, action: any): IRoleSt
     case RoleActions.ROLE_REMOVE_SUCCESS: {
       return Object.assign({}, null);
     }
-
-    default: {
-      return <IRoleState>state;
-    }
   }
+
+  return <IRoleState>state;
+
 }

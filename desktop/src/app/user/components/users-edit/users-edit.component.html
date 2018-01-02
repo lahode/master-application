@@ -44,9 +44,11 @@
         </mat-form-field>
       </div>
 
-      <div *ngFor="let role of editUserForm.controls.roles.controls; let i=index">
-        <br />
-        <mat-checkbox [formControl]="role">{{ rolesOptions[i].name }}</mat-checkbox>
+      <div formArrayName="roles">
+        <div *ngFor="let role of editUserForm.controls.roles.controls; let i=index">
+          <br />
+          <mat-checkbox [formControl]="role">{{ rolesOptions[i].name }}</mat-checkbox>
+        </div>
       </div>
 
     </fieldset>
@@ -56,4 +58,3 @@
   <button mat-button (click)="cancel()" tabindex="2">{{ 'USERS.EDIT.CANCEL' | translate }}</button>
   <button mat-button (click)="save()" tabindex="2" [disabled]="!editUserForm.valid">{{ 'USERS.EDIT.SAVE' | translate }}</button>
 </div>
-{{ editUserForm.value | json }}

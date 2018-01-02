@@ -32,9 +32,8 @@ export function reducer (state: IUserState = initialState, action: any): IUserSt
     case UserActions.USER_REMOVE_SUCCESS: {
       return Object.assign({}, null);
     }
-
-    default: {
-      return <IUserState>state;
-    }
   }
+
+  return <IUserState>state;
+
 }

@@ -27,4 +27,3 @@
   <button mat-button (click)="cancel()" tabindex="2">{{ 'ROLES.EDIT.CANCEL' | translate }}</button>
   <button mat-button (click)="save()" tabindex="2" [disabled]="!editRoleForm.valid">{{ 'ROLES.EDIT.SAVE' | translate }}</button>
 </div>
-{{ editRoleForm.value | json }}

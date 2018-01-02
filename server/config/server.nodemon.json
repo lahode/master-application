@@ -10,5 +10,5 @@
     "*.ts",
     "*.config.js"
   ],
-  "watch": "server.js"
+  "watch": "server-dev.js"
 }

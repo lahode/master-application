@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
 
@@ -26,6 +26,9 @@ export class UsersEditComponent implements OnInit, OnDestroy {
               private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
+    // Define email validation pattern
+    let emailpattern = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+
     // Initialize the list of roles
     this.store.dispatch(<Action>RoleActions.list());
 
@@ -35,42 +38,42 @@ export class UsersEditComponent implements OnInit, OnDestroy {
       username: ['', [<any>Validators.required, <any>Validators.minLength(5)]],
       firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
-      email: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
+      email: ['', [<any>Validators.required, Validators.pattern(emailpattern)]],
       roles: this._fb.array([]),
     });
 
     // Get connected user and current user edit to fill the form.
     this.stateSelect = this.store.select(state => state)
-      .filter((state) => !state.loading)
-      .filter((state) => state.roleList.roles)
+      .filter((state) => state.loading.length === 0)
+      .filter((state) => state.rolesList)
       .subscribe(state => {
         this.currentUser = state.currentUser;
         this.userEdit = state.userEdit;
-        this.rolesOptions = state.roleList.roles;
-        // Set role data to user form or reset roles form.
+        this.rolesOptions = state.rolesList;
+        // Set user data to user form or reset users form.
         if (Object.keys(this.userEdit).length > 0) {
           Object.keys(this.userEdit).forEach(key => {
             if (this.editUserForm.controls.hasOwnProperty(key)) {
               if (key === 'roles') {
-                this.editUserForm.controls['roles'] = this._fb.array(this.initRoles(this.userEdit[key]));
+                this.initRoles(this.userEdit[key]);
               } else {
                 this.editUserForm.controls[key].setValue(this.userEdit[key]);
               }
             }
           });
-        } else {
-          this.editUserForm.controls['roles'] = this._fb.array(this.initRoles());
+        }
+        // Set default list of roles for the checkboxes.
+        if (this.editUserForm.get('roles').value.length === 0) {
+          this.initRoles();
         }
       });
   }
 
   // Initialize each roles in the form.
   initRoles(roles = []) {
-    const rolesForm = [];
     this.rolesOptions.map(r => {
-      rolesForm.push(roles.includes(r._id))
+      (this.editUserForm.get('roles') as FormArray).push(new FormControl(roles.some(item => item.role === r._id)));
     });
-    return rolesForm;
   }
 
   // Cancel the changes.
@@ -82,7 +85,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
   save(): void {
     const model = this.editUserForm.value;
 
-    // Convert roles checkboxes
+    // Convert roles checkboxes.
     const roles: any[] = [];
     model.roles.map((selected, i) => {
       if (selected) {
@@ -91,7 +94,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
     });
     model.roles = roles;
 
-    // Set form updates to the original user object
+    // Set form updates to the original user object.
     if (this.userEdit) {
       Object.keys(model).map(key => {
         this.userEdit[key] = model[key];

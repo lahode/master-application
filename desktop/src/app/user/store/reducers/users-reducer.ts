@@ -9,10 +9,6 @@ export const initialState: IUsersState = [];
 
 export function reducer (state: any = initialState, action: any): IUsersState {
   switch (action.type) {
-    case UserActions.USERLIST_LOAD_START: {
-      return Object.assign([], action.payload)
-    }
-
     case UserActions.USERLIST_LOAD_SUCCESS: {
       return Object.assign([], action.payload)
     }
@@ -38,9 +34,8 @@ export function reducer (state: any = initialState, action: any): IUsersState {
       }));
       return newState;
     }
-
-    default: {
-      return <IUsersState>state;
-    }
   }
+
+  return <IUsersState>state;
+
 }
