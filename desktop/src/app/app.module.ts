@@ -22,12 +22,10 @@ import { appRoutes } from './app.routing';
 import { AppComponent, AppErrorComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
-import { MessageComponent } from './message/message.component';
 import { LoadingComponent } from './loading/loading.component';
 
 /* Services */
 import { LocalDataStorageService } from './shared/localdata-storage.service';
-import { MessageService } from './message/message.service';
 
 /* Store */
 import { StoreModule } from '@ngrx/store';
@@ -39,8 +37,8 @@ import { AppStoreModule } from '../core/store';
  * Custom Http Loader for translation
  * (AoT requires an exported function for factories)
  */
-export function HttpOBLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -49,8 +47,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     AppErrorComponent,
     HeaderComponent,
     HomeComponent,
-    MessageComponent,
-    LoadingComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +58,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpOBLoaderFactory,
+        useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
     }),
@@ -82,8 +79,7 @@ export function HttpOBLoaderFactory(http: HttpClient) {
     AppErrorComponent
   ],
   providers: [
-    LocalDataStorageService,
-    MessageService
+    LocalDataStorageService
   ],
   bootstrap: [AppComponent]
 })

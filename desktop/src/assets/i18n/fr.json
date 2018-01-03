@@ -20,6 +20,10 @@
       "DELETE" : "SUPPRIMER",
       "ADD" : "Ajouter un utilisateur"
     },
+    "DELETE" : {
+      "TITLE" : "Supprimer un utilisateur",
+      "MESSAGE" : "Êtes-vous sûr de vouloir supprimer l'utilisateur"
+    },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Modifier l'utilisateur",
       "PAGETITLE_ADD" : "Créer un nouvel utilisateur",
@@ -44,6 +48,10 @@
       "EDIT" : "MODIFIER",
       "DELETE" : "SUPPRIMER",
       "ADD" : "Ajouter un rôle"
+    },
+    "DELETE" : {
+      "TITLE" : "Supprimer un rôle",
+      "MESSAGE" : "Êtes-vous sûr de vouloir supprimer le rôle"
     },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Modifier le rôle",

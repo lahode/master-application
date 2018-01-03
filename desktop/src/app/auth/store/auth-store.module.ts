@@ -7,8 +7,6 @@ import { JwtHelper, AuthHttp, AuthConfig } from 'angular2-jwt';
 
 import { StorageService } from '../../../core/services/storage.service';
 import { AuthService } from '../services/auth.service';
-import { AuthGuard } from '../services/authguard.service';
-import { NoGuard } from '../services/noguard.service';
 import { AuthEffects } from './effects/auth.effects';
 
 import { reducers } from './reducers';
@@ -24,8 +22,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 
 export const AuthProviders = [
   AuthService,
-  AuthGuard,
-  NoGuard,
   JwtHelper,
   AuthHttp,
   {

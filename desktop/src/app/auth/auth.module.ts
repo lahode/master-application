@@ -15,6 +15,10 @@ import { RegisterComponent } from './components/register/register.component';
 import { PasswordComponent } from './components/password/password.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 
+/* Services */
+import { AuthGuard } from './services/authguard.service';
+import { NoGuard } from './services/noguard.service';
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -37,5 +41,9 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
     TranslateModule,
     AuthStoreModule.forRoot()
   ],
+  providers: [
+    AuthGuard,
+    NoGuard
+  ]
 })
 export class AuthModule {}

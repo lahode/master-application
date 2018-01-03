@@ -2,15 +2,15 @@
   "APPLICATION" : {
     "TITLE" : "Master Application"
   },
-  "HEADER": {
-    "MENU": {
+  "HEADER" : {
+    "MENU" : {
       "HOME" : "Home",
       "USERS" : "Manage users",
       "LOGOUT" : "Log out",
       "SEARCH" : "Search"
     }
   },
-  "USERS": {
+  "USERS" : {
     "TAB" : "Users",
     "LIST": {
       "TITLE" : "Users List",
@@ -19,6 +19,10 @@
       "EDIT" : "EDIT",
       "DELETE" : "DELETE",
       "ADD" : "Add a user"
+    },
+    "DELETE" : {
+      "TITLE" : "Delete a user",
+      "MESSAGE" : "Are you sure to delete the user"
     },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Edit user",
@@ -44,6 +48,10 @@
       "EDIT" : "EDIT",
       "DELETE" : "DELETE",
       "ADD" : "Add a role"
+    },
+    "DELETE" : {
+      "TITLE" : "Delete a role",
+      "MESSAGE" : "Are you sure to delete the role"
     },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Edit role",

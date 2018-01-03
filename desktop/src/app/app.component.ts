@@ -3,7 +3,6 @@ import { Store, Action } from '@ngrx/store';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AppActions } from '../core/store';
-import { MessageService } from './message/message.service';
 import { User } from './user/models/user';
 
 @Component({
@@ -23,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.storeErrorSubscription = this.store.select(state => state.error).subscribe(error => {
       if (error) {
         const dialogRef = this.dialog.open(AppErrorComponent, {
-          width: '250px',
+          width: '50%',
           data: {error: error.toString()}
         });
         dialogRef.afterClosed().subscribe(result => this.store.dispatch(<Action>AppActions.resetError()));

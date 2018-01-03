@@ -7,6 +7,7 @@ import { User } from '../../models/user';
 import { Range } from 'core/models/range';
 import { UserActions } from '../../store';
 import { UsersEditComponent } from '../users-edit/users-edit.component';
+import { UserConfirmComponent } from '../user-confirm/user-confirm.component';
 
 @Component({
   selector: 'app-users-list',
@@ -39,10 +40,6 @@ export class UsersListComponent implements OnInit {
     this.store.dispatch(<Action>UserActions.list(range));
   }
 
-  showUserDetail(user: User) {
-    this.router.navigate([`/user/view/${user._id}`]);
-  }
-
   changePage(event) {
     this.store.dispatch(<Action>UserActions.changePage(event));
   }
@@ -59,8 +56,21 @@ export class UsersListComponent implements OnInit {
     dialogRef.disableClose = true;
   }
 
-  deleteUser(userID: string) {
-    this.store.dispatch(<Action>UserActions.remove(userID));
+  deleteUser(user: User) {
+    const dialogRef = this.dialog.open(UserConfirmComponent, {
+      width: '50%',
+      data: {
+        title: 'USERS.DELETE.TITLE',
+        message: 'USERS.DELETE.MESSAGE',
+        name: user.username,
+        delete: false
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.dispatch(<Action>UserActions.remove(user._id));
+      }
+    });
   }
 
 }
