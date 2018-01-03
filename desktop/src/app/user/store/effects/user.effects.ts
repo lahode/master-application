@@ -56,13 +56,12 @@ export class UserEffects {
       .ofType(UserActions.USER_CREATE_START)
       .map<Action, any>(toPayload)
       .switchMap((payload: any) => this._user.create(payload)
-        // If successful, dispatch USER_CREATE_SUCCESS and UserActions.list()
-        .map<Action, any>((_result: any) => {
-            this.store$.dispatch(UserActions.list());
-            return <Action>{ type: UserActions.USER_CREATE_SUCCESS, payload: _result };
-        })
+        // If successful, dispatch USER_CREATE_SUCCESS
+        .map<Action, any>((_result: any) => <Action>{ type: UserActions.USER_CREATE_SUCCESS, payload: _result })
         // On errors dispatch USER_CREATE_FAILED action with result
         .catch((res: any) => Observable.of({ type: UserActions.USER_CREATE_FAILED, payload: res }))
+        // Dispatch UserActions.list() to update the list of users
+        .do(() => this.store$.dispatch(UserActions.list()))
       );
 
   // Listen for the 'USER_UPDATE_START' action
@@ -71,12 +70,11 @@ export class UserEffects {
       .map<Action, any>(toPayload)
       .switchMap((payload: any) => this._user.update(payload)
         // If successful, dispatch USER_UPDATE_SUCCESS and UserActions.list()
-        .map<Action, any>((_result: any) => {
-            this.store$.dispatch(UserActions.list());
-            return <Action>{ type: UserActions.USER_UPDATE_SUCCESS, payload: _result };
-        })
+        .map<Action, any>((_result: any) => <Action>{ type: UserActions.USER_UPDATE_SUCCESS, payload: _result })
         // On errors dispatch USER_UPDATE_FAILED action with result
         .catch((res: any) => Observable.of({ type: UserActions.USER_UPDATE_FAILED, payload: res }))
+        // Dispatch UserActions.list() to update the list of users
+        .do(() => this.store$.dispatch(UserActions.list()))
       );
 
     // Listen for the 'USER_REMOVE_START' action
@@ -88,6 +86,8 @@ export class UserEffects {
           .map<Action, any>((_result: any) => <Action>{ type: UserActions.USER_REMOVE_SUCCESS, payload: _result })
           // On errors dispatch USER_REMOVE_FAILED action with result
           .catch((res: any) => Observable.of({ type: UserActions.USER_REMOVE_FAILED, payload: res }))
+          // Dispatch UserActions.list() to update the list of users
+          .do(() => this.store$.dispatch(UserActions.list()))
         );
 
     constructor(
