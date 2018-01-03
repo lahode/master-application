@@ -5,6 +5,8 @@ import { Action } from '@ngrx/store';
  */
 export const UserActions = {
 
+  USERLIST_CHANGE_PAGE : 'USERLIST_CHANGE_PAGE',
+  USERLIST_CHANGE_PAGE_SUCCESS : 'USERLIST_CHANGE_PAGE_SUCCESS',
   USERLIST_LOAD_START : 'USERLIST_LOAD_START',
   USERLIST_LOAD_SUCCESS : 'USERLIST_LOAD_SUCCESS',
   USERLIST_LOAD_FAILED : 'USERLIST_LOAD_FAILED',
@@ -27,9 +29,17 @@ export const UserActions = {
   USER_REMOVE_SUCCESS : 'USER_REMOVE_SUCCESS',
   USER_REMOVE_FAILED : 'USER_REMOVE_FAILED',
 
-  list() {
+  list(_credentials = null) {
     return <Action>{
-      type: UserActions.USERLIST_LOAD_START
+      type: UserActions.USERLIST_LOAD_START,
+      payload: _credentials
+    };
+  },
+
+  changePage(_credentials) {
+    return <Action>{
+      type: UserActions.USERLIST_CHANGE_PAGE,
+      payload: _credentials
     };
   },
 

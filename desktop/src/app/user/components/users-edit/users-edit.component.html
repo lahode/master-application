@@ -47,7 +47,7 @@
       <div formArrayName="roles">
         <div *ngFor="let role of editUserForm.controls.roles.controls; let i=index">
           <br />
-          <mat-checkbox [formControl]="role">{{ rolesOptions[i].name }}</mat-checkbox>
+          <mat-checkbox [formControl]="role">{{ rolesOptions[i]?.name }}</mat-checkbox>
         </div>
       </div>
 

@@ -8,6 +8,7 @@ import { reducers, metaReducers } from './reducers';
 import { EndpointsService } from '../services/endpoints';
 import { StorageService } from '../services/storage.service';
 import { FileService } from '../services/file.service';
+import { PagerService } from '../services/pager.service';
 
 export interface RouterStateUrl {
   url: string;
@@ -36,6 +37,7 @@ export const AppProviders = [
   EndpointsService,
   StorageService,
   FileService,
+  PagerService,
   { provide: RouterStateSerializer, useClass: CustomSerializer }
 ]
 

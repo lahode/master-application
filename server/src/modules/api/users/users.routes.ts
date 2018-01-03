@@ -63,7 +63,7 @@ export class UsersRoutes {
             results.push(users);
           }
         });
-        return res.json({users: results, total: users.length, success: true});
+        return res.json({items: results, total: users.length, success: true});
       } else {
         return res.status(404).json({message: "Aucun utilisateur n'a été trouvée.", success: false});
       }

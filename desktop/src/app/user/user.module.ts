@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule, MatCheckboxModule, MatButtonModule,
-         MatTabsModule, MatSelectModule } from '@angular/material';
+         MatTabsModule, MatSelectModule, MatPaginatorModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* Custom modules */
@@ -30,6 +30,7 @@ import { RolesEditComponent } from './components/roles-edit/roles-edit.component
     MatButtonModule,
     MatTabsModule,
     MatSelectModule,
+    MatPaginatorModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,

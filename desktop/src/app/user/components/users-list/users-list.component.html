@@ -1,23 +1,30 @@
 <h2>{{ 'USERS.LIST.TITLE' | translate }}</h2>
 <div class="example-container mat-elevation-z8">
-  <table>
-    <thead>
-      <th>{{ 'USERS.LIST.USERNAME' | translate }}</th>
-      <th>{{ 'USERS.LIST.ACTIONS' | translate }}</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>
-          {{ user.username }}
-        </td>
-        <td>
-          <span class="action" (click)="manageUser(user._id)">[ {{ 'USERS.LIST.EDIT' | translate }} ]</span>
-          <span class="action" (click)="deleteUser(user._id)">[ {{ 'USERS.LIST.DELETE' | translate }} ]</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button mat-raised-button
-          color="primary"
-          (click)="manageUser()">{{ 'USERS.LIST.ADD' | translate }}</button>
+  <div>
+    <table>
+      <thead>
+        <th>{{ 'USERS.LIST.USERNAME' | translate }}</th>
+        <th>{{ 'USERS.LIST.ACTIONS' | translate }}</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>
+            {{ user.username }}
+          </td>
+          <td>
+            <span class="action" (click)="manageUser(user._id)">[ {{ 'USERS.LIST.EDIT' | translate }} ]</span>
+            <span class="action" (click)="deleteUser(user._id)">[ {{ 'USERS.LIST.DELETE' | translate }} ]</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button mat-raised-button
+            color="primary"
+            (click)="manageUser()">{{ 'USERS.LIST.ADD' | translate }}</button>
+  </div>
+  <mat-paginator [length]="total"
+                 [pageSize]="pageSize"
+                 [pageIndex]="pageIndex"
+                 [pageSizeOptions]="[2, 5, 10, 25]"
+                 (page)="changePage($event)"></mat-paginator>
 </div>

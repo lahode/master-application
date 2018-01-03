@@ -1,38 +1,35 @@
 import { Action } from '@ngrx/store';
 import { UserActions } from '../actions/user.actions';
+import { Injector } from '@angular/core';
 
 import { User } from '../../models/user';
+import { Pager } from 'core/models/pager';
+import { PagerService } from 'core/services/pager.service';
 
-export interface IUsersState extends Array<User> {}
+export interface IUsersState extends Pager {}
 
-export const initialState: IUsersState = [];
+export const initialState: IUsersState = null;
+
+const injector = Injector.create([{provide: PagerService, useClass: PagerService, deps: []}]);
+const pagerService = injector.get(PagerService);
 
 export function reducer (state: any = initialState, action: any): IUsersState {
   switch (action.type) {
     case UserActions.USERLIST_LOAD_SUCCESS: {
-      return Object.assign([], action.payload)
+      const newState = Object.assign({}, state);
+      return <Pager>{
+        items: action.payload.items,
+        total: action.payload.total,
+        pageIndex: pagerService.getPageIndex(newState),
+        pageSize: pagerService.getPageSize(newState)
+      };
     }
 
-    case UserActions.USER_CREATE_SUCCESS: {
-      const newState = Object.assign({}, state);
-      newState.users.push(action.payload);
-      return newState;
-    }
-
-    case UserActions.USER_UPDATE_SUCCESS: {
-      const newState = Object.assign({}, state);
-      newState.users = Object.assign([], state.users.map((item: User) => {
-        return item._id === action.payload._id ? action.payload : item;
-      }));
-      return newState;
-    }
-
-    case UserActions.USER_REMOVE_SUCCESS: {
-      const newState = Object.assign({}, state);
-      newState.users = Object.assign([], state.users.filter((item: User) => {
-        return item._id !== action.payload.deleted;
-      }));
-      return newState;
+    case UserActions.USERLIST_CHANGE_PAGE: {
+      return Object.assign({}, state, {
+        pageIndex: pagerService.getPageIndex(action.payload),
+        pageSize: pagerService.getPageSize(action.payload)
+      });
     }
   }
 
