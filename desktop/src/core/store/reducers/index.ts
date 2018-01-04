@@ -5,6 +5,7 @@ import { routerReducer } from '@ngrx/router-store';
 
 import * as fromLoading from './loadingReducer';
 import * as fromError from './errorReducer';
+import * as fromConfirm from './confirmReducer';
 
 import { AppStateI, AppRecucerStateI } from '../app-states';
 
@@ -13,7 +14,8 @@ declare const process: any;
 export const reducer: AppRecucerStateI = {
   router: routerReducer,
   loading: fromLoading.reducer,
-  error: fromError.reducer
+  error: fromError.reducer,
+  confirm: fromConfirm.reducer
 };
 
 export const reducers: ActionReducerMap<AppStateI> = reducer;

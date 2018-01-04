@@ -1,6 +1,14 @@
 {
   "APPLICATION" : {
-    "TITLE" : "Master Application"
+    "TITLE" : "Master Application",
+    "ERROR" : {
+      "TITLE" : "Erreur",
+      "OK" : "Ok"
+    },
+    "CONFIRM" : {
+      "CANCEL" : "Annuler",
+      "OK" : "Confirmer"
+    }
   },
   "HEADER": {
     "MENU": {

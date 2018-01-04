@@ -6,7 +6,6 @@ import { MatDialog } from '@angular/material';
 import { Role } from '../../models/role';
 import { RoleActions } from '../../store';
 import { RolesEditComponent } from '../roles-edit/roles-edit.component';
-import { UserConfirmComponent } from '../user-confirm/user-confirm.component';
 
 @Component({
   selector: 'app-roles-list',
@@ -44,20 +43,13 @@ export class RolesListComponent implements OnInit {
   }
 
   deleteRole(role: Role) {
-    const dialogRef = this.dialog.open(UserConfirmComponent, {
-      width: '50%',
-      data: {
-        title: 'ROLES.DELETE.TITLE',
-        message: 'ROLES.DELETE.MESSAGE',
-        name: role.name,
-        delete: false
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.store.dispatch(<Action>RoleActions.remove(role._id));
-      }
-    });
+    const confirmMessage = {
+      title: 'USERS.DELETE.TITLE',
+      message: 'USERS.DELETE.MESSAGE',
+      name: role.name,
+      action: <Action>RoleActions.remove(role._id)
+    }
+    this.store.dispatch(<Action>RoleActions.confirm(confirmMessage));
   }
 
 }

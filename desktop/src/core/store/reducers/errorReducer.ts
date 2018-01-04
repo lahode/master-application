@@ -3,13 +3,18 @@ import { AppActions } from '../actions/app.actions';
 
 export interface IErrorState extends String {}
 
-export const intitialState: IErrorState = null;
+export const initialState: IErrorState = null;
 
-export function reducer (state: IErrorState = intitialState, action: any): IErrorState {
+export function reducer (state: IErrorState = initialState, action: any): IErrorState {
   const actionTab = action.type.split('_');
   switch (actionTab[actionTab.length - 1]) {
     case 'FAILED' : {
-      return Object.assign(action.payload);
+      // Assign only one error at the time
+      if (!state) {
+        return Object.assign(action.payload);
+      } else {
+        return <IErrorState>state;
+      }
     }
   }
 

@@ -5,6 +5,8 @@ import { Action } from '@ngrx/store';
  */
 export const UserActions = {
 
+  CONFIRM_DIALOG: 'CONFIRM_DIALOG',
+
   USERLIST_CHANGE_PAGE : 'USERLIST_CHANGE_PAGE',
   USERLIST_CHANGE_PAGE_SUCCESS : 'USERLIST_CHANGE_PAGE_SUCCESS',
   USERLIST_LOAD_START : 'USERLIST_LOAD_START',
@@ -28,6 +30,13 @@ export const UserActions = {
   USER_REMOVE_START : 'USER_REMOVE_START',
   USER_REMOVE_SUCCESS : 'USER_REMOVE_SUCCESS',
   USER_REMOVE_FAILED : 'USER_REMOVE_FAILED',
+
+  confirm(_credentials = null) {
+    return <Action>{
+      type: UserActions.CONFIRM_DIALOG,
+      payload: _credentials
+    };
+  },
 
   list(_credentials = null) {
     return <Action>{

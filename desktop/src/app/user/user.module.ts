@@ -15,7 +15,6 @@ import { UsersEditComponent } from './components/users-edit/users-edit.component
 import { UsersListComponent } from './components/users-list/users-list.component';
 import { RolesListComponent } from './components/roles-list/roles-list.component';
 import { RolesEditComponent } from './components/roles-edit/roles-edit.component';
-import { UserConfirmComponent } from './components/user-confirm/user-confirm.component';
 
 export class MatPaginatorIntApp extends MatPaginatorIntl {
   itemsPerPageLabel = 'PAGER_ITEMPERPAGE';
@@ -29,8 +28,7 @@ export class MatPaginatorIntApp extends MatPaginatorIntl {
     UsersEditComponent,
     UsersListComponent,
     RolesListComponent,
-    RolesEditComponent,
-    UserConfirmComponent
+    RolesEditComponent
   ],
   imports: [
     SharedModule,
@@ -49,8 +47,7 @@ export class MatPaginatorIntApp extends MatPaginatorIntl {
   providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorIntApp}],
   entryComponents: [
     UsersEditComponent,
-    RolesEditComponent,
-    UserConfirmComponent
+    RolesEditComponent
   ]
 })
 export class UserModule {}

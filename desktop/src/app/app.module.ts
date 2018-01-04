@@ -19,10 +19,12 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routing';
 
 /* Components */
-import { AppComponent, AppErrorComponent } from './app.component';
+import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { LoadingComponent } from './loading/loading.component';
+import { ErrorComponent } from './shared/error/error.component';
+import { ConfirmComponent } from './shared/confirm/confirm.component';
 
 /* Services */
 import { LocalDataStorageService } from './shared/localdata-storage.service';
@@ -44,10 +46,11 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    AppErrorComponent,
     HeaderComponent,
     HomeComponent,
-    LoadingComponent
+    LoadingComponent,
+    ErrorComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,8 @@ export function createTranslateLoader(http: HttpClient) {
     StoreDevtoolsModule.instrument(),
   ],
   entryComponents: [
-    AppErrorComponent
+    ErrorComponent,
+    ConfirmComponent
   ],
   providers: [
     LocalDataStorageService

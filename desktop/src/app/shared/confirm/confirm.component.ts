@@ -2,13 +2,13 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'app-user-confirm',
-  templateUrl: './user-confirm.component.html',
-  styleUrls: ['./user-confirm.component.scss']
+  selector: 'app-confirm',
+  templateUrl: './confirm.component.html',
+  styleUrls: ['./confirm.component.scss']
 })
-export class UserConfirmComponent {
+export class ConfirmComponent {
 
-  constructor(public dialogRef: MatDialogRef<UserConfirmComponent>,
+  constructor(public dialogRef: MatDialogRef<ConfirmComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     cancel(): void {

@@ -5,6 +5,8 @@ import { Action } from '@ngrx/store';
  */
 export const RoleActions = {
 
+  CONFIRM_DIALOG: 'CONFIRM_DIALOG',
+
   ROLELIST_LOAD_START : 'ROLELIST_LOAD_START',
   ROLELIST_LOAD_SUCCESS : 'ROLELIST_LOAD_SUCCESS',
   ROLELIST_LOAD_FAILED : 'ROLELIST_LOAD_FAILED',
@@ -30,6 +32,13 @@ export const RoleActions = {
   ROLE_REMOVE_START : 'ROLE_REMOVE_START',
   ROLE_REMOVE_SUCCESS : 'ROLE_REMOVE_SUCCESS',
   ROLE_REMOVE_FAILED : 'ROLE_REMOVE_FAILED',
+
+  confirm(_credentials = null) {
+    return <Action>{
+      type: RoleActions.CONFIRM_DIALOG,
+      payload: _credentials
+    };
+  },
 
   list() {
     return <Action>{
