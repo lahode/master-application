@@ -21,11 +21,15 @@ export class EndpointsService {
     return this._apiEndPoint + '/api/check-permissions';
   }
 
-  getLogin() {
+  login() {
     return this._apiEndPoint + '/login';
   }
 
-  getSignup() {
+  logout() {
+    return this._apiEndPoint + '/logout';
+  }
+
+  signup() {
     return this._apiEndPoint + '/signup';
   }
 

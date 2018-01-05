@@ -1,10 +1,14 @@
 import * as express from 'express';
 import * as http  from 'http';
+import * as https from 'https';
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as path from 'path';
 import * as morgan from 'morgan';
+import * as fs from 'fs-extra';
 
+import { RetrieveUser } from "./modules/security/retrieve-user.middleware";
 import { APIRoutes }  from "./modules/routes/api.route";
 import { log }  from "./modules/log";
 import { CONFIG } from "./config";
@@ -18,46 +22,45 @@ export class Server {
 
   constructor() {
     this.app = express();
-    this.server = http.createServer(this.app);
+    this.app.use(cookieParser())
+    this.app.use(RetrieveUser.getUser)
     this.config();
     this.middleware();
     this.defaultServerRoute();
     this.app.use( new APIRoutes().routes());
   }
 
-  // Set configuration parameters
+  // Set configuration parameters.
   private config():void {
-    // define the app.server endpoints folder
+    // define the app.server endpoints folder.
     this.root = path.join(__dirname, '../api')
-    // define prot & normalize value
+    // define prot & normalize value.
     this.port = this.normalizePort(process.env.PORT|| CONFIG.PORT);
-    // use the root path defined
+    // use the root path defined.
     this.app.use(express.static(this.root))
   }
 
-  // Configure middleware
+  // Configure middleware.
   private middleware() {
-    // Set cors Options
+    // Set cors Options.
     const corsOptions = {
       origin: CONFIG.FRONTEND,
       credentials: true,
     }
 
     this.app
-      // use bodyParser middleware to decode json parameters
+      // use bodyParser middleware to decode json parameters.
       .use(bodyParser.json())
       .use(bodyParser.json({type: 'application/vnd.api+json'}))
-      // use bodyParser middleware to decode urlencoded parameters
+      // use bodyParser middleware to decode urlencoded parameters.
       .use(bodyParser.urlencoded({extended: false}))
-      // secret variable for jwt
-      .set('superSecret', CONFIG.SECRET_TOKEN_KEY)
-      // use morgan to log requests to the console
+      // use morgan to log requests to the console.
       .use(morgan('dev'))
-      // cors domaine origin
+      // cors domaine origin.
       .use(cors(corsOptions))
   }
 
-  // Default server route
+  // Default server route.
   private defaultServerRoute() {
     this.app.get( '/', log, (req, res) => {
       res.json({
@@ -67,7 +70,7 @@ export class Server {
     });
   }
 
-  // React on errors
+  // React on errors.
   private onError(error: NodeJS.ErrnoException): void {
     if (error.syscall !== 'listen') throw error;
     let bind:string = (typeof this.port === 'string') ? 'Pipe ' + this.port : 'Port ' + this.port;
@@ -85,7 +88,7 @@ export class Server {
     }
   }
 
-  // Normalize port entry
+  // Normalize port entry.
   normalizePort(val: number|string): number|string|boolean {
     let port: number = (typeof val === 'string') ? parseInt(val, 10) : val;
     if (isNaN(port)) return val;
@@ -93,12 +96,25 @@ export class Server {
     else return false;
   }
 
-  // Bootstrap the application
+  // Bootstrap the application with HTTPS or HTTP depending if the "--secure" option has been set.
   bootstrap():void {
-    this.server.on('error', this.onError);
-    this.server.listen(this.port, ()=>{
-    	console.log("Listnening on port " + this.port)
-    });
+    if (CONFIG.HTTPS) {
+      const httpsServer = https.createServer({
+        key: fs.readFileSync('key.pem'),
+        cert: fs.readFileSync('cert.pem')
+      }, this.app);
+      httpsServer.on('error', this.onError);
+
+      // Launch an HTTPS Server.
+      httpsServer.listen(this.port, () => console.log("HTTPS Secure Server running at https://localhost:" + httpsServer.address().port));
+    }
+    else {
+      const httpServer = http.createServer(this.app);
+      httpServer.on('error', this.onError);
+
+      // Launch an HTTP Server.
+      httpServer.listen(this.port, () => console.log("HTTP Server running at http://localhost:" + httpServer.address().port));
+    }
   }
 
 }

@@ -15,6 +15,7 @@ export const devVariables:IEnvironment = {
   FRONTEND: 'http://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,
+  HTTPS: false,
   MAILER: {
     host: '',
     port: 587,

@@ -8,5 +8,6 @@ export interface IEnvironment {
   FRONTEND: string,
   UPLOAD_DIRECTORY: string;
   PORT: number,
+  HTTPS: boolean,
   MAILER: any
 }

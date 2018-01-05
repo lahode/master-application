@@ -3,8 +3,10 @@ import { AuthRoutes }  from "../api/auth/auth.routes";
 import { UsersRoutes }  from "../api/users/users.routes";
 import { RolesRoutes }  from "../api/roles/roles.routes";
 import { FilesRoutes }  from "../api/files/files.routes";
-import { Authentication } from '../authentication';
 import { Permissions } from "../permissions";
+
+import { checkIfAuthenticated } from "../security/authentication.middleware";
+import { checkCsrfToken } from "../security/csrf.middleware";
 
 const app = express();
 
@@ -15,11 +17,12 @@ export class APIRoutes {
       app.post("/login", AuthRoutes.loginRoute);
       app.post("/signup", AuthRoutes.signUpRoute);
       app.post("/retrieve-password", AuthRoutes.getPswRoute);
-      app.use("/api", Authentication.authenticatedRoute);
+      app.use("/api", checkIfAuthenticated);
+      app.post("/api/logout", checkCsrfToken, AuthRoutes.logoutRoute);
       app.get("/api/check-auth", AuthRoutes.checkAuth);
-      app.post("/api/check-permissions", RolesRoutes.checkPermissions);
 
       // Permission
+      app.post("/api/check-permissions", RolesRoutes.checkPermissions);
       app.use("/api", Permissions.permissionOnRoute);
 
       // Users
