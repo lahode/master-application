@@ -1,91 +1,88 @@
 import { Injectable, Inject } from '@angular/core';
-import { environment } from '../../environments/environment';
 
 import { Range } from '../models/range';
 
 @Injectable()
 export class EndpointsService {
 
-  _apiEndPoint: string;
-
-  constructor() {
-    this._apiEndPoint = environment.apiEndpoint;
-  }
-
   // Endpoint for AuthService
   checkAuth() {
-    return this._apiEndPoint + '/api/check-auth';
+    return '/api/secure/check-auth';
   }
 
   checkPermissions() {
-    return this._apiEndPoint + '/api/check-permissions';
+    return '/api/secure/check-permissions';
   }
 
-  getLogin() {
-    return this._apiEndPoint + '/login';
+  login() {
+    return '/api/login';
   }
 
-  getSignup() {
-    return this._apiEndPoint + '/signup';
+  logout() {
+    return '/api/secure/logout';
+  }
+
+  signup() {
+    return '/api/signup';
   }
 
   getPassword() {
-    return this._apiEndPoint + '/retrieve-password';
+    return '/api/retrieve-password';
   }
 
   // Endpoint for UserService
   userList(range?: Range) {
-    return (range) ? this._apiEndPoint + `/api/users/list/${range.from}/${range.to}` : this._apiEndPoint + '/api/users/list';
+    return (range) ? `/api/secure/users/list/${range.from}/${range.to}` : '/api/secure/users/list';
   }
 
   userDetail(id: string) {
-    return this._apiEndPoint + `/api/users/get/${id}`;
+    return `/api/secure/users/get/${id}`;
   }
 
   userCreate() {
-    return this._apiEndPoint + '/api/users/create';
+    return '/api/secure/users/create';
   }
 
   userUpdate() {
-    return this._apiEndPoint + '/api/users/update';
+    return '/api/secure/users/update';
   }
 
   userRemove(id: string) {
-    return this._apiEndPoint + `/api/users/remove/${id}`;
+    return `/api/secure/users/remove/${id}`;
   }
 
   // Endpoint for RoleService
   roleList() {
-    return this._apiEndPoint + '/api/roles/list';
+    return '/api/secure/roles/list';
   }
 
   getPermissions() {
-    return this._apiEndPoint + '/api/roles/get-permissions';
+    return '/api/secure/roles/get-permissions';
   }
 
   roleDetail(id: string) {
-    return this._apiEndPoint + `/api/roles/get/${id}`;
+    return `/api/secure/roles/get/${id}`;
   }
 
   roleCreate() {
-    return this._apiEndPoint + '/api/roles/create';
+    return '/api/secure/roles/create';
   }
 
   roleUpdate() {
-    return this._apiEndPoint + '/api/roles/update';
+    return '/api/secure/roles/update';
   }
 
   roleRemove(id: string) {
-    return this._apiEndPoint + `/api/roles/remove/${id}`;
+    return `/api/secure/roles/remove/${id}`;
   }
 
   // Endpoint for FileService
   fileUpload() {
-    return this._apiEndPoint + '/api/files/upload';
+    return '/api/files/upload';
   }
 
   filePath() {
-    return this._apiEndPoint + `/files/view/`;
+    return `/files/view/`;
   }
 
 }

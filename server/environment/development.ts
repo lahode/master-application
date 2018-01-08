@@ -10,11 +10,16 @@ export const devVariables:IEnvironment = {
   DATABASE: {
     USERS: `${root}/data/users.json`,
     ROLES: `${root}/data/roles.json`,
-    FILES: `${root}/data/files.json`,
+    FILES: `${root}/data/files.json`
   },
-  FRONTEND: 'http://localhost:4200',
+  FRONTEND: 'https://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,
+  SECURITY: {
+    HTTPS: true,
+    KEY: `${root}/security/key.pem`,
+    CERT: `${root}/security/cert.pem`
+  },
   MAILER: {
     host: '',
     port: 587,

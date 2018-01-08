@@ -16,6 +16,11 @@ export function reducer (state: IErrorState = initialState, action: any): IError
         return <IErrorState>state;
       }
     }
+
+    case 'NOERROR' : {
+      return null;
+    }
+
   }
 
   return <IErrorState>state;

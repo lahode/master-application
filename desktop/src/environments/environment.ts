@@ -7,5 +7,4 @@ import { IEnvironment } from './env-model';
 
 export const environment: IEnvironment = {
   production: false,
-  apiEndpoint: 'http://localhost:4300'
 };

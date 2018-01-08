@@ -12,9 +12,14 @@ export const prodVariables:IEnvironment = {
     ROLES: `${root}/data/roles.json`,
     FILES: `${root}/data/files.json`,
   },
-  FRONTEND: 'http://localhost:4200',
+  FRONTEND: 'https://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
-  PORT: 4400,
+  PORT: 4300,
+  SECURITY: {
+    HTTPS: true,
+    KEY: `${root}/security/key.pem`,
+    CERT: `${root}/security/cert.pem`
+  },
   MAILER: {
     host: '',
     port: 587,

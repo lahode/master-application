@@ -19,7 +19,7 @@ export class Permissions {
   public static permissionOnRoute(req, res, next): void {
     const url = Permissions.sanitizeUrl(req.originalUrl) || '';
     const permissions = Permissions.permissions.get(url) || [];
-    const user = req.isAuth.user || {};
+    const user = req['user'] || {};
     Permissions.checkPermissionOnUser(user, permissions).then(check => {
       next();
     })

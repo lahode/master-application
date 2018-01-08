@@ -1,39 +1,23 @@
 import * as express from 'express';
-import { sign, verify } from 'jsonwebtoken';
+import { Request, Response } from 'express';
+
 import { CONFIG } from "../../../config";
+
+import { AuthStrategyCookie } from "../../security/authentication-cookie-strategy";
+import { PasswordStrategy } from "../../security/password-strategy";
 
 const nodemailer = require('nodemailer');
 const Datastore = require('nedb-promises');
 const userDB = new Datastore(CONFIG.DATABASE.USERS);
-const router = express.Router();
 
 export class AuthRoutes {
 
-  // Sign in and save token
-  public static saveToken(req, cb: (tokenSaved: boolean|any) => void): void {
-    let token = sign(req, CONFIG.SECRET_TOKEN_KEY, {
-      expiresIn: 60 * 60 * 24 // Expire dans 24 heures
-    }, (err: Error, token: any): void => {
-      if (err) {
-        cb(false);
-      }
-      // Token success
-      cb({success:true, user: req, token: token});
-    });
-  }
-
   // Check Authentication and return the user
-  public static checkAuth(req, res): void {
-    if (req.headers && req.headers.authorization) {
-      var authorization = req.headers.authorization, decoded;
-      try {
-        let header = authorization.split(' ');
-        decoded = verify(header[1], CONFIG.SECRET_TOKEN_KEY);
-      } catch (e) {
-        return res.status(401).json({message: "Vous n'êtes pas autorisé à accéder.", success: false});
-      }
+  public static checkAuth(req: Request, res: Response) {
+    const userInfo = req["user"];
+    if (userInfo) {
       // Fetch the user by id
-      userDB.findOne({_id: decoded._id}).then(function(user) {
+      userDB.findOne({_id: userInfo.sub}).then(function(user) {
         if (user) {
           return res.json({success:true, user: user});
         } else {
@@ -43,28 +27,25 @@ export class AuthRoutes {
       .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
     }
     else {
-      return res.status(500).json({message: "Erreur, en-têtes manquantes ou invalides.", success: false});
+      return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
     }
   }
 
   // Log in route
-  public static loginRoute(req, res): void {
-    let userAuth;
-    if (!req.body.username || !req.body.password) {
+  public static loginRoute(req: Request, res: Response) {
+    const credentials = req.body;
+    if (!credentials.username || !credentials.password) {
       return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
     }
-    userDB.findOne({ username: req.body.username, password: req.body.password }, { password: 0 })
+    userDB.findOne({ username: credentials.username })
       .then((user) => {
         if (user) {
-          let userAuth = Object.assign({}, user);
-          delete userAuth.password;
-          AuthRoutes.saveToken(userAuth, (tokenSaved: boolean|any): void => {
-            if (tokenSaved) {
-              return res.json(tokenSaved);
-            } else {
-              res.status(403).json({message: "Une erreur est survenue dans la génération du jeton d'authentification.", success: false});
-            }
-          });
+          return AuthStrategyCookie.login(credentials.password, user, res)
+            .then(user => {
+              delete(user.password);
+              return res.json({user: user, success: true});
+            })
+            .catch((error) => res.status(error.status).json({message: error.message, success: false}));
         } else {
           return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
         }
@@ -73,31 +54,44 @@ export class AuthRoutes {
   }
 
   // Sign up route
-  public static signUpRoute(req, res): void {
-    if (!req.body.username || !req.body.password) {
+  public static signUpRoute(req: Request, res: Response) {
+    const credentials = req.body;
+    const errors = PasswordStrategy.validate(credentials.password);
+    if (errors.length > 0) {
+      return res.status(400).json({message: errors, success: false});
+    }
+
+    if (!credentials.username || !credentials.password) {
       return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
     }
-    userDB.findOne({ username: req.body.username, password: req.body.password }, { password: 0 })
+    return userDB.findOne({ username: credentials.username, password: credentials.password }, { password: 0 })
       .then((user) => {
         if (!user) {
-          return userDB.insert(req.body)
-          .then((userInserted) => {
-            let userAuth = Object.assign({}, userInserted);
-            delete userAuth.password;
-            AuthRoutes.saveToken(userAuth, (tokenSaved: boolean|any): void => {
-              if (tokenSaved) {
-                return res.json(tokenSaved);
-              } else {
-                res.status(403).json({message: "Une erreur est survenue dans la génération du jeton d'authentification.", success: false});
-              }
-            });
+          return PasswordStrategy.getPasswordDigest(credentials.password)
+            .then((passwordDigest) => {
+              credentials.password = passwordDigest;
+              return userDB.insert(credentials)
+              .then((userInserted) => {
+                AuthStrategyCookie.signup(userInserted, res)
+                  .then((user) => {
+                    return res.json(user);
+                  })
+                  .catch((error) => res.status(error.status).json({message: error.message, success: false}));
+              })
+              .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
           })
-          .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
+          .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors du traitement d'authentification", success: false}));
         } else {
           return res.status(403).json({message: "L'utilisateur existe déjà.", success: false});
         }
       })
       .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
+  }
+
+  // Log out route
+  public static logoutRoute(req: Request, res: Response) {
+    AuthStrategyCookie.logout(res);
+    res.json({success: true});
   }
 
   // Get password route
@@ -120,7 +114,7 @@ export class AuthRoutes {
         transporter.sendMail(mailOptions, function(error, info) {
           if (error) {
             return res.status(500).json({message: "Une erreur s'est produite lors de l'envoi du mail", success: false});
-          } else{
+          } else {
             return res.json({mailID: info.response, success: true});
           };
         });

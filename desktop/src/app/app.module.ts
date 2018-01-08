@@ -1,8 +1,7 @@
 /* Contrib modules */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule, HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -56,8 +55,11 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
     HttpClientModule,
+    HttpClientXsrfModule.withOptions({ // Add cookie secure option
+      cookieName: 'XSRF-TOKEN',
+      headerName: 'x-xsrf-token'
+    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

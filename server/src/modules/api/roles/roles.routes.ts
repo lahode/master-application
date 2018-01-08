@@ -38,7 +38,7 @@ export class RolesRoutes {
     if (!Array.isArray(req.body)) {
       return res.json({success: true});
     }
-    const user = req.isAuth.user || {};
+    const user = req['user'] || {};
     Permissions.checkPermissionOnUser(user, req.body).then(check => {
       return res.json({success: true});
     })

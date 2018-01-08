@@ -3,32 +3,17 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
 import { Http, RequestOptions } from '@angular/http';
-import { JwtHelper, AuthHttp, AuthConfig } from 'angular2-jwt';
+import { JwtHelper } from 'angular2-jwt';
 
 import { StorageService } from '../../../core/services/storage.service';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth_cookiesecure.service';
 import { AuthEffects } from './effects/auth.effects';
 
 import { reducers } from './reducers';
 
-export function authHttpServiceFactory(http: Http, options: RequestOptions) {
-  const authConfig = new AuthConfig({
-    noJwtError: true,
-    globalHeaders: [{'Accept': 'application/json'}],
-    tokenGetter: (() => StorageService.getItem('jwt')),
-  });
-  return new AuthHttp(authConfig, http, options);
-}
-
 export const AuthProviders = [
   AuthService,
-  JwtHelper,
-  AuthHttp,
-  {
-    provide: AuthHttp,
-    useFactory: authHttpServiceFactory,
-    deps: [Http, RequestOptions]
-  }
+  JwtHelper
 ]
 
 @NgModule({

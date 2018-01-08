@@ -5,7 +5,7 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth_cookiesecure.service';
 
 @Injectable()
 export class AuthEffects {
@@ -22,7 +22,7 @@ export class AuthEffects {
             return <Action>{ type: AuthActions.CHECK_AUTH_STOP, payload: null };
           }
           // On errors dispatch CHECK_AUTH_FAILED action with result
-        }).catch((res: any) => Observable.of({ type: AuthActions.CHECK_AUTH_FAILED, payload: res }))
+        }).catch((res: any) => Observable.of({ type: AuthActions.CHECK_AUTH_STOP, payload: res }))
       );
 
   // Listen for the 'CHECK_PERMISSIONS_START' action

@@ -8,8 +8,8 @@ export const AppActions = {
   CONFIRM_LAUNCH: 'CONFIRM_LAUNCH',
   CONFIRM_RESET: 'CONFIRM_RESET',
 
-  NO_ERROR : 'NO_ERROR',
-  ERROR: 'ERROR',
+  NOERROR : 'NOERROR',
+  FAILED: 'FAILED',
 
   LOADING: 'LOADING',
   LOADED: 'LOADED',
@@ -35,13 +35,13 @@ export const AppActions = {
 
   resetError() {
     return <Action>{
-      type: AppActions.NO_ERROR
+      type: AppActions.NOERROR
     };
   },
 
   setError(_credentials)  {
     return <Action>{
-      type: AppActions.ERROR,
+      type: AppActions.FAILED,
       payload: _credentials
     };
   },

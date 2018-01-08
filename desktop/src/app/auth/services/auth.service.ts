@@ -3,8 +3,6 @@ import { Http } from '@angular/http';
 import { JwtHelper, AuthHttp } from 'angular2-jwt';
 import { EndpointsService } from '../../../core/services/endpoints';
 import { StorageService } from '../../../core/services/storage.service';
-// import { AppProviders } from '../../../../core/app-state-module';
-
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -54,7 +52,7 @@ export class AuthService {
 
   // Log in
   public login(values: any): Observable<any> {
-    return this.http.post(this.endpoints.getLogin(), values)
+    return this.http.post(this.endpoints.login(), values)
       .map(response => response.json())
       .switchMap(jwt => this.handleJwtResponse(jwt.token))
       .catch(err => {
@@ -70,7 +68,7 @@ export class AuthService {
 
   // Sign up
   public signup(values: any): Observable<any> {
-    return this.http.post(this.endpoints.getSignup(), values)
+    return this.http.post(this.endpoints.signup(), values)
       .map(response => response.json())
       .switchMap(jwt => this.handleJwtResponse(jwt.token))
       .catch(err => Observable.throw(this._manageError(err)));
