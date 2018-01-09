@@ -56,10 +56,12 @@ export function createTranslateLoader(http: HttpClient) {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    /*
     HttpClientXsrfModule.withOptions({ // Add cookie secure option
       cookieName: 'XSRF-TOKEN',
       headerName: 'x-xsrf-token'
     }),
+    */
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

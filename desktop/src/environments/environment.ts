@@ -7,4 +7,5 @@ import { IEnvironment } from './env-model';
 
 export const environment: IEnvironment = {
   production: false,
+  authentication: 'cookie'
 };

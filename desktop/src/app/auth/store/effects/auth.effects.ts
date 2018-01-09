@@ -5,7 +5,7 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
-import { AuthService } from '../../services/auth_cookiesecure.service';
+import { AuthService } from '../../services/auth.service';
 
 @Injectable()
 export class AuthEffects {

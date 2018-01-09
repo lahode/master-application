@@ -2,13 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
+import { AuthService } from './auth.service';
 import { EndpointsService } from '../../../core/services/endpoints';
+import { JwtHelper } from 'angular2-jwt';
+import { StorageService } from '../../../core/services/storage.service';
 
 @Injectable()
-export class AuthService {
+export class AuthCookieService extends AuthService {
 
   constructor(private readonly http: HttpClient,
-              private readonly endpoints: EndpointsService) {}
+              private readonly endpoints: EndpointsService,
+              private readonly storage: StorageService,
+              private readonly jwtHelper: JwtHelper) {
+    super();
+  }
 
   // Check authentification
   public checkAuth(): Observable<any> {
