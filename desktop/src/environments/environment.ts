@@ -7,4 +7,12 @@ import { IEnvironment } from './env-model';
 
 export const environment: IEnvironment = {
   production: false,
+  authentication: {
+    type: 'token',
+    value : {}
+  },
+  socket: {
+    baseUrl: '',
+    config: {}
+  }
 };

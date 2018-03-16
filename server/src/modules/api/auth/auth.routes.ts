@@ -3,7 +3,10 @@ import { Request, Response } from 'express';
 
 import { CONFIG } from "../../../config";
 
+/*
 import { AuthStrategyCookie } from "../../security/authentication-cookie-strategy";
+*/
+import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 import { PasswordStrategy } from "../../security/password-strategy";
 
 const nodemailer = require('nodemailer');
@@ -40,10 +43,16 @@ export class AuthRoutes {
     userDB.findOne({ username: credentials.username })
       .then((user) => {
         if (user) {
+/*
           return AuthStrategyCookie.login(credentials.password, user, res)
             .then(user => {
               delete(user.password);
               return res.json({user: user, success: true});
+*/
+          return AuthStrategyToken.login(credentials.password, user, res)
+            .then(result => {
+              delete(result.user.password);
+              return res.json({user: result.user, token: result.token, success: true});
             })
             .catch((error) => res.status(error.status).json({message: error.message, success: false}));
         } else {
@@ -72,7 +81,10 @@ export class AuthRoutes {
               credentials.password = passwordDigest;
               return userDB.insert(credentials)
               .then((userInserted) => {
+                /*
                 AuthStrategyCookie.signup(userInserted, res)
+                */
+                AuthStrategyToken.signup(userInserted, res)
                   .then((user) => {
                     return res.json(user);
                   })
@@ -90,7 +102,10 @@ export class AuthRoutes {
 
   // Log out route
   public static logoutRoute(req: Request, res: Response) {
+    /*
     AuthStrategyCookie.logout(res);
+    */
+    AuthStrategyToken.logout(res);
     res.json({success: true});
   }
 

@@ -3,19 +3,23 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { routerReducer } from '@ngrx/router-store';
 
 
-import * as fromLoading from './loadingReducer';
-import * as fromError from './errorReducer';
-import * as fromConfirm from './confirmReducer';
+import * as fromLoading from './loading-reducer';
+import * as fromError from './error-reducer';
+import * as fromLanguage from './language-reducer';
+import * as fromConfirm from './confirm-reducer';
+import * as fromSocket from './socket-reducer';
 
-import { AppStateI, AppRecucerStateI } from '../app-states';
+import { AppStateI, AppReducerStateI } from '../app-states';
 
 declare const process: any;
 
-export const reducer: AppRecucerStateI = {
+export const reducer: AppReducerStateI = {
   router: routerReducer,
   loading: fromLoading.reducer,
   error: fromError.reducer,
-  confirm: fromConfirm.reducer
+  language: fromLanguage.reducer,
+  confirm: fromConfirm.reducer,
+  socket: fromSocket.reducer
 };
 
 export const reducers: ActionReducerMap<AppStateI> = reducer;

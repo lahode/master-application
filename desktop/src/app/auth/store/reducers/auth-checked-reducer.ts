@@ -14,6 +14,7 @@ export function reducer (state: IAuthCheckedState = initialState, action: any): 
     }
 
     case AuthActions.LOGIN_FAILED:
+    case AuthActions.CHECK_AUTH_STOP:
     case AuthActions.CHECK_AUTH_FAILED:
     case AuthActions.LOGOUT_SUCCESS: {
       return false;

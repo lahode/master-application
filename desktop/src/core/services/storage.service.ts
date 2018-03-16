@@ -18,14 +18,14 @@ export class StorageService {
   public set(itemName: string, itemToStore: any): Promise<any> {
     return new Promise((resolve, reject) => {
       localStorage.setItem(itemName, JSON.stringify(itemToStore));
-      resolve(null);
+      resolve(true);
     });
   }
 
   public remove(itemName: string): Promise<any> {
     return new Promise((resolve, reject) => {
       localStorage.removeItem(itemName);
-      resolve(null);
+      resolve(true);
     });
   }
 

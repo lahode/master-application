@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { RoleActions } from '../actions/role.actions';
 
-import { Role } from '../../models/role';
+import { Role } from '../../../../core/models/role';
 
 export interface IRolesState extends Array<Role> {}
 

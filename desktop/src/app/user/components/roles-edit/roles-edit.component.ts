@@ -3,8 +3,8 @@ import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@ang
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
 
-import { Role } from '../../models/role';
-import { User } from '../../models/user';
+import { Role } from '../../../../core/models/role';
+import { User } from '../../../../core/models/user';
 import { RoleActions } from '../../store';
 import { GLOBAL_PERMISSIONS } from '../../../app.permissions';
 

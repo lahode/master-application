@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { UserActions } from '../actions/user.actions';
 
-import { User } from '../../models/user';
+import { User } from '../../../../core/models/user';
 
 export interface IUserState extends User {}
 

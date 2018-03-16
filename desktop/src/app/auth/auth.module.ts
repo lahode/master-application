@@ -1,6 +1,7 @@
 /* Contrib modules */
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule, MatCheckboxModule, MatButtonModule,
@@ -18,6 +19,7 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 /* Services */
 import { AuthGuard } from './services/authguard.service';
 import { NoGuard } from './services/noguard.service';
+import { TokenInterceptor } from './services/auth_token.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,14 @@ import { NoGuard } from './services/noguard.service';
   ],
   providers: [
     AuthGuard,
-    NoGuard
+    NoGuard,
+    /*
+    {
+       provide: HTTP_INTERCEPTORS,
+       useClass: TokenInterceptor,
+       multi: true
+    }
+    */
   ]
 })
 export class AuthModule {}

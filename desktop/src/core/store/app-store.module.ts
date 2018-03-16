@@ -5,10 +5,12 @@ import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router
 import { Params, RouterStateSnapshot } from '@angular/router';
 
 import { reducers, metaReducers } from './reducers';
+import { AppEffects } from './effects/app.effects';
 import { EndpointsService } from '../services/endpoints';
 import { StorageService } from '../services/storage.service';
 import { FileService } from '../services/file.service';
 import { PagerService } from '../services/pager.service';
+import { SocketService } from '../services/socket.service';
 
 export interface RouterStateUrl {
   url: string;
@@ -38,13 +40,14 @@ export const AppProviders = [
   StorageService,
   FileService,
   PagerService,
+  SocketService,
   { provide: RouterStateSerializer, useClass: CustomSerializer }
 ]
 
 @NgModule({
   imports: [
     StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([AppEffects]),
     StoreRouterConnectingModule
   ],
 })

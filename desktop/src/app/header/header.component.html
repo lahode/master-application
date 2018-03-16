@@ -1,11 +1,11 @@
 <mat-toolbar color="primary">
-  <div>
+  <div *ngIf="(language$ | async) as language">
     <mat-select #langSelect (change)="setLanguage(langSelect.value)" [(ngModel)]="currentLang">
       <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</mat-option>
     </mat-select>
   </div>
   <div mat-button class="docs-button" routerLink="/">{{ 'APPLICATION.TITLE' | translate }}</div>
-  <button mat-icon-button [mat-menu-trigger-for]="menu" *ngIf="isLoggedIn$ | async">
+  <button mat-icon-button [mat-menu-trigger-for]="menu" *ngIf="(user$ | async) as user">
     <mat-icon>more_vert</mat-icon>
   </button>
 </mat-toolbar>

@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Router} from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
+
+import { AuthActions } from '../auth/store';
+import { AppActions } from '../../core/store';
+
+const DEFAULT_LANGUAGE = 'en';
 
 @Component({
   selector: 'app-header',
@@ -11,29 +16,44 @@ import { Store } from '@ngrx/store';
 })
 export class HeaderComponent implements OnInit {
 
-  private isLoggedIn$: Observable<boolean>;
-  public currentLang = 'en';
+  public user$: Observable<boolean>;
+  public language$: Observable<any>;
 
   constructor(private translate: TranslateService,
-              private store: Store<any>,
-              private router: Router) {
+              private readonly _store: Store<any>,
+              private readonly _router: Router) {
     translate.addLangs(['en', 'fr']);
-    translate.setDefaultLang(this.currentLang);
-    const browserLang = translate.getBrowserLang();
-    translate.use(browserLang.match(/en|fr/) ? browserLang : 'en');
   }
 
   ngOnInit() {
-    this.isLoggedIn$ = this.store.select(state => state.currentUser).map(user => user !== null);
+    this._store.dispatch(<Action>AuthActions.checkAuth());
+    this.user$ = this._store.select(state => state.currentUser)
+                            .map(user => {
+                              this.setDefaultLang('');
+                              return user !== null;
+                            });
+    this.language$ = this._store.select(state => state.language)
+                                .filter(language => language !== '')
+                                .map(language => this.translate.use(language));
+  }
+
+  setDefaultLang(userlang) {
+    const browserLang = this.translate.getBrowserLang();
+    let currentLang = DEFAULT_LANGUAGE;
+    if (userlang.match(/en|fr/)) {
+      currentLang = userlang;
+    } else if (browserLang.match(/en|fr/)) {
+      currentLang = browserLang;
+    }
+    this._store.dispatch(<Action>AppActions.setLanguage(currentLang));
   }
 
   logout() {
-    this.store.dispatch({type: 'LOGOUT_START'});
+    this._store.dispatch(<Action>AuthActions.logout());
   }
 
   setLanguage(value) {
-    this.translate.use(value);
-    this.currentLang = value;
+    this._store.dispatch(<Action>AppActions.setLanguage(value));
   }
 
 }

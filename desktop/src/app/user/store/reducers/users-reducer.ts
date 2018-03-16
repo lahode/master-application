@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { UserActions } from '../actions/user.actions';
 import { Injector } from '@angular/core';
 
-import { User } from '../../models/user';
+import { User } from '../../../../core/models/user';
 import { Pager } from 'core/models/pager';
 import { PagerService } from 'core/services/pager.service';
 

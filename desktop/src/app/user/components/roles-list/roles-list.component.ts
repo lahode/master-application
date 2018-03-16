@@ -3,7 +3,7 @@ import { Store, Action } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 
-import { Role } from '../../models/role';
+import { Role } from '../../../../core/models/role';
 import { RoleActions } from '../../store';
 import { RolesEditComponent } from '../roles-edit/roles-edit.component';
 

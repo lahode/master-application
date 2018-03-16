@@ -3,7 +3,7 @@ import { Store, Action } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 
-import { User } from '../../models/user';
+import { User } from '../../../../core/models/user';
 import { Range } from 'core/models/range';
 import { UserActions } from '../../store';
 import { UsersEditComponent } from '../users-edit/users-edit.component';

@@ -14,6 +14,13 @@ export const AppActions = {
   LOADING: 'LOADING',
   LOADED: 'LOADED',
 
+  LANGUAGE: 'LANGUAGE',
+
+  SOCKET_CONNECT: 'SOCKET_CONNECT',
+  SOCKET_CONNECTED: 'SOCKET_CONNECTED',
+  SOCKET_DISCONNECT: 'SOCKET_DISCONNECT',
+  SOCKET_DISCONNECTED: 'SOCKET_DISCONNECTED',
+
   confirm(_credentials = null) {
     return <Action>{
       type: AppActions.CONFIRM_DIALOG,
@@ -46,6 +53,13 @@ export const AppActions = {
     };
   },
 
+  setLanguage(_credentials)  {
+    return <Action>{
+      type: AppActions.LANGUAGE,
+      payload: _credentials
+    };
+  },
+
   loading(_credentials)  {
     return <Action>{
       type: AppActions.LOADING,
@@ -57,6 +71,18 @@ export const AppActions = {
     return <Action>{
       type: AppActions.LOADED,
       payload: _credentials
+    };
+  },
+
+  connectSocket() {
+    return <Action>{
+      type: AppActions.SOCKET_CONNECT,
+    };
+  },
+
+  disconnectSocket() {
+    return <Action>{
+      type: AppActions.SOCKET_DISCONNECT,
     };
   }
 
