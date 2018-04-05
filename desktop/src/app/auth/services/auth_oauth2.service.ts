@@ -175,7 +175,7 @@ export class AuthOAuth2Service extends AuthService {
 
     const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
 
-    return this._http.post(this._getConfig().api.host + '/' + this._getConfig().token, params.join('&'), {headers})
+    return this._http.post(this._getConfig().api.host + '/' + this._getConfig().api.token, params.join('&'), {headers})
                      .switchMap((res: AuthResponse) => this._setToken(res))
                      .catch(err => {
                        this._destroyTokens();

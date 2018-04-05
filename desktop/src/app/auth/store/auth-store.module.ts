@@ -36,7 +36,7 @@ const authServiceFactory = (http: HttpClient,
 export let AuthServiceProvider = {
   provide: AuthService,
   useFactory: authServiceFactory,
-  deps: [HttpClient, EndpointsService, StorageService, JwtHelper]
+  deps: [HttpClient, EndpointsService, StorageService, JwtHelper, ErrorHandlerService]
 };
 
 export const AuthProviders = [
