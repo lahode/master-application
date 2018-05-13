@@ -12,6 +12,15 @@ export class RetrieveUser {
           next();
       })
     }
+    else if (req.headers && req.headers.authorization) {
+      var authorization = req.headers.authorization, decoded;
+      let header = (authorization as string).split(' ');
+      RetrieveUser.handleSessionCookie(header[1], req)
+        .then(() => next())
+        .catch(err => {
+          next();
+      });
+    }
     else {
       next();
     }

@@ -100,12 +100,13 @@ export class UsersEditComponent implements OnInit, OnDestroy {
 
     // Set form updates to the original user object.
     if (this.userEdit) {
-      Object.keys(model).map(key => {
-        this.userEdit[key] = model[key];
+      Object.keys(this.userEdit).map(key => {
+        if (!model.hasOwnProperty(key)) {
+          model[key] = this.userEdit[key];
+        }
       });
-    } else {
-      this.userEdit = model;
     }
+    this.userEdit = model;
 
     // Save the user
     if (this.userEdit._id) {

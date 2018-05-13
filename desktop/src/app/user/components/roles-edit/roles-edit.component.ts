@@ -93,12 +93,13 @@ export class RolesEditComponent implements OnInit, OnDestroy {
 
     // Set form updates to the original role object.
     if (this.roleEdit) {
-      Object.keys(model).map(key => {
-        this.roleEdit[key] = model[key];
+      Object.keys(this.roleEdit).map(key => {
+        if (!model.hasOwnProperty(key)) {
+          model[key] = this.roleEdit[key];
+        }
       });
-    } else {
-      this.roleEdit = model;
     }
+    this.roleEdit = model;
 
     // Save the role
     if (this.roleEdit._id) {

@@ -11,5 +11,10 @@
     .docs-navbar, .docs-navbar-header {
       background: mat-color($primary);
     }
+
+    .ng-star-inserted {
+      background: transparent;
+      border: none;
+    }
   }
 }

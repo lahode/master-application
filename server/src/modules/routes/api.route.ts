@@ -19,7 +19,7 @@ export class APIRoutes {
     app.post("/api/login", AuthRoutes.loginRoute);
     app.post("/api/signup", AuthRoutes.signUpRoute);
     app.post("/api/retrieve-password", AuthRoutes.getPswRoute);
-    // app.use("/api/secure", checkIfAuthenticated);
+    app.use("/api/secure", checkIfAuthenticated);
     app.post("/api/secure/logout", checkCsrfToken, AuthRoutes.logoutRoute);
     app.get("/api/secure/check-auth", AuthRoutes.checkAuth);
 

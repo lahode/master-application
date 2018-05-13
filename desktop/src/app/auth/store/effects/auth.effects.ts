@@ -85,7 +85,7 @@ export class AuthEffects {
           // On errors dispatch LOGOUT_FAILED action with result
           catchError(res => of({type: AuthActions.LOGOUT_FAILED, payload: res})),
           // Redirect to Homepage
-          tap(() => this._router.navigate(['/home']))
+          tap(() => this._router.navigate(['/signin']))
         )
       )
     );

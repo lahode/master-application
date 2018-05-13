@@ -9,6 +9,7 @@ import { MatDialogModule, } from '@angular/material';
 import { NgProgressModule } from 'ngx-progressbar';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 /* Custom modules */
 import { AuthModule } from './auth/auth.module';
@@ -29,6 +30,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppStoreModule } from '../core/store';
 
+/* Providers */
+import { TokenInterceptor } from './auth/services/auth_token.service';
+
 /**
  * Custom Http Loader for translation
  * (AoT requires an exported function for factories)
@@ -47,10 +51,12 @@ export function createTranslateLoader(http: HttpClient) {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    /*
     HttpClientXsrfModule.withOptions({ // Add cookie secure option
       cookieName: 'XSRF-TOKEN',
       headerName: 'x-xsrf-token'
     }),
+    */
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -67,6 +73,13 @@ export function createTranslateLoader(http: HttpClient) {
     AppStoreModule.forRoot(),
     RouterModule.forRoot(appRoutes, { useHash: false }),
     StoreDevtoolsModule.instrument(),
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

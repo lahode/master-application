@@ -41,6 +41,7 @@ export let AuthServiceProvider = {
 
 export const AuthProviders = [
   AuthServiceProvider,
+  AuthTokenService,
   JwtHelper
 ];
 

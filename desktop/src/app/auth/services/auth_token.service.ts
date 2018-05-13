@@ -37,10 +37,7 @@ export class AuthTokenService extends AuthService {
           return this._http.get(this._endpoints.checkAuth())
             .pipe(
               shareReplay(),
-              map(response => {
-                this._jwtHelper.decodeToken(jwt);
-                return response;
-              }),
+              map(response => (response as any).user),
               catchError(err => {
                 this._storage.remove(STORAGE_ITEM).then(() => true);
                 return throwError(this._manageError(err));
@@ -69,7 +66,7 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.login(), values)
       .pipe(
         shareReplay(),
-        switchMap(jwt => this.handleJwtResponse((jwt as any).user.token)),
+        switchMap(jwt => this.handleJwtResponse((jwt as any).token, (jwt as any).user)),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
           return throwError(this._manageError(err));
@@ -87,7 +84,7 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.signup(), values)
       .pipe(
         shareReplay(),
-        switchMap(jwt => this.handleJwtResponse((jwt as any).user.token)),
+        switchMap(jwt => this.handleJwtResponse((jwt as any).token, (jwt as any).user)),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
           return throwError(this._manageError(err));
@@ -100,7 +97,7 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.getPassword(), values)
       .pipe(
         shareReplay(),
-        switchMap(jwt => this.handleJwtResponse((jwt as any).user.token)),
+        switchMap(jwt => this.handleJwtResponse((jwt as any).token, (jwt as any).user)),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
           return throwError(this._manageError(err));
@@ -109,11 +106,11 @@ export class AuthTokenService extends AuthService {
   }
 
   // Save JWT Token and return user object.
-  private handleJwtResponse(jwt: string): Observable<any> {
+  private handleJwtResponse(jwt: string, user: any): Observable<any> {
     return from(
       this._storage.set('jwt', jwt)
         .then(
-          () => this._jwtHelper.decodeToken(jwt),
+          () => user,
           (err) => throwError(this._manageError(err))
         )
       );
