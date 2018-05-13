@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { FileService } from '../../core/services/file.service';
 

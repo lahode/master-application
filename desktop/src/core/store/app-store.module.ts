@@ -6,12 +6,13 @@ import { Params, RouterStateSnapshot } from '@angular/router';
 
 import { reducers, metaReducers } from './reducers';
 import { AppEffects } from './effects/app.effects';
+
 import { EndpointsService } from '../services/endpoints';
-import { StorageService } from '../services/storage.service';
 import { ErrorHandlerService } from '../services/errorhandler.service';
 import { FileService } from '../services/file.service';
 import { PagerService } from '../services/pager.service';
 import { SocketService } from '../services/socket.service';
+import { StorageService } from '../services/storage.service';
 
 export interface RouterStateUrl {
   url: string;
@@ -38,13 +39,13 @@ export class CustomSerializer implements RouterStateSerializer<RouterStateUrl> {
 
 export const AppProviders = [
   EndpointsService,
-  StorageService,
   ErrorHandlerService,
   FileService,
   PagerService,
   SocketService,
+  StorageService,
   { provide: RouterStateSerializer, useClass: CustomSerializer }
-]
+];
 
 @NgModule({
   imports: [

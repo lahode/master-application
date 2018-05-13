@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ObjtoarrayPipe implements PipeTransform {
 
   transform(value: any, args?: any[]): Object[] {
-    let groupedResult = [];
+    const groupedResult = [];
     Object.keys(value).forEach(function(key, index) {
       groupedResult[index] = {key: key, value: value[key]};
     });

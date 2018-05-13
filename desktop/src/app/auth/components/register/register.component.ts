@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import { AuthActions } from '../../store';
-import { DoubleValidation } from '../../../shared/custom-validation';
+import { DoubleValidation } from '../../../../core/services/custom-validation';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,7 @@ import { DoubleValidation } from '../../../shared/custom-validation';
 export class RegisterComponent implements OnInit {
 
   private registerForm: FormGroup;
-  public loading$;
+  public loading$: Observable<any>;
 
   @Input() returnUrl: string;
 
@@ -22,7 +23,8 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     // Define email validation pattern
-    let emailpattern = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+    const emailpattern = `[a-z0-9!#$%&'*+/=?^_"{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_"{|}~-]+)` +
+                         `@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?`;
 
     // Register form
     this.registerForm = this._fb.group({
@@ -37,7 +39,7 @@ export class RegisterComponent implements OnInit {
     });
 
     // Start loading
-    this.loading$ = this.store.select(state => state.loading)
+    this.loading$ = this.store.select(state => state.loading);
   }
 
   // Register the new user

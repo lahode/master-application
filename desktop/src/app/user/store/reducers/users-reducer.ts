@@ -3,8 +3,8 @@ import { UserActions } from '../actions/user.actions';
 import { Injector } from '@angular/core';
 
 import { User } from '../../../../core/models/user';
-import { Pager } from 'core/models/pager';
-import { PagerService } from 'core/services/pager.service';
+import { Pager } from '../../../../core/models/pager';
+import { PagerService } from '../../../../core/services/pager.service';
 
 export interface IUsersState extends Pager {}
 

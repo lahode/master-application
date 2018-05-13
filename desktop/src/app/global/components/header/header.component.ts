@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 import { Router} from '@angular/router';
 import { Store, Action } from '@ngrx/store';
 
-import { AuthActions } from '../auth/store';
-import { AppActions } from '../../core/store';
+import { AuthActions } from '../../../auth/store';
+import { AppActions } from '../../../../core/store';
 
 const DEFAULT_LANGUAGE = 'en';
 
@@ -28,13 +29,17 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this._store.dispatch(<Action>AuthActions.checkAuth());
     this.user$ = this._store.select(state => state.currentUser)
-                            .map(user => {
-                              this.setDefaultLang('');
-                              return user !== null;
-                            });
+      .pipe(
+        map(user => {
+          this.setDefaultLang('');
+          return user !== null;
+        })
+      );
     this.language$ = this._store.select(state => state.language)
-                                .filter(language => language !== '')
-                                .map(language => this.translate.use(language));
+      .pipe(
+        filter(language => language !== ''),
+        map(language => this.translate.use(language))
+      );
   }
 
   setDefaultLang(userlang) {

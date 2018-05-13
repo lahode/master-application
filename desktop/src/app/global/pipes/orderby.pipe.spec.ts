@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async } from '@angular/core/testing';
-import { GetkeyPipe } from './getkey.pipe';
+import { OrderByPipe } from './orderby.pipe';
 
-describe('Pipe: Getkey', () => {
+describe('Pipe: Orderby', () => {
   it('create an instance', () => {
-    let pipe = new GetkeyPipe();
+    const pipe = new OrderByPipe();
     expect(pipe).toBeTruthy();
   });
 });

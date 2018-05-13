@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import { AuthActions } from '../../store';
 
@@ -12,7 +13,7 @@ import { AuthActions } from '../../store';
 export class SigninComponent implements OnInit {
 
   public signInform: FormGroup;
-  public loading$;
+  public loading$: Observable<any>;
 
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
@@ -28,7 +29,7 @@ export class SigninComponent implements OnInit {
     });
 
     // Start loading
-    this.loading$ = this.store.select(state => state.loading)
+    this.loading$ = this.store.select(state => state.loading);
   }
 
   // Change block

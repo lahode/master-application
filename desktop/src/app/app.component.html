@@ -1,7 +1,16 @@
+<ng-progress
+    [positionUsing]="'marginLeft'"
+    [direction]="'leftToRightIncreased'"
+    [color]="'#4286f4'"
+    [trickleSpeed]="500"
+    [thick]="true"
+    [ease]="'easeInSine'"
+></ng-progress>
 <header>
   <app-header></app-header>
 </header>
-<main>
+<app-breadcrumb></app-breadcrumb>
+<main class="container">
   <app-loading></app-loading>
   <router-outlet></router-outlet>
 </main>

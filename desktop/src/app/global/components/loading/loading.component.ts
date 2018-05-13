@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Router, NavigationStart, RoutesRecognized } from '@angular/router';
 
 @Component({
@@ -15,8 +16,9 @@ export class LoadingComponent implements OnInit {
 
   ngOnInit() {
     this.loading$ = this.router.events
-                      .map(event => event instanceof NavigationStart ||
-                                    event instanceof RoutesRecognized);
+      .pipe(
+        map(event => event instanceof NavigationStart || event instanceof RoutesRecognized)
+      );
   }
 
 }

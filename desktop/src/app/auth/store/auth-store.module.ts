@@ -42,7 +42,7 @@ export let AuthServiceProvider = {
 export const AuthProviders = [
   AuthServiceProvider,
   JwtHelper
-]
+];
 
 @NgModule({
   imports: [

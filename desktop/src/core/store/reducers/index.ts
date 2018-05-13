@@ -2,10 +2,10 @@ import { MetaReducer, ActionReducerMap, combineReducers, ActionReducer, Action }
 import { storeFreeze } from 'ngrx-store-freeze';
 import { routerReducer } from '@ngrx/router-store';
 
-
 import * as fromLoading from './loading-reducer';
 import * as fromError from './error-reducer';
 import * as fromLanguage from './language-reducer';
+import * as fromBreadcrumb from './breadcrumb-reducer';
 import * as fromConfirm from './confirm-reducer';
 import * as fromSocket from './socket-reducer';
 
@@ -18,6 +18,7 @@ export const reducer: AppReducerStateI = {
   loading: fromLoading.reducer,
   error: fromError.reducer,
   language: fromLanguage.reducer,
+  breadcrumb: fromBreadcrumb.reducer,
   confirm: fromConfirm.reducer,
   socket: fromSocket.reducer
 };

@@ -12,11 +12,11 @@ export const devVariables:IEnvironment = {
     ROLES: `${root}/data/roles.json`,
     FILES: `${root}/data/files.json`
   },
-  FRONTEND: 'https://localhost:4200',
+  FRONTEND: 'http://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,
   SECURITY: {
-    HTTPS: true,
+    HTTPS: false,
     KEY: `${root}/security/key.pem`,
     CERT: `${root}/security/cert.pem`
   },

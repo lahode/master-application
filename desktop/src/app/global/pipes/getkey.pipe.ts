@@ -6,10 +6,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class GetkeyPipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    if (value)
+    if (value) {
       return Object.keys(value);
-    else
+    } else {
       return null;
+    }
   }
 
 }

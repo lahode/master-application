@@ -1,5 +1,6 @@
 import { Directive, Input, OnInit, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
 
 import { AuthActions } from '../store';
@@ -19,7 +20,9 @@ export class PermissionCheckDirective implements OnInit, OnDestroy {
     private store: Store<any>) {
 
     this.sub = this.store.select(state => state)
-      .filter((state) => state.loading.length === 0)
+      .pipe(
+        filter((state) => state.loading.length === 0)
+      )
       .subscribe((state) => {
         this.isAllowed = state.permissionCheck;
         this.showIfUserAllowed();

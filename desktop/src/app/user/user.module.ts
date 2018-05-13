@@ -1,7 +1,7 @@
 /* Contrib modules */
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '../shared/shared.module';
+import { GlobalModule } from '../global/global.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule, MatCheckboxModule, MatButtonModule,
          MatTabsModule, MatSelectModule, MatPaginatorModule,
@@ -31,7 +31,7 @@ export class MatPaginatorIntApp extends MatPaginatorIntl {
     RolesEditComponent
   ],
   imports: [
-    SharedModule,
+    GlobalModule,
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,

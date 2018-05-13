@@ -1,16 +1,18 @@
 /* Contrib modules */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HttpClientXsrfModule, HttpClient } from '@angular/common/http';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HttpClientXsrfModule, HttpClient } from '@angular/common/http';
+import { MatDialogModule, } from '@angular/material';
+import { NgProgressModule } from 'ngx-progressbar';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { MatSelectModule, MatButtonModule, MatDialogModule,
-         MatToolbarModule, MatMenuModule, MatIconModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* Custom modules */
 import { AuthModule } from './auth/auth.module';
+import { GlobalModule } from './global/global.module';
 import { UserModule } from './user/user.module';
 
 /* Routing */
@@ -19,30 +21,13 @@ import { appRoutes } from './app.routing';
 
 /* Components */
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
-import { LoadingComponent } from './loading/loading.component';
-import { ErrorComponent } from './shared/error/error.component';
-import { ConfirmComponent } from './shared/confirm/confirm.component';
-
-/* Services */
-import { LocalDataStorageService } from './shared/localdata-storage.service';
 
 /* Store */
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppStoreModule } from '../core/store';
-
-/* RxJS imports */
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/withLatestFrom';
 
 /**
  * Custom Http Loader for translation
@@ -55,11 +40,7 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     HomeComponent,
-    LoadingComponent,
-    ErrorComponent,
-    ConfirmComponent
   ],
   imports: [
     BrowserModule,
@@ -77,25 +58,15 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    MatSelectModule,
-    MatButtonModule,
+    NgProgressModule,
     MatDialogModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatIconModule,
     BrowserAnimationsModule,
     AuthModule,
+    GlobalModule,
     UserModule,
     AppStoreModule.forRoot(),
     RouterModule.forRoot(appRoutes, { useHash: false }),
     StoreDevtoolsModule.instrument(),
-  ],
-  entryComponents: [
-    ErrorComponent,
-    ConfirmComponent
-  ],
-  providers: [
-    LocalDataStorageService
   ],
   bootstrap: [AppComponent]
 })

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
+import { filter } from 'rxjs/operators';
 
 import { Role } from '../../../../core/models/role';
 import { User } from '../../../../core/models/user';
@@ -27,7 +28,8 @@ export class UsersEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Define email validation pattern
-    let emailpattern = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+    const emailpattern = `[a-z0-9!#$%&'*+/=?^_"{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_"{|}~-]+)` +
+                         `@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?`;
 
     // Initialize the list of roles
     this.store.dispatch(<Action>RoleActions.list());
@@ -44,8 +46,10 @@ export class UsersEditComponent implements OnInit, OnDestroy {
 
     // Get connected user and current user edit to fill the form.
     this.stateSelect = this.store.select(state => state)
-      .filter((state) => state.loading.length === 0)
-      .filter((state) => state.rolesList)
+      .pipe(
+        filter((state) => state.loading.length === 0),
+        filter((state) => state.rolesList)
+      )
       .subscribe(state => {
         this.currentUser = state.currentUser;
         this.userEdit = state.userEdit;

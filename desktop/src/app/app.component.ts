@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
+import { NgProgress } from 'ngx-progressbar';
 
 import { AppActions } from '../core/store';
-import { ErrorComponent } from './shared/error/error.component';
-import { ConfirmComponent } from './shared/confirm/confirm.component';
+import { ErrorComponent } from './global/components/error/error.component';
+import { ConfirmComponent } from './global/components/confirm/confirm.component';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +15,12 @@ import { ConfirmComponent } from './shared/confirm/confirm.component';
 export class AppComponent implements OnInit, OnDestroy {
   private storeErrorSubscription;
   private storeConfirmSubscription;
+  private storeLoadingSubscription;
+  private progressBar = true;
 
   constructor(private store: Store<any>,
-              private dialog: MatDialog) {}
+              private dialog: MatDialog,
+              private progressService: NgProgress) {}
 
   ngOnInit() {
     // Managing error in app
@@ -40,19 +44,32 @@ export class AppComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
             this.store.dispatch(confirm.action);
-            this.store.dispatch(<Action>AppActions.lauchConfirm());
+            this.store.dispatch(<Action>AppActions.launchConfirm());
           } else {
             this.store.dispatch(<Action>AppActions.resetConfirm());
           }
         });
       }
     });
+
+    // Managing confirm dialog in app
+    this.storeLoadingSubscription = this.store.select(state => state.loading)
+      .subscribe(loading => {
+        if (loading.length > 0) {
+          this.progressService.start();
+        } else {
+          this.progressService.done();
+        }
+      });
+
   }
 
   // Destroy store subscriptions when leaving component
   ngOnDestroy() {
     this.storeErrorSubscription.unsubscribe();
     this.storeConfirmSubscription.unsubscribe();
+    this.storeLoadingSubscription.unsubscribe();
+    this.store.dispatch(<Action>AppActions.disconnectSocket());
   }
 
 }

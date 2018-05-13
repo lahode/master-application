@@ -48,7 +48,7 @@ export class RolesListComponent implements OnInit {
       message: 'USERS.DELETE.MESSAGE',
       name: role.name,
       action: <Action>RoleActions.remove(role._id)
-    }
+    };
     this.store.dispatch(<Action>RoleActions.confirm(confirmMessage));
   }
 

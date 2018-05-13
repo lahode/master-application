@@ -16,6 +16,8 @@ export const AppActions = {
 
   LANGUAGE: 'LANGUAGE',
 
+  BREADCRUMB: 'BREADCRUMB',
+
   SOCKET_CONNECT: 'SOCKET_CONNECT',
   SOCKET_CONNECTED: 'SOCKET_CONNECTED',
   SOCKET_DISCONNECT: 'SOCKET_DISCONNECT',
@@ -28,7 +30,7 @@ export const AppActions = {
     };
   },
 
-  lauchConfirm() {
+  launchConfirm() {
     return <Action>{
       type: AppActions.CONFIRM_LAUNCH
     };
@@ -60,6 +62,13 @@ export const AppActions = {
     };
   },
 
+  setBreadcrumb(_credentials)  {
+    return <Action>{
+      type: AppActions.BREADCRUMB,
+      payload: _credentials
+    };
+  },
+
   loading(_credentials)  {
     return <Action>{
       type: AppActions.LOADING,
@@ -86,4 +95,4 @@ export const AppActions = {
     };
   }
 
-}
+};

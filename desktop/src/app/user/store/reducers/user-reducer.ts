@@ -10,11 +10,11 @@ export const initialState: IUserState = null;
 export function reducer (state: IUserState = initialState, action: any): IUserState {
   switch (action.type) {
     case UserActions.USER_NEW: {
-      return Object.assign({}, null)
+      return Object.assign({}, null);
     }
 
     case UserActions.USER_LOAD_START: {
-      return Object.assign({}, state)
+      return Object.assign({}, state);
     }
 
     case UserActions.USER_LOAD_SUCCESS: {

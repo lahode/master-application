@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Observable, throwError } from 'rxjs';
+import { shareReplay, catchError } from 'rxjs/operators';
 
 import { EndpointsService } from './endpoints';
 
@@ -14,9 +14,9 @@ export class FileService {
   // Upload file
   public upload(file) {
     return this.http.post(this.endpoints.fileUpload(), file)
-      .shareReplay()
-      .catch(err => {
-        return Observable.throw(this._manageError(err))}
+      .pipe(
+        shareReplay(),
+        catchError(err => throwError(this._manageError(err)))
       );
   }
 

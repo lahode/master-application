@@ -7,8 +7,12 @@ export class OrderByPipe implements PipeTransform {
 
   transform(array: Array<any>, orderField: string, orderType: boolean): any {
     array.sort((a: any, b: any) => {
-      if (a[orderField] == null || a[orderField].isUndefined) return orderType ? 0 - b[orderField] : b[orderField] - 0;
-      if (b[orderField] == null || b[orderField].isUndefined) return orderType ? a[orderField] - 0 : b[orderField] - 0;
+      if (a[orderField] == null || a[orderField].isUndefined) {
+        return orderType ? 0 - b[orderField] : b[orderField] - 0;
+      }
+      if (b[orderField] == null || b[orderField].isUndefined) {
+        return orderType ? a[orderField] - 0 : b[orderField] - 0;
+      }
       return orderType ? a[orderField] - b[orderField] : b[orderField] - a[orderField];
     });
   }

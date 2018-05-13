@@ -1,0 +1,6 @@
+<ol class="breadcrumb" *ngIf="(breadcrumb$ | async) as breadcrumb">
+  <li class="breadcrumb-item" *ngFor="let element of breadcrumb">
+    <a *ngIf="element.path; else withoutpath" [routerLink]="[element.path]">{{ element.label }}</a>
+    <ng-template #withoutpath>{{ element.label }}</ng-template>
+  </li>
+</ol>

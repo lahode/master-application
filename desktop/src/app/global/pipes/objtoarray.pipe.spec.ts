@@ -5,7 +5,7 @@ import { ObjtoarrayPipe } from './objtoarray.pipe';
 
 describe('Pipe: Objtoarray', () => {
   it('create an instance', () => {
-    let pipe = new ObjtoarrayPipe();
+    const pipe = new ObjtoarrayPipe();
     expect(pipe).toBeTruthy();
   });
 });

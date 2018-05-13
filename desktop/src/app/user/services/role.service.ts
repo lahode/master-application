@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable, throwError } from 'rxjs';
+import { shareReplay, map, catchError } from 'rxjs/operators';
 
 import { EndpointsService } from '../../../core/services/endpoints';
 
@@ -13,59 +14,59 @@ export class RoleService {
   // List all roles
   public list(): Observable<any> {
     return this.http.get(this.endpoints.roleList())
-      .shareReplay()
-      .map(response => <any>(response as any).roles)
-      .catch(err => {
-        return Observable.throw(this._manageError(err))}
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).roles),
+        catchError(err => throwError(this._manageError(err)))
       );
   }
 
   // List all permissions
   public getPermissions(): Observable<any> {
     return this.http.get(this.endpoints.getPermissions())
-      .shareReplay()
-      .map(response => <any>(response as any).permissions)
-      .catch(err => {
-        return Observable.throw(this._manageError(err))}
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).permissions),
+        catchError(err => throwError(this._manageError(err)))
       );
   }
 
   // Get role detail by ID
   public get(id: string): Observable<any> {
     return this.http.get(this.endpoints.roleDetail(id))
-      .shareReplay()
-      .map(response => <any>(response as any).role)
-      .catch(err => {
-        return Observable.throw(this._manageError(err))}
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).role),
+        catchError(err => throwError(this._manageError(err)))
       );
   }
 
   // Create role
   public create(values: any): Observable<any> {
     return this.http.post(this.endpoints.roleCreate(), values)
-      .shareReplay()
-      .map(response => <any>(response as any).role)
-      .catch(err => {
-        return Observable.throw(this._manageError(err))}
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).role),
+        catchError(err => throwError(this._manageError(err)))
       );
   }
 
   // Update role
   public update(values: any): Observable<any> {
     return this.http.post(this.endpoints.roleUpdate(), values)
-      .shareReplay()
-      .map(response => <any>(response as any).role)
-      .catch(err => {
-        return Observable.throw(this._manageError(err))}
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).role),
+        catchError(err => throwError(this._manageError(err)))
       );
   }
 
   // Remove role
   public remove(id: string): Observable<any> {
     return this.http.get(this.endpoints.roleRemove(id))
-      .shareReplay()
-      .catch(err => {
-        return Observable.throw(this._manageError(err))}
+      .pipe(
+        shareReplay(),
+        catchError(err => throwError(this._manageError(err)))
       );
   }
 

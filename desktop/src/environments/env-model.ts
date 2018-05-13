@@ -1,8 +1,8 @@
 export interface IEnvironment {
-  production: boolean,
+  production: boolean;
   authentication: {
     type: string,
     value: {}
-  },
-  socket: {}
+  };
+  socket: {};
 }

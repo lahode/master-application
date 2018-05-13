@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
+import { filter } from 'rxjs/operators';
 
 import { Role } from '../../../../core/models/role';
 import { User } from '../../../../core/models/user';
@@ -38,8 +39,10 @@ export class RolesEditComponent implements OnInit, OnDestroy {
 
     // Get connected user and current role edit to fill the form.
     this.stateSelect = this.store.select(state => state)
-      .filter((state) => state.loading.length === 0)
-      .filter((state) => state.permissionsList)
+      .pipe(
+        filter((state) => state.loading.length === 0),
+        filter((state) => state.permissionsList)
+      )
       .subscribe(state => {
         this.currentUser = state.currentUser;
         this.roleEdit = state.roleEdit;

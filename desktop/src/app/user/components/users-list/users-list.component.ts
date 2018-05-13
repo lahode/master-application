@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 
 import { User } from '../../../../core/models/user';
-import { Range } from 'core/models/range';
+import { Range } from '../../../../core/models/range';
 import { UserActions } from '../../store';
 import { UsersEditComponent } from '../users-edit/users-edit.component';
 
@@ -35,7 +35,7 @@ export class UsersListComponent implements OnInit {
   }
 
   ngOnInit() {
-    const range = <Range>{from: this.pageIndex * this.pageSize, to: ((this.pageIndex + 1) * this.pageSize) - 1}
+    const range = <Range>{from: this.pageIndex * this.pageSize, to: ((this.pageIndex + 1) * this.pageSize) - 1};
     this.store.dispatch(<Action>UserActions.list(range));
   }
 
@@ -61,7 +61,7 @@ export class UsersListComponent implements OnInit {
       message: 'USERS.DELETE.MESSAGE',
       name: user.username,
       action: <Action>UserActions.remove(user._id)
-    }
+    };
     this.store.dispatch(<Action>UserActions.confirm(confirmMessage));
   }
 

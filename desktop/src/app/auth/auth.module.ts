@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { SharedModule } from '../shared/shared.module';
+import { GlobalModule } from '../global/global.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule, MatCheckboxModule, MatButtonModule,
          MatTabsModule, MatProgressSpinnerModule, MatCardModule } from '@angular/material';
@@ -30,7 +30,7 @@ import { TokenInterceptor } from './services/auth_token.service';
     ConfirmationComponent
   ],
   imports: [
-    SharedModule,
+    GlobalModule,
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,
