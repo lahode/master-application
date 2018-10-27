@@ -6,7 +6,6 @@ import { FilesRoutes }  from "../api/files/files.routes";
 import { Permissions } from "../permissions";
 
 import { checkIfAuthenticated } from "../security/authentication.middleware";
-import { checkCsrfToken } from "../security/csrf.middleware";
 
 // import { getUser } from './get-user';
 
@@ -20,7 +19,7 @@ export class APIRoutes {
     app.post("/api/signup", AuthRoutes.signUpRoute);
     app.post("/api/retrieve-password", AuthRoutes.getPswRoute);
     app.use("/api/secure", checkIfAuthenticated);
-    app.post("/api/secure/logout", checkCsrfToken, AuthRoutes.logoutRoute);
+    app.post("/api/secure/logout", AuthRoutes.logoutRoute);
     app.get("/api/secure/check-auth", AuthRoutes.checkAuth);
 
     // Permission

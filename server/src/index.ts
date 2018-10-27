@@ -2,7 +2,6 @@ import * as express from 'express';
 import * as http  from 'http';
 import * as https from 'https';
 import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as path from 'path';
 import * as morgan from 'morgan';
@@ -22,7 +21,6 @@ export class Server {
 
   constructor() {
     this.app = express();
-    this.app.use(cookieParser())
     this.app.use(RetrieveUser.getUser)
     this.config();
     this.middleware();
@@ -106,14 +104,14 @@ export class Server {
       httpsServer.on('error', this.onError);
 
       // Launch an HTTPS Server.
-      httpsServer.listen(this.port, () => console.log("HTTPS Secure Server running at https://localhost:" + httpsServer.address().port));
+      httpsServer.listen(this.port, () => console.log("HTTPS Secure Server running at https://localhost:" + this.port));
     }
     else {
       const httpServer = http.createServer(this.app);
       httpServer.on('error', this.onError);
 
       // Launch an HTTP Server.
-      httpServer.listen(this.port, () => console.log("HTTP Server running at http://localhost:" + httpServer.address().port));
+      httpServer.listen(this.port, () => console.log("HTTP Server running at http://localhost:" + this.port));
     }
   }
 

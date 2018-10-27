@@ -3,9 +3,6 @@ import { Request, Response } from 'express';
 
 import { CONFIG } from "../../../config";
 
-/*
-import { AuthStrategyCookie } from "../../security/authentication-cookie-strategy";
-*/
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 import { PasswordStrategy } from "../../security/password-strategy";
 
@@ -43,12 +40,6 @@ export class AuthRoutes {
     userDB.findOne({ username: credentials.username })
       .then((user) => {
         if (user) {
-/*
-          return AuthStrategyCookie.login(credentials.password, user, res)
-            .then(user => {
-              delete(user.password);
-              return res.json({user: user, success: true});
-*/
           return AuthStrategyToken.login(credentials.password, user, res)
             .then(result => {
               delete(result.user.password);
@@ -67,7 +58,18 @@ export class AuthRoutes {
     const credentials = req.body;
     const errors = PasswordStrategy.validate(credentials.password);
     if (errors.length > 0) {
-      return res.status(400).json({message: errors, success: false});
+      const err:string[] = [];
+      errors.map(e => {
+        switch (e) {
+          case 'min' : err.push('au minimum 10 caractères');break;
+          case 'uppercase' : err.push('des majuscules');break;
+          case 'min' : err.push('des minuscules');break;
+          case 'spaces' : err.push("aucun d'espace");break;
+          case 'digits' : err.push("des chiffres");break;
+          case 'oneOf' : err.push("être différent de Passw0rd ou Password123");break;
+        }
+      });
+      return res.status(400).json({message: 'Le mot de passe doit avoir ' + err.join(', '), success: false});
     }
 
     if (!credentials.username || !credentials.password) {
@@ -81,9 +83,6 @@ export class AuthRoutes {
               credentials.password = passwordDigest;
               return userDB.insert(credentials)
               .then((userInserted) => {
-                /*
-                AuthStrategyCookie.signup(userInserted, res)
-                */
                 AuthStrategyToken.signup(userInserted, res)
                   .then((user) => {
                     return res.json(user);
@@ -102,9 +101,6 @@ export class AuthRoutes {
 
   // Log out route
   public static logoutRoute(req: Request, res: Response) {
-    /*
-    AuthStrategyCookie.logout(res);
-    */
     AuthStrategyToken.logout(res);
     res.json({success: true});
   }

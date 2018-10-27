@@ -43,7 +43,7 @@ export class RolesRoutes {
       return res.json({success: true});
     })
     .catch(error => {
-      res.status(403).json({
+      res.status(405).json({
         message: "Vous n'êtes pas autorisé à accéder.",
         success: false
       });

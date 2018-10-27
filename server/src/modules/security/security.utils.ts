@@ -28,7 +28,3 @@ export async function createSessionToken(user: User) {
 export async function decodeJwt(token:string) {
   return await jwt.verify(token, RSA_PUBLIC_KEY);
 }
-
-export async function createCsrfToken() {
-  return await randomBytes(32).then(bytes => bytes.toString("hex"));
-}
