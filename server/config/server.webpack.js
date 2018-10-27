@@ -1,14 +1,10 @@
 const root = require('app-root-path').path;
-// all webpack import working cause we use Ionicframewok in front-side
-// Ionic allready have install all default webpack dependencies into our node_modules
-// Do simply import with require(WEBPACK_MODULE_PLUGIN_YOU_NEED);
-// If plugin do not exist, just add it to ou project package devDependencies
-// with $ npm install --save-dev WEBPACK_MODULE_PLUGIN_YOU_NEED
-var webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ModuleConcatPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 const NodemonPlugin = require( 'nodemon-webpack-plugin' );
+const { CheckerPlugin } = require('awesome-typescript-loader');
+const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 
 // import nodemon config object
 const NodemonOptions = require('./server.nodemon.json')
@@ -29,9 +25,13 @@ const commonConfig = {
     /^[a-z\-0-9]+$/ // Ignore node_modules folder
   ],
   resolve: {
-      // Add in `.ts` and `.tsx` as a resolvable extension.
-      extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
-      modules: [SERVER_CONFIG.node_modules]
+    extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
+    modules: [SERVER_CONFIG.node_modules],
+    plugins: [
+      new TsConfigPathsPlugin({
+        configFile: SERVER_CONFIG.entry_path+'/tsconfig.json',
+      }),
+    ],
   },
   node: {
     fs: 'empty',
@@ -40,65 +40,68 @@ const commonConfig = {
   }
 };
 
-// define function to return default loaders
-function getProdLoaders() {
-  return devConfig.module.loaders;
+// define function to return default rules
+function getProdRules() {
+  return devConfig.module.rules;
 }
 
 // define webpack devConfig options
 const devConfig = {
-    output: {
-        filename: 'server-dev.js', // output file
-        path: SERVER_CONFIG.output,
-        libraryTarget: "commonjs",
-    },
-    module: {
-        loaders: [{
-            // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
-            test: /\.tsx?$/,
-            exclude:[
-              SERVER_CONFIG.node_modules
-            ],
+  output: {
+    filename: 'server-dev.js', // output file
+    path: SERVER_CONFIG.output,
+    libraryTarget: "commonjs",
+  },
+  devtool: 'inline-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        use: [
+          {
             loader: 'awesome-typescript-loader',
             options: {
-                configFileName: SERVER_CONFIG.entry_path+'/tsconfig.json',
-                sourceMap: true
+              silent: true,
+              useBabel: true,
+              babelOptions: {
+                compact: process.env.NODE_ENV === 'production',
+                highlightCode: true,
+              },
+              babelCore: '@babel/core',
+              useCache: true,
             },
-        }]
-    },
-    plugins: [
-      new NodemonPlugin(NodemonOptions)
-    ]
+          },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new CheckerPlugin(),
+    new NodemonPlugin(NodemonOptions)
+  ]
 };
 
 // define webpack prodConfig options
 const prodConfig = {
-    output: {
-        filename: 'server-prod.js', // output file
-        path: SERVER_CONFIG.output,
-        libraryTarget: "commonjs",
-    },
-    module: {
-      loaders: getProdLoaders()
-    },
-    plugins: [
-      new webpack.optimize.UglifyJsPlugin(),
-      /*
-      new CopyWebpackPlugin([
-        { from: SERVER_CONFIG.entry_path+'/package.json'},
-        { from: SERVER_CONFIG.entry_path+'/.gitignore' },
-      ]),
-      */
-      new webpack.optimize.ModuleConcatenationPlugin()
-    ],
+  output: {
+    filename: 'server-prod.js', // output file
+    path: SERVER_CONFIG.output,
+    libraryTarget: "commonjs",
+  },
+  module: {
+    rules: getProdRules()
+  },
+  plugins: [
+    new UglifyJsPlugin(),
+    new webpack.optimize.ModuleConcatenationPlugin()
+  ],
 };
 
 // export webpack config
-// export webpack config
-module.exports = (env)=> {
+module.exports = env => {
   // define production check const
-  const isProduction = env.prod === true;
-  console.log('[info] Webpack build production mode-> ',isProduction);
+  const isProduction = env.NODE_ENV === 'production';
+  console.log('[info] Webpack build production mode-> ', isProduction);
   // return new object assign with commonConfig + {env}Config
   return (isProduction)
     ? Object.assign({}, commonConfig, prodConfig)

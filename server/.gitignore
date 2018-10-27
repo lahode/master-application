@@ -10,6 +10,7 @@ log.txt
 *.sublime-project
 *.sublime-workspace
 .vscode/
+.awcache/
 npm-debug.log*
 dist/
 node_modules/
