@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, CanActivate } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map, take } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
@@ -8,22 +8,21 @@ import { AuthActions } from '../store';
 @Injectable()
 export class NoGuard implements CanActivate {
 
-  constructor(private readonly router: Router,
-              private readonly store: Store<any>) {}
+  constructor(private readonly _router: Router,
+              private readonly _store: Store<any>) {}
 
-    canActivate(route: ActivatedRouteSnapshot,
-                routerState: RouterStateSnapshot): Observable<boolean> {
+    canActivate(): Observable<boolean> {
       // Dispatch check auth action
-      this.store.dispatch(<Action>AuthActions.checkAuth());
+      this._store.dispatch(<Action>AuthActions.checkAuth());
       // Check Auth on store select
-      return this.store.select(state => state)
+      return this._store.select(state => state)
         .pipe(
           filter((state) => state.loading.length === 0),
           map((state) => {
             if (state.currentUser === null) {
               return true;
             }
-            this.router.navigate(['/']);
+            this._router.navigate(['/']);
             return false;
           }),
           take(1)

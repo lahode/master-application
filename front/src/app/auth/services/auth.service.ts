@@ -22,4 +22,7 @@ export abstract class AuthService {
   // Retrieve password.
   public abstract retrievePassword(values: any): Observable<any>;
 
+  // Handle authentication for third party authentication.
+  public abstract handleAuthentication(): any;
+
 }

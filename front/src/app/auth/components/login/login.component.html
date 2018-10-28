@@ -1,82 +1,4 @@
-<div *ngFor="let alert of alerts">
-  {{ alert.message }}
-</div>
-
-<div class="content">
-<div class="flash-container flash-container-page">
-</div>
-
 <div class="row">
-
-  <div class="col-sm-5 pull-right new-session-forms-container">
-
-    <div *ngIf="showBlock == 'login'">
-      <mat-tab-group>
-        <mat-tab id="signin">
-          <ng-template mat-tab-label>{{ 'LOGIN.TAB.SIGNIN' | translate }}</ng-template>
-          <app-signin [returnUrl]="returnUrl" (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-signin>
-        </mat-tab>
-        <mat-tab id="register">
-          <ng-template mat-tab-label>{{ 'LOGIN.TAB.REGISTER' | translate }}</ng-template>
-          <app-register [returnUrl]="returnUrl" (alertReceived)="addAlert($event)"></app-register>
-        </mat-tab>
-      </mat-tab-group>
-      <mat-card>
-        <span>{{ 'LOGIN.REQUESTCONFIRMATION.TEXT' | translate }}</span>
-        <button mat-button (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</button>
-      </mat-card>
-      <div class="clearfix">
-        <div class="omniauth-container">
-          <p>
-            <span class="light">
-              {{ 'LOGIN.SIGNINOAUTH.SIGNIN_TITLE' | translate }}
-            </span>
-            <span class="icon-oauth">
-              <a rel="nofollow">
-                <i class="ion-social-googleplus"></i>
-              </a>
-            </span>
-            <span class="icon-oauth">
-              <a rel="nofollow">
-                 <i class="ion-social-twitter"></i>
-              </a>
-            </span>
-            <span class="icon-oauth">
-              <a rel="nofollow">
-                 <i class="icon ion-social-facebook"></i>
-              </a>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="showBlock == 'password'">
-      <mat-tab-group>
-        <mat-tab id="password">
-          <ng-template mat-tab-label>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
-          <app-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-password>
-        </mat-tab>
-      </mat-tab-group>
-      <div class="clearfix prepend-top-20">
-        <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-        <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
-      </div>
-    </div>
-
-    <div *ngIf="showBlock == 'confirmation'">
-      <mat-tab-group>
-        <mat-tab id="confirmation">
-          <ng-template mat-tab-label>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
-          <app-confirmation (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-confirmation>
-        </mat-tab>
-      </mat-tab-group>
-      <div class="clearfix prepend-top-20">
-        <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-        <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
-      </div>
-    </div>
-  </div>
 
   <div class="col-sm-7 brand-holder pull-left">
     <h1>
@@ -84,4 +6,63 @@
     </h1>
     <p>{{ 'LOGIN.WELCOME_TEXT' | translate }}</p>
   </div>
+
+  <div *ngIf="authType === 'auth0'; then buttonloginBlock; else credentialBlock">this is ignored</div>
+
+  <ng-template #buttonloginBlock>
+    <div class="col-sm-5 pull-right new-session-forms-container centered-button">
+      <button mat-raised-button
+              color="primary"
+              (click)="directLogin()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
+    </div>
+  </ng-template>
+
+  <ng-template #credentialBlock>
+    <div class="col-sm-5 pull-right new-session-forms-container">
+
+      <div *ngIf="showBlock == 'login'">
+        <mat-tab-group>
+          <mat-tab id="signin">
+            <ng-template mat-tab-label>{{ 'LOGIN.TAB.SIGNIN' | translate }}</ng-template>
+            <app-signin [returnUrl]="returnUrl" (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-signin>
+          </mat-tab>
+          <mat-tab id="register">
+            <ng-template mat-tab-label>{{ 'LOGIN.TAB.REGISTER' | translate }}</ng-template>
+            <app-register [returnUrl]="returnUrl" (alertReceived)="addAlert($event)"></app-register>
+          </mat-tab>
+        </mat-tab-group>
+        <mat-card>
+          <span>{{ 'LOGIN.REQUESTCONFIRMATION.TEXT' | translate }}</span>
+          <button mat-button (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</button>
+        </mat-card>
+      </div>
+
+      <div *ngIf="showBlock == 'password'">
+        <mat-tab-group>
+          <mat-tab id="password">
+            <ng-template mat-tab-label>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
+            <app-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-password>
+          </mat-tab>
+        </mat-tab-group>
+        <div class="clearfix prepend-top-20">
+          <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
+          <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
+        </div>
+      </div>
+
+      <div *ngIf="showBlock == 'confirmation'">
+        <mat-tab-group>
+          <mat-tab id="confirmation">
+            <ng-template mat-tab-label>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
+            <app-confirmation (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-confirmation>
+          </mat-tab>
+        </mat-tab-group>
+        <div class="clearfix prepend-top-20">
+          <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
+          <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
 </div>

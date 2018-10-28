@@ -8,27 +8,12 @@ import { IEnvironment } from './env-model';
 export const environment: IEnvironment = {
   production: false,
   authentication: {
-    type: 'token',
-    value : ''
-    /*
+    type: 'auth0',
     value : {
-      api: {
-        host: 'http://localhost:3999',
-        token: 'oauth/token',
-        key: 'simple_auth',
-        withCredentials: true,
-        tokens: {
-          access: 'access_token',
-          refresh: 'refresh_token'
-        }
-      },
-      auth: {
-        grant_type: 'password',
-        client_id: 'd22f88f4-2e87-413b-ab2c-c74c9001f126',
-        client_secret: 'front-angular'
-      }
+      callback: 'http://localhost:4200/callback', // callback URL
+      domain: '',  // auth0 domain name
+      client_id: ''  // client ID
     }
-    */
   },
   socket: {
     baseUrl: '',

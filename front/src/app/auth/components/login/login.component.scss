@@ -11,4 +11,15 @@
       width: 100%;
     }
   }
+
+  .centered-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      height: 50px;
+      width: 100px;
+    }
+  }
 }

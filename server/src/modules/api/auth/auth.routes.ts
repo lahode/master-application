@@ -17,7 +17,7 @@ export class AuthRoutes {
     const userInfo = req["user"];
     if (userInfo) {
       // Fetch the user by id
-      userDB.findOne({_id: userInfo.sub}).then(function(user) {
+      userDB.findOne({sub: userInfo.sub}).then(function(user) {
         if (user) {
           return res.json({success:true, user: user});
         } else {
@@ -56,6 +56,17 @@ export class AuthRoutes {
   // Sign up route
   public static signUpRoute(req: Request, res: Response) {
     const credentials = req.body;
+
+    // Register with auth0.
+    if (req["user"] && req["user"].sub) {
+      credentials.sub = req["user"].sub
+      return userDB.insert(credentials)
+        .then((userInserted) => {
+          return res.json(userInserted);
+        });
+    }
+
+    // Register with token.
     const errors = PasswordStrategy.validate(credentials.password);
     if (errors.length > 0) {
       const err:string[] = [];
@@ -81,6 +92,7 @@ export class AuthRoutes {
           return PasswordStrategy.getPasswordDigest(credentials.password)
             .then((passwordDigest) => {
               credentials.password = passwordDigest;
+              credentials.sub = 'token-' + credentials.username + '|' + Date.now();
               return userDB.insert(credentials)
               .then((userInserted) => {
                 AuthStrategyToken.signup(userInserted, res)

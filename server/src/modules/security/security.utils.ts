@@ -1,9 +1,8 @@
-const moment = require('moment');
 const util = require('util');
 const crypto = require('crypto');
 import * as jwt from 'jsonwebtoken';
 import * as fs from "fs";
-import * as argon2 from 'argon2';
+import * as jwksClient from 'jwks-rsa';
 import { User } from "../models/user";
 import { CONFIG } from "../../config";
 
@@ -19,12 +18,32 @@ export async function createSessionToken(user: User) {
       roles: user.roles
     },
     RSA_PRIVATE_KEY, {
-    algorithm: 'RS256',
-    expiresIn: 7200,
-    subject: user._id.toString()
+    algorithm: CONFIG.AUTH.value['algorithm'],
+    expiresIn: CONFIG.AUTH.value['expire'],
+    subject: user.sub
+  });
+}
+
+function getKey(header, callback) {
+  let client = jwksClient({
+    jwksUri: 'https://' + CONFIG.AUTH.value['domain'] + '/.well-known/jwks.json'
+  });
+  console.log('https://' + CONFIG.AUTH.value['domain'] + '/.well-known/jwks.json');
+  client.getSigningKey(header.kid, (err, key) => {
+    var signingKey = key.publicKey || key.rsaPublicKey;
+    callback(null, signingKey);
   });
 }
 
 export async function decodeJwt(token:string) {
-  return await jwt.verify(token, RSA_PUBLIC_KEY);
+  if (CONFIG.AUTH.type == 'auth0') {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, getKey, [], (err, verified) => {
+        if (err) return reject(err)
+        resolve(verified)
+      })
+    });
+  } else {
+    return await jwt.verify(token, RSA_PUBLIC_KEY);
+  }
 }

@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment';
 import { StorageService } from '../../../core/services/storage.service';
 import { ErrorHandlerService } from '../../../core/services/errorhandler.service';
 import { AuthService } from '../services/auth.service';
-import { AuthOAuth2Service } from '../services/auth_oauth2.service';
+import { AuthAuth0Service } from '../services/auth_auth0.service';
 import { AuthTokenService } from '../services/auth_token.service';
 import { AuthEffects } from './effects/auth.effects';
 
@@ -23,8 +23,8 @@ const authServiceFactory = (http: HttpClient,
                             jwtHelper: JwtHelperService,
                             error: ErrorHandlerService) => {
   switch (environment.authentication.type) {
-    case 'oauth2':
-      return new AuthOAuth2Service(http, endpoints, storage, jwtHelper, error);
+    case 'auth0':
+      return new AuthAuth0Service(http, endpoints, storage, jwtHelper, error);
     default:
       return new AuthTokenService(http, endpoints, storage, jwtHelper, error);
   }

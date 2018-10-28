@@ -8,8 +8,8 @@ import { AuthActions } from '../store';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(private readonly router: Router,
-              private readonly store: Store<any>) {}
+  constructor(private readonly _router: Router,
+              private readonly _store: Store<any>) {}
 
     canActivate(route: ActivatedRouteSnapshot,
                 routerState: RouterStateSnapshot): Observable<boolean> {
@@ -19,21 +19,21 @@ export class AuthGuard implements CanActivate {
       const queryParams = path.length > 0 ? { queryParams: { returnUrl: path }} : {};
 
       // Dispatch check auth action
-      this.store.dispatch(<Action>AuthActions.checkAuth());
+      this._store.dispatch(<Action>AuthActions.checkAuth());
 
       // Dispatch check permissions action
       const permissions = route.data['perms'];
-      this.store.dispatch(<Action>AuthActions.checkPermission(permissions));
+      this._store.dispatch(<Action>AuthActions.checkPermission(permissions));
 
       // Check Auth on store select
-      return this.store.select(state => state)
+      return this._store.select(state => state)
         .pipe(
           filter((state) => state.loading.length === 0),
           map((state) => {
             if (state.authCheck && state.permissionCheck) {
               return true;
             }
-            this.router.navigate(['/signin'], queryParams);
+            this._router.navigate(['/signin'], queryParams);
             return false;
           }),
           take(1)

@@ -110,12 +110,6 @@
       "TEXT" : "Already have login and password?",
       "ACTION" : "Sign in"
     },
-    "SIGNINOAUTH" : {
-      "SIGNIN_TITLE" : "Sign in with ",
-      "SIGNIN_GOOGLE" : "Sign in with Google",
-      "SIGNIN_TWITTER" : "Sign in with Twitter",
-      "SIGNIN_FACEBOOK" : "Sign in with Facebook"
-    },
     "ERRORS" : {
       "SIGNIN_FAILED" : "An error occured during authentification.",
       "REGISTER_FAILED" : "An error occured during the user creation.",

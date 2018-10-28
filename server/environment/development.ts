@@ -3,10 +3,6 @@ const root = require('app-root-path').path;
 
 export const devVariables:IEnvironment = {
   environmentName: 'Development Environment',
-  SECRET_TOKEN_KEY: 'this is a bad secret sentence',
-  BCRYPT_ROUND: 10,
-  PASSWORD_MIN_LENGHT: 6,
-  JWT_EXPIRE: 86400000,
   DATABASE: {
     USERS: `${root}/data/users.json`,
     ROLES: `${root}/data/roles.json`,
@@ -18,7 +14,20 @@ export const devVariables:IEnvironment = {
   SECURITY: {
     HTTPS: false,
     KEY: `${root}/security/key.pem`,
-    CERT: `${root}/security/cert.pem`
+    CERT: `${root}/security/cert.pem`,
+  },
+  AUTH: {
+    /*
+    type: 'token',
+    value : {
+      algorithm: 'RS256',
+      expire: 7200
+    }
+    */
+    type: 'auth0',
+    value : {
+      domain: '' // auth0 domain name
+    }
   },
   MAILER: {
     host: '',

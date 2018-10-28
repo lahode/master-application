@@ -110,12 +110,6 @@
       "TEXT" : "Vous avez déjà un mot de passe?",
       "ACTION" : "Authentifiez-vous"
     },
-    "SIGNINOAUTH" : {
-      "SIGNIN_TITLE" : "Se connecter avec ",
-      "SIGNIN_GOOGLE" : "Se connecter avec Google",
-      "SIGNIN_TWITTER" : "Se connecter avec Twitter",
-      "SIGNIN_FACEBOOK" : "Se connecter avec Facebook"
-    },
     "ERRORS" : {
       "SIGNIN_FAILED" : "Une erreur s'est produite lors de l'authentification.",
       "REGISTER_FAILED" : "Une erreur s'est produite lors de la création de l'utilisateur.",

@@ -18,7 +18,7 @@ export class SigninComponent implements OnInit {
   @Input() returnUrl: string;
   @Output() changeBlock = new EventEmitter();
 
-  constructor(private readonly store: Store<any>,
+  constructor(private readonly _store: Store<any>,
               private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class SigninComponent implements OnInit {
     });
 
     // Start loading
-    this.loading$ = this.store.select(state => state.loading);
+    this.loading$ = this._store.select(state => state.loading);
   }
 
   // Change block
@@ -40,7 +40,7 @@ export class SigninComponent implements OnInit {
   // Sign in the user
   onSignIn() {
     if (this.signInform.valid) {
-      this.store.dispatch(<Action>AuthActions.login(this.signInform.value));
+      this._store.dispatch(<Action>AuthActions.login(this.signInform.value));
       this.signInform.reset();
     }
   }

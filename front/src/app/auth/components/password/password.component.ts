@@ -17,7 +17,7 @@ export class PasswordComponent implements OnInit {
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
-  constructor(private store: Store<any>) { }
+  constructor(private _store: Store<any>) { }
 
   ngOnInit() {
     // Define email validation pattern
@@ -33,14 +33,14 @@ export class PasswordComponent implements OnInit {
     });
 
     // Start loading
-    this.loading$ = this.store.select(state => state.loading);
+    this.loading$ = this._store.select(state => state.loading);
 
   }
 
   // Request a new password
   onRequestPassword() {
     if (this.passwordForm.valid) {
-      this.store.dispatch(<Action>AuthActions.getPassword(this.passwordForm.value));
+      this._store.dispatch(<Action>AuthActions.getPassword(this.passwordForm.value));
       this.passwordForm.reset();
     }
   }

@@ -1,2 +1,3 @@
+{"fistname":"Fredrik","lastname":"Lahode","username":"","email":"fredrik@lahode.ch","emailconfirm":"fredrik@lahode.ch","password":"","sub":"google-oauth2|102546433693141069162","_id":"V60frE0s5G9w0vZe"}
 {"fistname":"Admin","lastname":"admin","username":"admin","email":"admin@admin.com","emailconfirm":"admin@admin.com","password":"$argon2i$v=19$m=4096,t=3,p=1$KP0/GDdgvxuT/vVwWRRUFQ$Yh747crpbMgjmq7MLVpctOXJs/7Du0br+ilThC7yUB0","roles":[{"role":"vFJlPsTWUJb8rVoe"}],"_id":"ZcM72vEwZbJazRAa"}
 {"fistname":"Firstname","lastname":"Lastname","username":"contributor","email":"contributor@test.ch","emailconfirm":"contributor@test.ch","password":"$argon2i$v=19$m=4096,t=3,p=1$QBJah6Bz8HaJo6Mk/eNupA$CA4rQ/Jl3yOnwYtjGlYg+8pJlc0iUNaBAVFVNWXUWJU","_id":"r71Vss659sAH5nKC"}

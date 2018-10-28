@@ -105,6 +105,8 @@ export class AuthTokenService extends AuthService {
       );
   }
 
+  public handleAuthentication(): any { return null; }
+
   // Save JWT Token and return user object.
   private handleJwtResponse(jwt: string, user: any): Observable<any> {
     return from(

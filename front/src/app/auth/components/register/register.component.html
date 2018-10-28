@@ -1,3 +1,8 @@
+<div *ngIf="directLogin">
+  <h1>Welcome</h1>
+  <p>Please enter your information to register.</p>
+</div>
+
 <form novalidate [formGroup]="registerForm">
   <div>
     <mat-form-field>
@@ -15,7 +20,7 @@
              formControlName="lastname" />
     </mat-form-field>
   </div>
-  <div>
+  <div *ngIf="!directLogin">
     <mat-form-field>
       <input matInput
              placeholder="{{ 'LOGIN.REGISTERFORM.USERNAME' | translate }}"
@@ -41,7 +46,7 @@
              formControlName="emailconfirm" />
     </mat-form-field>
   </div>
-  <div>
+  <div *ngIf="!directLogin">
     <mat-form-field>
       <input matInput
              placeholder="{{ 'LOGIN.REGISTERFORM.PASSWORD' | translate }}"

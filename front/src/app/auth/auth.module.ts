@@ -14,6 +14,7 @@ import { SigninComponent } from './components/signin/signin.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PasswordComponent } from './components/password/password.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { CallbackComponent } from './components/callback/callback.component';
 
 /* Services */
 import { AuthGuard } from './services/authguard.service';
@@ -25,7 +26,8 @@ import { NoGuard } from './services/noguard.service';
     SigninComponent,
     RegisterComponent,
     PasswordComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    CallbackComponent
   ],
   imports: [
     GlobalModule,

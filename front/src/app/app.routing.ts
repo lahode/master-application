@@ -2,6 +2,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/components/login/login.component';
+import { RegisterComponent } from './auth/components/register/register.component';
+import { CallbackComponent } from './auth/components/callback/callback.component';
 import { ManageUsersComponent } from './user/components/manage-users/manage-users.component';
 import { PageNotFoundComponent } from './global/components/page-not-found/page-not-found.component';
 
@@ -17,6 +19,16 @@ export const appRoutes: Routes = [
   {
     path: 'signin',
     component: LoginComponent,
+    canActivate: [NoGuard]
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    canActivate: [NoGuard]
+  },
+  {
+    path: 'callback',
+    component: CallbackComponent,
     canActivate: [NoGuard]
   },
   {
