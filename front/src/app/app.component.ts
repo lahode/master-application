@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
-import { NgProgress } from '@ngx-progressbar/core';
+import { NgProgress, NgProgressRef } from '@ngx-progressbar/core';
 
 import { AppActions } from '../core/store';
 import { ErrorComponent } from './global/components/error/error.component';
@@ -16,11 +16,14 @@ export class AppComponent implements OnInit, OnDestroy {
   private storeErrorSubscription;
   private storeConfirmSubscription;
   private storeLoadingSubscription;
-  private progressBar = true;
+  private progressBar: NgProgressRef;
 
   constructor(private readonly _store: Store<any>,
               private readonly _dialog: MatDialog,
-              private readonly _progress: NgProgress) {}
+              private readonly _progress: NgProgress) {
+    // Get an instance of NgProgressRef.
+    this.progressBar = _progress.ref();
+  }
 
   ngOnInit() {
     // Managing error in app
@@ -56,9 +59,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.storeLoadingSubscription = this._store.select(state => state.loading)
       .subscribe(loading => {
         if (loading.length > 0) {
-          // this._progress.start();
+          this.progressBar.start();
         } else {
-          // this._progress.destroy();
+          this.progressBar.destroy();
         }
       });
 
