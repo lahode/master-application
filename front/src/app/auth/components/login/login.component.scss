@@ -12,6 +12,12 @@
     }
   }
 
+  .space-between {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+  }
+
   .centered-button {
     display: flex;
     align-items: center;

@@ -1,31 +1,27 @@
-<form [formGroup]="signInform">
-  <div>
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.SIGNINFORM.USERNAME' | translate }}"
-             id="username"
-             formControlName="username" />
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.SIGNINFORM.PASSWORD' | translate }}"
-             type="password"
-             id="password"
-             formControlName="password" />
-    </mat-form-field>
-  </div>
-  <div>
+<form [formGroup]="signInform"
+      class="form-signup">
+  <mat-form-field>
+    <input matInput
+           placeholder="{{ 'LOGIN.SIGNINFORM.USERNAME' | translate }}"
+           id="username"
+           formControlName="username" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           placeholder="{{ 'LOGIN.SIGNINFORM.PASSWORD' | translate }}"
+           type="password"
+           id="password"
+           formControlName="password" />
+  </mat-form-field>
+  <div class="space-between">
     <mat-checkbox id="user_remember_me" name="user[remember_me]">{{ 'LOGIN.SIGNINFORM.REMEMBERME' | translate }}</mat-checkbox>
-  </div>
-  <div class="pull-right forgot-password">
-    <span mat-button (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</span>
-  </div>
-  <div>
     <button mat-raised-button
-            color="primary"
-            [disabled]="(loading$ | async).length!==0 || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
-    <mat-spinner *ngIf="(loading$ | async).length!==0"></mat-spinner>
+            color="secondary"
+            (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</button>
   </div>
+  <button mat-raised-button
+          color="primary"
+          [disabled]="(loading$ | async).length!==0 || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
+  <mat-spinner *ngIf="(loading$ | async).length!==0"></mat-spinner>
 </form>

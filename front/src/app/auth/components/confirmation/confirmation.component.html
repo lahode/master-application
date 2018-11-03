@@ -1,17 +1,13 @@
 <form [formGroup]="confirmationForm">
-  <div>
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.CONFIRMATIONFORM.EMAIL' | translate }}"
-             id="email"
-             type="email"
-             formControlName="email" />
-    </mat-form-field>
-  </div>
-  <div>
-    <button mat-raised-button
-            color="primary"
-            [disabled]="loading || !confirmationForm.valid" (click)="onRequestConfirmation()">{{ 'LOGIN.CONFIRMATIONFORM.SUBMIT' | translate }}</button>
-    <mat-spinner *ngIf="loading"></mat-spinner>
-  </div>
+  <mat-form-field>
+    <input matInput
+           placeholder="{{ 'LOGIN.CONFIRMATIONFORM.EMAIL' | translate }}"
+           id="email"
+           type="email"
+           formControlName="email" />
+  </mat-form-field>
+  <button mat-raised-button
+          color="primary"
+          [disabled]="loading || !confirmationForm.valid" (click)="onRequestConfirmation()">{{ 'LOGIN.CONFIRMATIONFORM.SUBMIT' | translate }}</button>
+  <mat-spinner *ngIf="loading"></mat-spinner>
 </form>

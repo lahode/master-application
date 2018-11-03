@@ -22,7 +22,7 @@ export class NoGuard implements CanActivate {
             if (state.currentUser === null) {
               return true;
             }
-            this._router.navigate(['/']);
+            this._router.navigate(['/home']);
             return false;
           }),
           take(1)

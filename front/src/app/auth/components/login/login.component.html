@@ -44,9 +44,11 @@
             <app-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-password>
           </mat-tab>
         </mat-tab-group>
-        <div class="clearfix prepend-top-20">
+        <div class="space-between">
           <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-          <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
+          <button mat-raised-button
+                  color="secondary"
+                  (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
         </div>
       </div>
 
@@ -54,12 +56,15 @@
         <mat-tab-group>
           <mat-tab id="confirmation">
             <ng-template mat-tab-label>{{ 'LOGIN.TAB.CONFIRMATION' | translate }}</ng-template>
-            <app-confirmation (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-confirmation>
+            <app-confirmation (alertReceived)="addAlert($event)"
+                              (changeBlock)="onChangeBlock($event)"></app-confirmation>
           </mat-tab>
         </mat-tab-group>
-        <div class="clearfix prepend-top-20">
+        <div class="space-between">
           <span>{{ 'LOGIN.AUTHENTIFICATION_EXIST.TEXT' | translate }}</span>
-          <button mat-button (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
+          <button mat-raised-button
+                  color="secondary"
+                  (click)="onChangeBlock('login')">{{ 'LOGIN.AUTHENTIFICATION_EXIST.ACTION' | translate }}</button>
         </div>
       </div>
     </div>

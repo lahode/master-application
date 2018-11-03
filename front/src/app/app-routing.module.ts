@@ -1,3 +1,4 @@
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
@@ -10,9 +11,14 @@ import { PageNotFoundComponent } from './global/components/page-not-found/page-n
 import { AuthGuard } from './auth/services/authguard.service';
 import { NoGuard } from './auth/services/noguard.service';
 
-export const appRoutes: Routes = [
+export const routes: Routes = [
   {
     path: '',
+    component: LoginComponent,
+    canActivate: [NoGuard]
+  },
+  {
+    path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuard]
   },
@@ -44,3 +50,9 @@ export const appRoutes: Routes = [
     component: PageNotFoundComponent
   }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

@@ -18,8 +18,7 @@ import { GlobalModule } from './global/global.module';
 import { UserModule } from './user/user.module';
 
 /* Routing */
-import { RouterModule } from '@angular/router';
-import { appRoutes } from './app.routing';
+import { AppRoutingModule } from './app-routing.module';
 
 /* Components */
 import { AppComponent } from './app.component';
@@ -73,7 +72,7 @@ export function tokenGetter() {
     GlobalModule,
     UserModule,
     AppStoreModule.forRoot(),
-    RouterModule.forRoot(appRoutes, { useHash: false }),
+    AppRoutingModule,
     StoreDevtoolsModule.instrument(),
   ],
   providers: [

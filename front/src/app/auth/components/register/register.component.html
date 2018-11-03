@@ -4,61 +4,47 @@
 </div>
 
 <form novalidate [formGroup]="registerForm">
-  <div>
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.REGISTERFORM.FIRSTNAME' | translate }}"
-             id="fistname"
-             formControlName="fistname" />
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.REGISTERFORM.LASTNAME' | translate }}"
-             id="lastname"
-             formControlName="lastname" />
-    </mat-form-field>
-  </div>
-  <div *ngIf="!directLogin">
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.REGISTERFORM.USERNAME' | translate }}"
-             id="username"
-             formControlName="username" />
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.REGISTERFORM.EMAIL' | translate }}"
-             id="email"
-             type="email"
-             formControlName="email" />
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.REGISTERFORM.EMAILCONFIRM' | translate }}"
-             id="emailconfirm"
-             type="email"
-             formControlName="emailconfirm" />
-    </mat-form-field>
-  </div>
-  <div *ngIf="!directLogin">
-    <mat-form-field>
-      <input matInput
-             placeholder="{{ 'LOGIN.REGISTERFORM.PASSWORD' | translate }}"
-             id="password"
-             type="password"
-             formControlName="password" />
-    </mat-form-field>
-  </div>
-  <div>
-    <button mat-raised-button
-            color="primary"
-            [disabled]="(loading$ | async).length!==0 || !registerForm.valid" (click)="onRegister()">{{ 'LOGIN.REGISTERFORM.SUBMIT' | translate }}</button>
-    <mat-spinner *ngIf="(loading$ | async).length!==0"></mat-spinner>
-  </div>
+  <mat-form-field>
+    <input matInput
+           placeholder="{{ 'LOGIN.REGISTERFORM.FIRSTNAME' | translate }}"
+           id="fistname"
+           formControlName="fistname" />
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput
+           placeholder="{{ 'LOGIN.REGISTERFORM.LASTNAME' | translate }}"
+           id="lastname"
+           formControlName="lastname" />
+  </mat-form-field>
+  <mat-form-field *ngIf="!directLogin">
+    <input matInput
+           placeholder="{{ 'LOGIN.REGISTERFORM.USERNAME' | translate }}"
+           id="username"
+           formControlName="username" />
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput
+           placeholder="{{ 'LOGIN.REGISTERFORM.EMAIL' | translate }}"
+           id="email"
+           type="email"
+           formControlName="email" />
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput
+           placeholder="{{ 'LOGIN.REGISTERFORM.EMAILCONFIRM' | translate }}"
+           id="emailconfirm"
+           type="email"
+           formControlName="emailconfirm" />
+  </mat-form-field>
+  <mat-form-field *ngIf="!directLogin">
+    <input matInput
+           placeholder="{{ 'LOGIN.REGISTERFORM.PASSWORD' | translate }}"
+           id="password"
+           type="password"
+           formControlName="password" />
+  </mat-form-field>
+  <button mat-raised-button
+          color="primary"
+          [disabled]="(loading$ | async).length!==0 || !registerForm.valid" (click)="onRegister()">{{ 'LOGIN.REGISTERFORM.SUBMIT' | translate }}</button>
+  <mat-spinner *ngIf="(loading$ | async).length!==0"></mat-spinner>
 </form>
