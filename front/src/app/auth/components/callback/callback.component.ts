@@ -21,7 +21,7 @@ export class CallbackComponent {
         this._router.navigate(['/signin']);
       } else {
         // Dispatch check auth action
-        this._store.dispatch(<Action>AuthActions.checkAuth());
+        this._store.dispatch(<Action>AuthActions.checkAuth(true));
 
         // Check if user is already registered
         this._store.select(state => state)

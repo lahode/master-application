@@ -37,9 +37,10 @@ export const AuthActions = {
     };
   },
 
-  checkAuth() {
+  checkAuth(_credentials = null) {
     return <Action>{
       type: AuthActions.CHECK_AUTH_START,
+      payload: _credentials
     };
   },
 

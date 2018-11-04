@@ -17,7 +17,8 @@ export class AuthEffects {
   @Effect() checkAuthAction$ = this._action$
     .ofType(AuthActions.CHECK_AUTH_START)
     .pipe(
-      switchMap(() => this._auth.checkAuth()
+      map<Action, any>((action: Action) => (action as any).payload),
+      switchMap((payload: any) => this._auth.checkAuth(payload)
         .pipe(
           map<Action, any>((_result: any) => {
               // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP

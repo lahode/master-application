@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 export abstract class AuthService {
 
   // Check authentification
-  public abstract checkAuth(): Observable<any>;
+  public abstract checkAuth(arg: any): Observable<any>;
 
   // Check permissions
   public abstract checkPermissions(permissions: string[]): Observable<any>;

@@ -38,7 +38,7 @@ export class AuthAuth0Service extends AuthService {
   }
 
   // Check authentification.
-  public checkAuth(): Observable<any> {
+  public checkAuth(skipBackend = false): Observable<any> {
     return fromPromise(this._storage.get(STORAGE_ITEM))
       .pipe(
         mergeMap(jwt => {
@@ -48,6 +48,12 @@ export class AuthAuth0Service extends AuthService {
             return of(false);
           }
 
+          // Skip the check in the backend.
+          if (skipBackend) {
+            return of(true);
+          }
+
+          // Check if user is authenticate in the backend.
           return this._http.get(this._endpoints.checkAuth())
             .pipe(
               shareReplay(),
@@ -119,6 +125,7 @@ export class AuthAuth0Service extends AuthService {
   private _destroyTokens() {
     this._storage.remove(TOKEN_STORAGE).then(() => true);
     this._storage.remove(STORAGE_ITEM).then(() => true);
+    this._storage.remove('access_type').then(() => true);
     this._storage.remove(EXPIREAT).then(() => true);
   }
 
