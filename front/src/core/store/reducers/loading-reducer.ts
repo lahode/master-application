@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { AppActions } from '../actions/app.actions';
 
-export interface ILoadingState extends Array<string> {};
+export interface ILoadingState extends Array<string> {}
 
 export const initialState: ILoadingState = [];
 

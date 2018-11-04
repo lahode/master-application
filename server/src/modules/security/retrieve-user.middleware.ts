@@ -7,9 +7,10 @@ export class RetrieveUser {
     if (req.headers && req.headers.authorization) {
       var authorization = req.headers.authorization, decoded;
       let header = (authorization as string).split(' ');
-      RetrieveUser.handleSession(header[1], req)
+      RetrieveUser.handleSession(header[1], req, res)
         .then(() => next())
         .catch(err => {
+          // TODO
           next();
       });
     }
@@ -18,13 +19,14 @@ export class RetrieveUser {
     }
   }
 
-  public static async handleSession(jwt:string, req: Request) {
+  public static async handleSession(jwt:string, req: Request, res: Response) {
     try {
       const payload = await decodeJwt(jwt);
       req["user"] = payload;
     }
     catch(err) {
       console.log("Error: Could not extract user from request:", err.message);
+      return Promise.reject();
     }
   }
 }

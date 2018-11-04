@@ -45,8 +45,8 @@ export const AuthProviders = [
 @NgModule({
   imports: [
     StoreModule.forFeature('authCheck', reducers.authCheck),
-    StoreModule.forFeature('permissionCheck', reducers.permissionCheck),
     StoreModule.forFeature('currentUser', reducers.currentUser),
+    StoreModule.forFeature('permissionCheck', reducers.permissionCheck),
     EffectsModule.forFeature([AuthEffects]),
   ],
   exports: [

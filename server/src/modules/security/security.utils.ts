@@ -18,17 +18,16 @@ export async function createSessionToken(user: User) {
       roles: user.roles
     },
     RSA_PRIVATE_KEY, {
-    algorithm: CONFIG.AUTH.value['algorithm'],
-    expiresIn: CONFIG.AUTH.value['expire'],
+    algorithm: CONFIG.AUTH.algorithm || 'RS256',
+    expiresIn: CONFIG.AUTH.expire || 7200,
     subject: user.sub
   });
 }
 
 function getKey(header, callback) {
   let client = jwksClient({
-    jwksUri: 'https://' + CONFIG.AUTH.value['domain'] + '/.well-known/jwks.json'
+    jwksUri: 'https://' + CONFIG.AUTH.domain + '/.well-known/jwks.json'
   });
-  console.log('https://' + CONFIG.AUTH.value['domain'] + '/.well-known/jwks.json');
   client.getSigningKey(header.kid, (err, key) => {
     var signingKey = key.publicKey || key.rsaPublicKey;
     callback(null, signingKey);
@@ -36,14 +35,21 @@ function getKey(header, callback) {
 }
 
 export async function decodeJwt(token:string) {
-  if (CONFIG.AUTH.type == 'auth0') {
-    return new Promise((resolve, reject) => {
-      jwt.verify(token, getKey, [], (err, verified) => {
-        if (err) return reject(err)
-        resolve(verified)
-      })
-    });
-  } else {
-    return await jwt.verify(token, RSA_PUBLIC_KEY);
+  try {
+    const tokenPart = token.split('|');
+    switch (tokenPart[1]) {
+      case 'jwt' :
+        return await jwt.verify(tokenPart[0], RSA_PUBLIC_KEY);
+      case 'auth0' :
+        return new Promise((resolve, reject) => {
+          jwt.verify(tokenPart[0], getKey, [], (err, verified) => {
+            if (err) return reject(err)
+            resolve(verified)
+          })
+        });
+    }
+  }
+  catch(e) {
+    throw('Invalid token');
   }
 }

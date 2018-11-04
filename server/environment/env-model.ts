@@ -5,9 +5,6 @@ export interface IEnvironment {
   UPLOAD_DIRECTORY: string;
   PORT: number,
   SECURITY: any,
-  AUTH: {
-    type: string;
-    value: any;
-  }
+  AUTH: any,
   MAILER: any
 }

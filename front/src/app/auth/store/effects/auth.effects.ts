@@ -17,13 +17,7 @@ export class AuthEffects {
   @Effect() checkAuthAction$ = this._action$
     .ofType(AuthActions.CHECK_AUTH_START)
     .pipe(
-      withLatestFrom(this._store$),
-      map(([action, storeState]) => {
-        (action as any).payload = (storeState as any).currentUser ? (storeState as any).currentUser : {};
-        return action;
-      }),
-      map<Action, any>((action: Action) => (action as any).payload),
-      switchMap((payload: User) => this._auth.checkAuth(payload)
+      switchMap(() => this._auth.checkAuth()
         .pipe(
           map<Action, any>((_result: any) => {
               // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP
@@ -32,9 +26,9 @@ export class AuthEffects {
               } else {
                 return <Action>{ type: AuthActions.CHECK_AUTH_STOP, payload: null };
               }
-              // On errors dispatch CHECK_AUTH_STOP action with result
+              // On errors dispatch CHECK_AUTH_FAILED action with result
             }),
-          catchError(res => of({type: AuthActions.CHECK_AUTH_STOP, payload: res}))
+          catchError(res => of({type: AuthActions.CHECK_AUTH_FAILED, payload: res}))
         )
       )
     );
@@ -67,8 +61,10 @@ export class AuthEffects {
           catchError(res => of({type: AuthActions.LOGIN_FAILED, payload: res})),
           // Redirect to the target page
           tap(() => {
-            const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '';
-            this._router.navigate([`/${returnUrl}`]);
+            if (payload) {
+              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
+              this._router.navigate([`/${returnUrl}`]);
+            }
           })
         )
       )
@@ -103,7 +99,7 @@ export class AuthEffects {
           catchError(res => of({type: AuthActions.CREATE_USER_FAILED, payload: res})),
           // Redirect to the target page
           tap(() => {
-            const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '';
+            const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
             this._router.navigate([`/${returnUrl}`]);
           })
         )

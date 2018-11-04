@@ -16,31 +16,27 @@ export class CallbackComponent {
               private readonly _router: Router,
               private readonly _store: Store<any>) {
 
-    if (this._auth.handleAuthentication()) {
-      this._router.navigate(['/signin']);
-    } else {
-      console.log('before');
-      // Dispatch check auth action
-      // this._store.dispatch(<Action>AuthActions.checkAuth());
-      console.log('after');
+    this._auth.handleAuthentication().then(result => {
+      if (result) {
+        this._router.navigate(['/signin']);
+      } else {
+        // Dispatch check auth action
+        this._store.dispatch(<Action>AuthActions.checkAuth());
 
-      this._store.select(state => state)
-        .pipe(
-          map((state) => {
-            console.log('waiting', state);
-            return state;
-          }),
-          filter((state) => state.loading.length === 0),
-          map((state) => {
-            console.log('callback', state);
-            if (state.authCheck) {
-              this._router.navigate(['/']);
-            } else {
-              this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });
-            }
-          }),
-          take(1)).subscribe();
-    }
+        // Check if user is already registered
+        this._store.select(state => state)
+          .pipe(
+            filter((state) => state.loading.length === 0),
+            map((state) => {
+              if (state.authCheck) {
+                this._router.navigate(['/home']);
+              } else {
+                this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });
+              }
+            }),
+            take(1)).subscribe();
+      }
+    }).catch(() => this._router.navigate(['/signin']));
   }
 
 }

@@ -17,17 +17,9 @@ export const devVariables:IEnvironment = {
     CERT: `${root}/security/cert.pem`,
   },
   AUTH: {
-    /*
-    type: 'token',
-    value : {
-      algorithm: 'RS256',
-      expire: 7200
-    }
-    */
-    type: 'auth0',
-    value : {
-      domain: '' // auth0 domain name
-    }
+    algorithm: 'RS256',
+    expire: 7200,
+    domain: '' // auth0 domain name
   },
   MAILER: {
     host: '',

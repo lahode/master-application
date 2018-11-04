@@ -34,8 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'callback',
-    component: CallbackComponent,
-    canActivate: [NoGuard]
+    component: CallbackComponent
   },
   {
     path: 'users',

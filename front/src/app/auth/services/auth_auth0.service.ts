@@ -14,9 +14,9 @@ import { ErrorHandlerService } from '../../../core/services/errorhandler.service
 import { environment } from '../../../environments/environment';
 
 const STORAGE_ITEM = 'access_token';
+const STORAGE_TYPE = 'auth0';
 const TOKEN_STORAGE = 'token_id';
 const EXPIREAT = 'expireat';
-
 
 @Injectable()
 export class AuthAuth0Service extends AuthService {
@@ -83,15 +83,18 @@ export class AuthAuth0Service extends AuthService {
   }
 
   // Looks for the result of authentication in the URL hash.
-  public handleAuthentication(): any {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        window.location.hash = '';
-        this._setSession(authResult);
-        return false;
-      } else if (err) {
-        return this._manageError(err);
-      }
+  public handleAuthentication(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.auth0.parseHash((err, authResult) => {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          window.location.hash = '';
+          resolve(this._setSession(authResult).then(() => false));
+        } else if (err) {
+          reject(this._manageError(err));
+        } else {
+          resolve(false);
+        }
+      });
     });
   }
 
@@ -128,12 +131,15 @@ export class AuthAuth0Service extends AuthService {
     return 'Erreur de connexion avec le serveur';
   }
 
-  private _setSession(authResult): void {
+  private _setSession(authResult): Promise<any> {
     // Set the time that the access token will expire at
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    this._storage.set(TOKEN_STORAGE, authResult.accessToken).then(() => true);
-    this._storage.set(STORAGE_ITEM, authResult.idToken).then(() => true);
-    this._storage.set(EXPIREAT, expiresAt).then(() => true);
+    return Promise.all([
+      this._storage.set(TOKEN_STORAGE, authResult.accessToken).then(() => true),
+      this._storage.set(STORAGE_ITEM, authResult.idToken).then(() => true),
+      this._storage.set('access_type', STORAGE_TYPE).then(() => true),
+      this._storage.set(EXPIREAT, expiresAt).then(() => true)
+    ]);
   }
 
   // Get authO config in the environment file.

@@ -11,6 +11,7 @@ import { StorageService } from '../../../core/services/storage.service';
 import { ErrorHandlerService } from '../../../core/services/errorhandler.service';
 
 const STORAGE_ITEM = 'access_token';
+const STORAGE_TYPE = 'jwt';
 
 @Injectable()
 export class AuthTokenService extends AuthService {
@@ -30,7 +31,7 @@ export class AuthTokenService extends AuthService {
         mergeMap(jwt => {
           // If storage is not found.
           if (!jwt || this._jwtHelper.isTokenExpired(jwt)) {
-            this._storage.remove(STORAGE_ITEM).then(() => true);
+            this._destroyTokens();
             return of(false);
           }
 
@@ -39,17 +40,12 @@ export class AuthTokenService extends AuthService {
               shareReplay(),
               map(response => (response as any).user),
               catchError(err => {
-                this._storage.remove(STORAGE_ITEM).then(() => true);
+                this._destroyTokens();
                 return throwError(this._manageError(err));
               })
             );
         })
       );
-  }
-
-  // Return the token as Observable.
-  public getToken(): Observable<string> {
-    return fromPromise(StorageService.getItem(STORAGE_ITEM));
   }
 
   // Check permissions.
@@ -105,17 +101,40 @@ export class AuthTokenService extends AuthService {
       );
   }
 
-  public handleAuthentication(): any { return null; }
+  // Destroy tokens and deconnect.
+  private _destroyTokens() {
+    this._storage.remove(STORAGE_ITEM).then(() => true);
+    this._storage.remove('access_type').then(() => true);
+  }
+
+  public handleAuthentication(): Promise<any> { return Promise.resolve(null); }
 
   // Save JWT Token and return user object.
   private handleJwtResponse(jwt: string, user: any): Observable<any> {
     return from(
-      this._storage.set(STORAGE_ITEM, jwt)
-        .then(
-          () => user,
-          (err) => throwError(this._manageError(err))
-        )
-      );
+      Promise.all([
+        this._storage.set(STORAGE_ITEM, jwt)
+          .then(
+            () => user,
+            (err) => throwError(this._manageError(err))
+          ),
+        this._storage.set('access_type', STORAGE_TYPE)
+          .then(
+            () => user,
+            (err) => throwError(this._manageError(err))
+          )
+      ])
+    );
+  }
+
+  // Return the token as Observable.
+  public getToken(): Observable<string> {
+    return fromPromise(
+      Promise.all([
+        StorageService.getItem(STORAGE_ITEM),
+        StorageService.getItem('access_type')
+      ]).then(result => result.join('|'))
+    );
   }
 
   // Manage back-end error.

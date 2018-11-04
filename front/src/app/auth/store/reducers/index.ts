@@ -11,8 +11,8 @@ declare const process: any;
 
 export const reducer: AuthRecucerStateI = {
   authCheck: fromAuthCheck.reducer,
-  permissionCheck: fromPermissionCheck.reducer,
-  currentUser: fromCurrentUser.reducer
+  currentUser: fromCurrentUser.reducer,
+  permissionCheck: fromPermissionCheck.reducer
 };
 
 export const reducers: ActionReducerMap<AuthStateI> = reducer;
