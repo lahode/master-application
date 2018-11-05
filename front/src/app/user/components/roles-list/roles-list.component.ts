@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material';
 
 import { Role } from '../../../../core/models/role';
 import { RoleActions } from '../../store';
-import { RolesEditComponent } from '../roles-edit/roles-edit.component';
+import { RolesEditComponent } from '../../../shared/components/roles-edit/roles-edit.component';
 
 @Component({
   selector: 'app-roles-list',

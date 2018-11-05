@@ -2,6 +2,7 @@ import * as express from 'express';
 import { sign, verify } from 'jsonwebtoken';
 import { CONFIG } from "../../../config";
 import { Permissions } from "../../permissions";
+import { AuthRoutes } from "../auth/auth.routes";
 
 const nodemailer = require('nodemailer');
 const Datastore = require('nedb-promises');
@@ -33,21 +34,26 @@ export class RolesRoutes {
   }
 
   // Check permissions
-  public static checkPermissions(req, res) {
+  public static async checkPermissions(req, res) {
     // Check if permissions has been set
     if (!Array.isArray(req.body)) {
       return res.json({success: true});
     }
-    const user = req['user'] || {};
-    Permissions.checkPermissionOnUser(user, req.body).then(check => {
-      return res.json({success: true});
-    })
-    .catch(error => {
-      res.status(405).json({
-        message: "Vous n'êtes pas autorisé à accéder.",
-        success: false
+    const data = await AuthRoutes.findUserBySub(req['user']);
+    if (data.success) {
+      Permissions.checkPermissionOnUser(data.user, req.body).then(check => {
+        return res.json({success: true});
+      })
+      .catch(error => {
+        res.status(405).json({
+          message: "Vous n'êtes pas autorisé à accéder.",
+          success: false
+        });
       });
-    });
+    }
+    else {
+      res.status(data.status).json({message: data.message, success: data.success});
+    }
   }
 
   // Get all permissions

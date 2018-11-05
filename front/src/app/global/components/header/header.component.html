@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <div *ngIf="(language$ | async) as language">
-    <mat-select #langSelect (change)="setLanguage(langSelect.value)" [(ngModel)]="currentLang">
+    <mat-select #langSelect (selectionChange)="setLanguage(langSelect.value)" [(ngModel)]="currentLang">
       <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</mat-option>
     </mat-select>
   </div>
@@ -11,7 +11,8 @@
 </mat-toolbar>
 <mat-menu x-position="before" #menu="matMenu">
   <button mat-menu-item [routerLink]="['/']" routerLinkActive = "active" [routerLinkActiveOptions]="{exact: true}">{{ 'HEADER.MENU.HOME' | translate }}</button>
-  <button mat-menu-item [routerLink]="['/users']">{{ 'HEADER.MENU.USERS' | translate }}</button>
+  <button mat-menu-item [routerLink]="['/user']">{{ 'HEADER.MENU.VIEWPROFILE' | translate }}</button>
+  <button mat-menu-item [routerLink]="['/user/manage']">{{ 'HEADER.MENU.MANAGEUSERS' | translate }}</button>
   <button mat-menu-item (click)="logout()">{{ 'HEADER.MENU.LOGOUT' | translate }}</button>
 </mat-menu>
 <!--  [selected]="lang === translate.currentLang" -->

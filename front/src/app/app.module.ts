@@ -15,7 +15,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 /* Custom modules */
 import { AuthModule } from './auth/auth.module';
 import { GlobalModule } from './global/global.module';
-import { UserModule } from './user/user.module';
+import { SharedModule } from './shared/shared.module';
 
 /* Routing */
 import { AppRoutingModule } from './app-routing.module';
@@ -70,7 +70,7 @@ export function tokenGetter() {
     BrowserAnimationsModule,
     AuthModule,
     GlobalModule,
-    UserModule,
+    SharedModule,
     AppStoreModule.forRoot(),
     AppRoutingModule,
     StoreDevtoolsModule.instrument(),

@@ -11,12 +11,11 @@ import { AuthActions } from '../../store';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
+  @Input() returnUrl: string;
+  @Output() changeBlock = new EventEmitter();
 
   public signInform: FormGroup;
   public loading$: Observable<any>;
-
-  @Input() returnUrl: string;
-  @Output() changeBlock = new EventEmitter();
 
   constructor(private readonly _store: Store<any>,
               private readonly _fb: FormBuilder) {}
@@ -33,8 +32,13 @@ export class SigninComponent implements OnInit {
   }
 
   // Change block
-  public onChangeBlock(block) {
-    this.changeBlock.emit('password');
+  public onRedirectPassword(event) {
+    // Prevent mouse click triggered when hitting Enter on the form.
+    if (event.clientX === 0 && event.clientY === 0) {
+      this.onSignIn();
+    } else {
+      this.changeBlock.emit('password');
+    }
   }
 
   // Sign in the user

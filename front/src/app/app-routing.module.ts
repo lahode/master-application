@@ -5,7 +5,6 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/components/login/login.component';
 import { RegisterComponent } from './auth/components/register/register.component';
 import { CallbackComponent } from './auth/components/callback/callback.component';
-import { ManageUsersComponent } from './user/components/manage-users/manage-users.component';
 import { PageNotFoundComponent } from './global/components/page-not-found/page-not-found.component';
 
 import { AuthGuard } from './auth/services/authguard.service';
@@ -36,12 +35,9 @@ export const routes: Routes = [
     component: CallbackComponent
   },
   {
-    path: 'users',
-    component: ManageUsersComponent,
+    path: 'user',
+    loadChildren: './user/user.module#UserModule',
     canActivate: [AuthGuard],
-    data: {
-       perms: ['manage users']
-    }
   },
   {
     path: '**',

@@ -1,20 +1,20 @@
 /* Contrib modules */
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalModule } from '../global/global.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatInputModule, MatCheckboxModule, MatButtonModule,
-         MatTabsModule, MatSelectModule, MatPaginatorModule,
-         MatPaginatorIntl } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule, MatTabsModule, MatButtonModule, MatSelectModule,
+         MatGridListModule, MatPaginatorModule, MatPaginatorIntl } from '@angular/material';
 
 /* Custom modules */
 import { UserStoreModule } from './store';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { ManageUsersComponent } from './components/manage-users/manage-users.component';
-import { UsersEditComponent } from './components/users-edit/users-edit.component';
-import { UsersListComponent } from './components/users-list/users-list.component';
 import { RolesListComponent } from './components/roles-list/roles-list.component';
-import { RolesEditComponent } from './components/roles-edit/roles-edit.component';
+import { UsersListComponent } from './components/users-list/users-list.component';
+import { ViewProfileComponent } from './components/view-profile/view-profile.component';
+import { UserRoutingModule } from './user-routing.module';
 
 export class MatPaginatorIntApp extends MatPaginatorIntl {
   itemsPerPageLabel = 'PAGER_ITEMPERPAGE';
@@ -24,30 +24,27 @@ export class MatPaginatorIntApp extends MatPaginatorIntl {
 
 @NgModule({
   declarations: [
+    EditProfileComponent,
     ManageUsersComponent,
-    UsersEditComponent,
-    UsersListComponent,
     RolesListComponent,
-    RolesEditComponent
+    UsersListComponent,
+    ViewProfileComponent
   ],
   imports: [
+    CommonModule,
     GlobalModule,
-    MatInputModule,
-    MatCheckboxModule,
     MatButtonModule,
+    MatGridListModule,
+    MatInputModule,
     MatTabsModule,
     MatSelectModule,
     MatPaginatorModule,
-    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    UserRoutingModule,
     UserStoreModule.forRoot()
   ],
-  providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorIntApp}],
-  entryComponents: [
-    UsersEditComponent,
-    RolesEditComponent
-  ]
+  providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorIntApp}]
 })
 export class UserModule {}

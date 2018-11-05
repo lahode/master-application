@@ -1,4 +1,5 @@
 import { RolesRoutes } from "./api/roles/roles.routes";
+import { AuthRoutes } from "./api/auth/auth.routes";
 
 // Export the permissions class
 export class Permissions {
@@ -16,19 +17,24 @@ export class Permissions {
   }
 
   // Check permission on each route
-  public static permissionOnRoute(req, res, next): void {
+  public static async permissionOnRoute(req, res, next) {
     const url = Permissions.sanitizeUrl(req.originalUrl) || '';
     const permissions = Permissions.permissions.get(url) || [];
-    const user = req['user'] || {};
-    Permissions.checkPermissionOnUser(user, permissions).then(check => {
-      next();
-    })
-    .catch(error => {
-      res.status(403).json({
-        message: "Erreur, vous n'avez pas les droits requis.",
-        success: false
+    const data = await AuthRoutes.findUserBySub(req['user']);
+    if (data.success) {
+      Permissions.checkPermissionOnUser(data.user, permissions).then(check => {
+        next();
+      })
+      .catch(error => {
+        res.status(403).json({
+          message: "Erreur, vous n'avez pas les droits requis.",
+          success: false
+        });
       });
-    })
+    }
+    else {
+      res.status(data.status).json({message: data.message, success: data.success});
+    }
   }
 
   // Check if a user has permissions to get further

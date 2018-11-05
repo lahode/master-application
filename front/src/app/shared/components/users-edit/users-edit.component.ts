@@ -6,8 +6,7 @@ import { filter } from 'rxjs/operators';
 
 import { Role } from '../../../../core/models/role';
 import { User } from '../../../../core/models/user';
-import { UserActions } from '../../store';
-import { RoleActions } from '../../store';
+import { UserActions, RoleActions } from '../../../user/store';
 
 @Component({
   selector: 'app-users-edit',

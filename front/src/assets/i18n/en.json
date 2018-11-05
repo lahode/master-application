@@ -13,7 +13,8 @@
   "HEADER" : {
     "MENU" : {
       "HOME" : "Home",
-      "USERS" : "Manage users",
+      "VIEWPROFILE" : "View profile",
+      "MANAGEUSERS" : "Manage users",
       "LOGOUT" : "Log out",
       "SEARCH" : "Search"
     }
@@ -45,6 +46,24 @@
       "EMAIL_VALID" : "Insert a valid e-mail.",
       "CANCEL" : "Cancel",
       "SAVE" : "Save"
+    }
+  },
+  "PROFILE": {
+    "EDIT" : {
+      "USERNAME" : "Username",
+      "USERNAME_VALID" : "Insert a username with at least 5 characters.",
+      "FIRSTNAME" : "First name",
+      "LASTNAME" : "Last name",
+      "CURRENTPASSWORD" : "Current password",
+      "NEWPASSWORD" : "New password",
+      "CONFIRMPASSWORD" : "Confirm new password",
+      "DESCRIPTION" : "Description",
+      "PICTURE" : "Edit Picture",
+      "COMPLETE" : "Complete your profile",
+      "EDITPROFILE" : "Edit profile",
+      "CANCEL" : "Cancel",
+      "SAVE" : "Save",
+      "SETTINGS": "Edit profile settings"
     }
   },
   "ROLES": {

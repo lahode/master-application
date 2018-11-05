@@ -13,7 +13,8 @@
   "HEADER": {
     "MENU": {
       "HOME" : "Accueil",
-      "USERS" : "Gestion utilisateur",
+      "VIEWPROFILE" : "Voir profil",
+      "MANAGEUSERS" : "Gestion utilisateur",
       "LOGOUT" : "Se déconnecter",
       "SEARCH" : "Recherche"
     }
@@ -45,6 +46,24 @@
       "EMAIL_VALID" : "Insérer un e-mail valide.",
       "CANCEL" : "Annuler",
       "SAVE" : "Sauver"
+    }
+  },
+  "PROFILE" : {
+    "EDIT" : {
+      "USERNAME" : "Nom d'utilisateur",
+      "USERNAME_VALID" : "Insérer un nom d'utilisateur au minimum avec 5 caractères.",
+      "FIRSTNAME" : "Prénom",
+      "LASTNAME" : "Nom",
+      "CURRENTPASSWORD" : "Mot de passe actuel",
+      "NEWPASSWORD" : "Nouveau mot de passe",
+      "CONFIRMPASSWORD" : "Confirmer le nouveau mot de passe",
+      "DESCRIPTION" : "Description",
+      "PICTURE" : "Modifier l'image",
+      "COMPLETE" : "Compléter votre profil",
+      "EDITPROFILE" : "Edition du profil",
+      "CANCEL" : "Annuler",
+      "SAVE" : "Sauver",
+      "SETTINGS": "Modifier le profil"
     }
   },
   "ROLES": {

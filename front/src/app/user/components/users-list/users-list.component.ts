@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material';
 import { User } from '../../../../core/models/user';
 import { Range } from '../../../../core/models/range';
 import { UserActions } from '../../store';
-import { UsersEditComponent } from '../users-edit/users-edit.component';
+import { UsersEditComponent } from '../../../shared/components/users-edit/users-edit.component';
 
 @Component({
   selector: 'app-users-list',

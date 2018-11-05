@@ -1,0 +1,81 @@
+<div class="main-content">
+  <div class="card" *ngIf="(user$ | async) as profile">
+    <div class="card-header card-header-danger">
+      <h4 class="card-title">{{ 'PROFILE.EDIT.EDITPROFILE' | translate }}</h4>
+      <div class="picture">
+        <img [src]="profile.image || 'assets/images/profile.png'" class="user-img" />
+        <button mat-raised-button>{{ 'PROFILE.EDIT.PICTURE' | translate }}</button>
+      </div>
+      <p class="card-category">{{ 'PROFILE.EDIT.COMPLETE' | translate }}</p>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="editProfileform"
+            class="form-edit-profile">
+        <div class="form-flex">
+          <div class="form-column">
+            <mat-form-field>
+              <input matInput
+                     placeholder="{{ 'PROFILE.EDIT.CURRENTPASSWORD' | translate }}"
+                     type="password"
+                     id="current-password"
+                     formControlName="currentPassword" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput
+                     placeholder="{{ 'PROFILE.EDIT.USERNAME' | translate }}"
+                     id="username"
+                     formControlName="username" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput
+                     placeholder="{{ 'PROFILE.EDIT.NEWPASSWORD' | translate }}"
+                     type="password"
+                     id="password"
+                     formControlName="password" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput
+                     placeholder="{{ 'PROFILE.EDIT.CONFIRMPASSWORD' | translate }}"
+                     type="password"
+                     id="confirm-password"
+                     formControlName="confirmPassword" />
+            </mat-form-field>
+          </div>
+          <div class="form-column">
+            <mat-form-field>
+              <input matInput
+                     placeholder="{{ 'PROFILE.EDIT.FIRSTNAME' | translate }}"
+                     id="firstname"
+                     formControlName="firstname" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput
+                     placeholder="{{ 'PROFILE.EDIT.LASTNAME' | translate }}"
+                     id="lastname"
+                     formControlName="lastname" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <textarea matInput
+                        placeholder="{{ 'PROFILE.EDIT.DESCRIPTION' | translate }}"
+                        id="description"
+                        formControlName="description"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="form-buttons">
+          <button mat-raised-button
+                  #signin
+                  color="secondary">{{ 'PROFILE.EDIT.CANCEL' | translate }}</button>
+          <button mat-raised-button
+                  #signin
+                  color="primary">{{ 'PROFILE.EDIT.SAVE' | translate }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

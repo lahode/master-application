@@ -6,7 +6,7 @@ import { filter } from 'rxjs/operators';
 
 import { Role } from '../../../../core/models/role';
 import { User } from '../../../../core/models/user';
-import { RoleActions } from '../../store';
+import { RoleActions } from '../../../user/store';
 import { GLOBAL_PERMISSIONS } from '../../../app.permissions';
 
 @Component({

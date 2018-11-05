@@ -18,9 +18,10 @@
     <mat-checkbox id="user_remember_me" name="user[remember_me]">{{ 'LOGIN.SIGNINFORM.REMEMBERME' | translate }}</mat-checkbox>
     <button mat-raised-button
             color="secondary"
-            (click)="onChangeBlock('password')">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</button>
+            (click)="onRedirectPassword($event)">{{ 'LOGIN.SIGNINFORM.PASSWORDLOST' | translate }}</button>
   </div>
   <button mat-raised-button
+          #signin
           color="primary"
           [disabled]="(loading$ | async).length!==0 || !signInform.valid" (click)="onSignIn()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
   <mat-spinner *ngIf="(loading$ | async).length!==0"></mat-spinner>

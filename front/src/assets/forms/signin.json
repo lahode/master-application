@@ -1,0 +1,50 @@
+{
+  "form" : [
+      {
+        "type": "input",
+        "name": "username",
+        "validation": {
+          "required": true
+        }
+      },
+      {
+        "type": "password",
+        "name": "password",
+        "validation": {
+          "required": true
+        }
+      },
+      {
+        "type": "checkbox",
+        "label": "Remember me",
+        "name": "remember_me"
+      },
+      {
+        "type": "button",
+        "name": "password_lost",
+        "label": "Password lost",
+        "color": "secondary",
+        "click": "onChangeBlock('password')"
+      },
+      {
+        "type": "button",
+        "name": "signin",
+        "label": "Sign in",
+        "color": "primary",
+        "click": "onSignIn()"
+      }
+  ],
+  "display" : {
+    "credentials" : {
+      "fields" : ["username", "password"]
+    },
+    "options" : {
+      "class" : "space-between",
+      "fields" : ["remember_me", "password_lost"]
+    },
+    "signin" : {
+      "fields" : ["signin"]
+    }
+  }
+
+}

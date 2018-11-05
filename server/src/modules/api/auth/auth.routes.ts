@@ -13,21 +13,13 @@ const userDB = new Datastore(CONFIG.DATABASE.USERS);
 export class AuthRoutes {
 
   // Check Authentication and return the user
-  public static checkAuth(req: Request, res: Response) {
-    const userInfo = req["user"];
-    if (userInfo) {
-      // Fetch the user by id
-      userDB.findOne({sub: userInfo.sub}).then(function(user) {
-        if (user) {
-          return res.json({success:true, user: user});
-        } else {
-          return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
-        }
-      })
-      .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
+  public static async checkAuth(req: Request, res: Response) {
+    const data = await AuthRoutes.findUserBySub(req['user']);
+    if (data.success) {
+      res.json({success:true, user: data.user});
     }
     else {
-      return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
+      res.status(data.status).json({message: data.message, success: data.success});
     }
   }
 
@@ -146,6 +138,25 @@ export class AuthRoutes {
       }
     })
     .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false}));
+  }
+
+  // Fetch the user by sub
+  public static async findUserBySub(userInfo) {
+    if (userInfo) {
+      return userDB.findOne({sub: userInfo.sub}).then(function(user) {
+        if (user) {
+          return {success:true, user: user};
+        } else {
+          return {message: "Aucun utilisateur n'a été trouvé.", success: false, status: 404};
+        }
+      })
+      .catch((error) => {
+        return {message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false, status: 500};
+      });
+    }
+    else {
+      return {message: "Aucun utilisateur n'a été trouvé.", success: false, status: 404};
+    }
   }
 
 }
