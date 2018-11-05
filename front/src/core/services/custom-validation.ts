@@ -8,6 +8,11 @@ export class DoubleValidation {
     if (email !== emailconfirm) {
       AC.get('emailconfirm').setErrors({ MatchEmail: true });
     } else {
+      const control = AC.get('emailconfirm');
+      if (control.hasError('MatchEmail')) {
+        delete control.errors['MatchEmail'];
+        control.updateValueAndValidity();
+      }
       return null;
     }
   }
@@ -15,9 +20,15 @@ export class DoubleValidation {
   static MatchPassword(AC: AbstractControl) {
     const password = AC.get('password').value;
     const passwordconfirm = AC.get('passwordconfirm').value;
-    if (password !== passwordconfirm) {
+    if (password && password !== passwordconfirm) {
       AC.get('passwordconfirm').setErrors({ MatchPassword: true });
+      return null;
     } else {
+      const control = AC.get('passwordconfirm');
+      if (control.hasError('MatchPassword')) {
+        delete control.errors['MatchPassword'];
+        control.updateValueAndValidity();
+      }
       return null;
     }
   }

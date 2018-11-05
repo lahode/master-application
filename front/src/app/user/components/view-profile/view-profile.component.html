@@ -2,7 +2,7 @@
 
   <div class="card" *ngIf="(user$ | async) as profile">
     <div class="card-header">
-      <h4 class="card-title">{{ profile.fistname }} {{ profile.lastname }}</h4>
+      <h4 class="card-title">{{ profile.firstname }} {{ profile.lastname }}</h4>
     </div>
     <div class="container">
       <img [src]="profile.image || 'assets/images/profile.png'" class="user-img" />

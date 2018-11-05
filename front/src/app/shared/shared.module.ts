@@ -4,8 +4,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { MatInputModule, MatCheckboxModule, MatButtonModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatDialogModule, MatInputModule } from '@angular/material';
 
+import { PictureEditComponent } from './components/picture-edit/picture-edit.component';
 import { RolesEditComponent } from './components/roles-edit/roles-edit.component';
 import { UsersEditComponent } from './components/users-edit/users-edit.component';
 
@@ -17,6 +18,7 @@ import { UsersEditComponent } from './components/users-edit/users-edit.component
     TranslateModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatInputModule
   ],
   exports: [
@@ -25,10 +27,12 @@ import { UsersEditComponent } from './components/users-edit/users-edit.component
     MatInputModule,
   ],
   declarations: [
+    PictureEditComponent,
     RolesEditComponent,
     UsersEditComponent
   ],
   entryComponents: [
+    PictureEditComponent,
     RolesEditComponent,
     UsersEditComponent
   ]

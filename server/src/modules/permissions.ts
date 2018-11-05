@@ -1,5 +1,5 @@
 import { RolesRoutes } from "./api/roles/roles.routes";
-import { AuthRoutes } from "./api/auth/auth.routes";
+import { UsersRoutes } from "./api/users/users.routes";
 
 // Export the permissions class
 export class Permissions {
@@ -20,7 +20,7 @@ export class Permissions {
   public static async permissionOnRoute(req, res, next) {
     const url = Permissions.sanitizeUrl(req.originalUrl) || '';
     const permissions = Permissions.permissions.get(url) || [];
-    const data = await AuthRoutes.findUserBySub(req['user']);
+    const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
       Permissions.checkPermissionOnUser(data.user, permissions).then(check => {
         next();
@@ -33,7 +33,7 @@ export class Permissions {
       });
     }
     else {
-      res.status(data.status).json({message: data.message, success: data.success});
+      res.status(data.error).json({message: data.message, success: data.success});
     }
   }
 

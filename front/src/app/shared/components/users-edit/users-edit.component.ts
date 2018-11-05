@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { Role } from '../../../../core/models/role';
@@ -15,14 +16,14 @@ import { UserActions, RoleActions } from '../../../user/store';
 })
 export class UsersEditComponent implements OnInit, OnDestroy {
 
-  editUserForm: FormGroup;
-  rolesOptions: Role[];
-  currentUser: User;
-  userEdit: User;
-  stateSelect: any;
+  public editUserForm: FormGroup;
+  public rolesOptions: Role[];
+  private currentUser: User;
+  private userEdit: User;
+  private stateSelect: Subscription;
 
-  constructor(private store: Store<any>,
-              private readonly dialogRef: MatDialogRef<UsersEditComponent>,
+  constructor(private readonly _store: Store<any>,
+              private readonly _dialogRef: MatDialogRef<UsersEditComponent>,
               private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
@@ -31,7 +32,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
                          `@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?`;
 
     // Initialize the list of roles
-    this.store.dispatch(<Action>RoleActions.list());
+    this._store.dispatch(<Action>RoleActions.list());
 
     // Initialize edit user form.
     this.editUserForm = this._fb.group({
@@ -44,7 +45,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
     });
 
     // Get connected user and current user edit to fill the form.
-    this.stateSelect = this.store.select(state => state)
+    this.stateSelect = this._store.select(state => state)
       .pipe(
         filter((state) => state.loading.length === 0),
         filter((state) => state.rolesList)
@@ -81,7 +82,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
 
   // Cancel the changes.
   cancel(): void {
-    this.dialogRef.close();
+    this._dialogRef.close();
   }
 
   // Save the user form.
@@ -109,15 +110,15 @@ export class UsersEditComponent implements OnInit, OnDestroy {
 
     // Save the user
     if (this.userEdit._id) {
-      this.store.dispatch(<Action>UserActions.update(this.userEdit));
+      this._store.dispatch(<Action>UserActions.update(this.userEdit));
     } else {
       delete(this.userEdit._id);
       this.userEdit.owner = this.currentUser._id;
-      this.store.dispatch(<Action>UserActions.create(this.userEdit));
+      this._store.dispatch(<Action>UserActions.create(this.userEdit));
     }
 
     // Close the form.
-    this.dialogRef.close();
+    this._dialogRef.close();
   }
 
   ngOnDestroy() {

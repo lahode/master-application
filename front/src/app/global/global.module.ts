@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatSelectModule,  MatToolbarModule, MatMenuModule, MatIconModule } from '@angular/material';
+import { MatButtonModule, MatSelectModule,  MatToolbarModule, MatMenuModule, MatIconModule } from '@angular/material';
 
 import { ConfirmComponent } from './components/confirm/confirm.component';
 import { ErrorComponent } from './components/error/error.component';
@@ -21,6 +21,7 @@ import { Nl2brPipe } from './pipes/nl2br.pipe';
   imports: [
     CommonModule,
     FormsModule,
+    MatButtonModule,
     MatSelectModule,
     MatToolbarModule,
     MatMenuModule,

@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ 'PROFILE.EDIT.PICTURE' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="file-field input-field">
+    <div class="btn">
+      <span>{{ 'PROFILE.EDIT.FILE' | translate }}</span>
+      <input type="file" #fileInput (change)="uploadFile()">
+    </div>
+    <div class="file-path-wrapper">
+      <input class="file-path validate" type="text">
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{ 'PROFILE.EDIT.CANCEL' | translate }}</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>{{ 'PROFILE.EDIT.EDIT' | translate }}</button>
+</mat-dialog-actions>

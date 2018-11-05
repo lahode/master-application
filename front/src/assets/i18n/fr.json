@@ -59,10 +59,12 @@
       "CONFIRMPASSWORD" : "Confirmer le nouveau mot de passe",
       "DESCRIPTION" : "Description",
       "PICTURE" : "Modifier l'image",
+      "FILE" : "Fichier",
+      "EDIT": "Modifier",
       "COMPLETE" : "Compléter votre profil",
       "EDITPROFILE" : "Edition du profil",
       "CANCEL" : "Annuler",
-      "SAVE" : "Sauver",
+      "SAVE" : "Sauvegarder",
       "SETTINGS": "Modifier le profil"
     }
   },

@@ -2,7 +2,7 @@ import * as express from 'express';
 import { sign, verify } from 'jsonwebtoken';
 import { CONFIG } from "../../../config";
 import { Permissions } from "../../permissions";
-import { AuthRoutes } from "../auth/auth.routes";
+import { UsersRoutes } from "../users/users.routes";
 
 const nodemailer = require('nodemailer');
 const Datastore = require('nedb-promises');
@@ -39,7 +39,7 @@ export class RolesRoutes {
     if (!Array.isArray(req.body)) {
       return res.json({success: true});
     }
-    const data = await AuthRoutes.findUserBySub(req['user']);
+    const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
       Permissions.checkPermissionOnUser(data.user, req.body).then(check => {
         return res.json({success: true});
@@ -52,7 +52,7 @@ export class RolesRoutes {
       });
     }
     else {
-      res.status(data.status).json({message: data.message, success: data.success});
+      res.status(data.error).json({message: data.message, success: data.success});
     }
   }
 

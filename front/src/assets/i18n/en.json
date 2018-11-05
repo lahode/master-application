@@ -59,6 +59,8 @@
       "CONFIRMPASSWORD" : "Confirm new password",
       "DESCRIPTION" : "Description",
       "PICTURE" : "Edit Picture",
+      "FILE" : "File",
+      "EDIT" : "Change",
       "COMPLETE" : "Complete your profile",
       "EDITPROFILE" : "Edit profile",
       "CANCEL" : "Cancel",

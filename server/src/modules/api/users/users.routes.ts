@@ -16,19 +16,40 @@ export class UsersRoutes {
       let result = await userDB.findOne({ _id: id })
         .then((user) => {
           if (user) {
+            user.password = '';
             return {data: user, success: true};
           } else {
             return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
           }
         })
         .catch((error) => {
-          return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}
+          return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
         });
         if (result.hasOwnProperty('data')) {
           results.push(result.data);
         }
     }
     return results;
+  }
+
+  // Fetch the user by sub
+  public static async findUserBySub(userInfo) {
+    if (userInfo) {
+      return userDB.findOne({sub: userInfo.sub}).then(function(user) {
+        if (user) {
+          user.password = '';
+          return {success:true, user: user};
+        } else {
+          return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
+        }
+      })
+      .catch((error) => {
+        return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
+      });
+    }
+    else {
+      return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
+    }
   }
 
   // Get user by ID route
@@ -39,6 +60,7 @@ export class UsersRoutes {
     // Find a user by it's ID
     userDB.findOne({ _id: req.params.id })
       .then((user) => {
+        user.password = '';
         return res.json({user: user, success: true});
       })
       .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}));
