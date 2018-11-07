@@ -59,21 +59,10 @@ export class AuthRoutes {
         });
     }
 
-    // Register with token.
-    const errors = PasswordStrategy.validate(credentials.password);
-    if (errors.length > 0) {
-      const err:string[] = [];
-      errors.map(e => {
-        switch (e) {
-          case 'min' : err.push('au minimum 10 caractères');break;
-          case 'uppercase' : err.push('des majuscules');break;
-          case 'min' : err.push('des minuscules');break;
-          case 'spaces' : err.push("aucun d'espace");break;
-          case 'digits' : err.push("des chiffres");break;
-          case 'oneOf' : err.push("être différent de Passw0rd ou Password123");break;
-        }
-      });
-      return res.status(400).json({message: 'Le mot de passe doit avoir ' + err.join(', '), success: false});
+    // Check password strategy
+    const errorValidatePassword = AuthRoutes.checkPasswordStrategy(credentials.password);
+    if (errorValidatePassword) {
+      return res.status(400).json({message: errorValidatePassword, success: false});
     }
 
     if (!credentials.username || !credentials.password) {
@@ -139,6 +128,26 @@ export class AuthRoutes {
       }
     })
     .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false}));
+  }
+
+  // Check password validity.
+  public static checkPasswordStrategy(password): string {
+    const errors = PasswordStrategy.validate(password);
+    if (errors.length > 0) {
+      const err:string[] = [];
+      errors.map(e => {
+        switch (e) {
+          case 'min' : err.push('au minimum 10 caractères');break;
+          case 'uppercase' : err.push('des majuscules');break;
+          case 'min' : err.push('des minuscules');break;
+          case 'spaces' : err.push("aucun d'espace");break;
+          case 'digits' : err.push("des chiffres");break;
+          case 'oneOf' : err.push("être différent de Passw0rd ou Password123");break;
+        }
+      });
+      return 'Le mot de passe doit avoir ' + err.join(', ');
+    }
+    return null;
   }
 
 }

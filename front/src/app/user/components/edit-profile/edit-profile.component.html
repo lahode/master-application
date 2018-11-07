@@ -3,7 +3,12 @@
     <div class="card-header card-header-danger">
       <h4 class="card-title">{{ 'PROFILE.EDIT.EDITPROFILE' | translate }}</h4>
       <div class="picture">
-        <img [src]="profile.image || 'assets/images/profile.png'" class="user-img" />
+        <ng-template *ngIf="(picture$ | async) as picture; else defaultImage">
+          <img [src]="picture" class="user-img" />
+        </ng-template>
+        <ng-template #defaultImage>
+          <img src="assets/images/profile.png" class="user-img" />
+        </ng-template>
         <button mat-raised-button
                 (click)="editPicture()">{{ 'PROFILE.EDIT.PICTURE' | translate }}</button>
       </div>
@@ -13,8 +18,8 @@
       <form [formGroup]="editProfileform"
             class="form-edit-profile">
         <div class="form-flex">
-          <div class="form-column">
-            <mat-form-field *ngIf="editProfileform.controls.password.value || editProfileform.controls.username.value != profile.username">
+          <div class="form-column" *ngIf="enableAuthChange">
+            <mat-form-field *ngIf="editProfileform.controls.passwordnew.value || editProfileform.controls.username.value != profile.username">
               <input matInput
                      placeholder="{{ 'PROFILE.EDIT.CURRENTPASSWORD' | translate }}"
                      type="password"
@@ -33,11 +38,11 @@
               <input matInput
                      placeholder="{{ 'PROFILE.EDIT.NEWPASSWORD' | translate }}"
                      type="password"
-                     id="password"
-                     formControlName="password" />
+                     id="new-password"
+                     formControlName="passwordnew" />
             </mat-form-field>
 
-            <mat-form-field *ngIf="editProfileform.controls.password.value">
+            <mat-form-field *ngIf="editProfileform.controls.passwordnew.value">
               <input matInput
                      placeholder="{{ 'PROFILE.EDIT.CONFIRMPASSWORD' | translate }}"
                      type="password"
@@ -45,7 +50,7 @@
                      formControlName="passwordconfirm" />
             </mat-form-field>
           </div>
-          <div class="form-column">
+          <div class="form-column" [ngClass]="!enableAuthChange ? 'fullwidth' : ''">
             <mat-form-field>
               <input matInput
                      placeholder="{{ 'PROFILE.EDIT.FIRSTNAME' | translate }}"
@@ -76,7 +81,7 @@
           <button mat-raised-button
                   #signin
                   (click)="save()"
-                  [disabled]="!editProfileform.valid"
+                  [disabled]="!editProfileform.valid || (editProfileform.pristine && picture === userEdit.picture)"
                   color="primary">{{ 'PROFILE.EDIT.SAVE' | translate }}</button>
         </div>
       </form>

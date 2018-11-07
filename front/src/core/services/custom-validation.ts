@@ -18,9 +18,9 @@ export class DoubleValidation {
   }
 
   static MatchPassword(AC: AbstractControl) {
-    const password = AC.get('password').value;
+    const passwordnew = AC.get('passwordnew').value;
     const passwordconfirm = AC.get('passwordconfirm').value;
-    if (password && password !== passwordconfirm) {
+    if (passwordnew && passwordnew !== passwordconfirm) {
       AC.get('passwordconfirm').setErrors({ MatchPassword: true });
       return null;
     } else {

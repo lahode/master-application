@@ -80,11 +80,11 @@ export class EndpointsService {
 
   // Endpoint for FileService
   fileUpload() {
-    return this.url + '/api/files/upload';
+    return this.url + '/api/secure/files/upload';
   }
 
-  filePath() {
-    return this.url + `/files/view/`;
+  filePath(id) {
+    return this.url + `/api/files/view/${id}`;
   }
 
 }

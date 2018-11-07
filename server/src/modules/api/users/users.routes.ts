@@ -1,11 +1,16 @@
 import * as express from 'express';
 import { sign, verify } from 'jsonwebtoken';
 import { CONFIG } from "../../../config";
+import { AuthRoutes } from "../auth/auth.routes";
+import { PasswordStrategy } from "../../security/password-strategy";
 
 const nodemailer = require('nodemailer');
 const Datastore = require('nedb-promises');
 const userDB = new Datastore(CONFIG.DATABASE.USERS);
+const fileDB = new Datastore(CONFIG.DATABASE.FILES);
 const router = express.Router();
+
+import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 
 export class UsersRoutes {
 
@@ -16,13 +21,13 @@ export class UsersRoutes {
       let result = await userDB.findOne({ _id: id })
         .then((user) => {
           if (user) {
-            user.password = '';
+            delete(user.password);
             return {data: user, success: true};
           } else {
             return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
           }
         })
-        .catch((error) => {
+        .catch(() => {
           return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
         });
         if (result.hasOwnProperty('data')) {
@@ -35,17 +40,18 @@ export class UsersRoutes {
   // Fetch the user by sub
   public static async findUserBySub(userInfo) {
     if (userInfo) {
-      return userDB.findOne({sub: userInfo.sub}).then(function(user) {
+      try {
+        const user = await userDB.findOne({sub: userInfo.sub});
         if (user) {
-          user.password = '';
+          delete(user.password);
           return {success:true, user: user};
         } else {
           return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
         }
-      })
-      .catch((error) => {
+      }
+      catch (e) {
         return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
-      });
+      }
     }
     else {
       return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
@@ -63,7 +69,7 @@ export class UsersRoutes {
         user.password = '';
         return res.json({user: user, success: true});
       })
-      .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}));
+      .catch(() => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}));
   }
 
   // Get all users route
@@ -90,7 +96,7 @@ export class UsersRoutes {
         return res.status(404).json({message: "Aucun utilisateur n'a été trouvée.", success: false});
       }
     })
-    .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération des utilisateurs.", success: false}));
+    .catch(() => res.status(500).json({message: "Une erreur s'est produite lors de la récupération des utilisateurs.", success: false}));
   }
 
   // Create user route
@@ -115,7 +121,7 @@ export class UsersRoutes {
           }
           return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de l'utilisateur", success: false});
         })
-        .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
+        .catch(() => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
     }
     else {
       return res.status(500).json({message: "Impossible d'insérer cet utilisateur, l'utilisateur existe déjà.", success: false});
@@ -124,7 +130,7 @@ export class UsersRoutes {
   }
 
   // Save user route
-  public static update(req, res): void {
+  public static async update(req, res) {
     if (!req.body.username) {
       return res.status(400).json({message: "Un utilisateur doit avoir au moins un nom d'utilisateur.", success: false});
     }
@@ -141,21 +147,53 @@ export class UsersRoutes {
       }
       user.updated = new Date().toISOString();
       userDB.findOne({ _id: user._id })
-      .then((checkUser) => {
-        if (checkUser) {
-          user.password = checkUser.password;
-          return userDB.update({ _id: user._id }, user)
-            .then((updated) => {
-              if (updated) {
-                return res.json({user: user, success: true});
+        .then((checkUser) => {
+          if (checkUser) {
+
+            // Manage password or username modifications.
+            user.password = checkUser.password;
+            if (user.passwordcurrent) {
+              const passwordcurrent = user.passwordcurrent;
+              const passwordnew = user.passwordnew || null;
+              try {
+                const checkPassword = AuthStrategyToken.login(passwordcurrent, user, res);
               }
-              return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de l'utilisateur", success: false});
-            })
-            .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", success: false}));
-        } else {
-          return res.status(404).json({message: "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.", success: false});
-        }
-      });
+              catch(e) {
+                return res.status(400).json({message: "Le mot de passe que vous avez entré est invalide.", success: false});
+              }
+              if (passwordnew) {
+                const errorValidatePassword = AuthRoutes.checkPasswordStrategy(passwordnew);
+                if (errorValidatePassword) {
+                  return res.status(400).json({message: errorValidatePassword, success: false});
+                }
+                PasswordStrategy.getPasswordDigest(passwordnew)
+                  .then((passwordDigest) => {
+                    user.password = passwordDigest;
+                  })
+                  .catch((error) => res.status(error.status).json({message: error.message, success: false}));
+              }
+            } else {
+              user.username = checkUser.username;
+            }
+            delete(user.passwordcurrent);
+            delete(user.passwordnew);
+
+            // Get picture ID for user.
+            user.picture = user.picture._id || undefined;
+
+            // Update user.
+            return userDB.update({ _id: user._id }, user)
+              .then((updated) => {
+                if (updated) {
+                  return res.json({user: user, success: true});
+                }
+                return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de l'utilisateur", success: false});
+              })
+              .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", success: false}));
+          } else {
+            return res.status(404).json({message: "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.", success: false});
+          }
+        });
     }
     else {
       return res.status(500).json({message: "Impossible de modifier cet utilisateur, l'utilisateur n'a pas d'identifiant.", success: false});

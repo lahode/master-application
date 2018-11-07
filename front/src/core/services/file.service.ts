@@ -20,6 +20,10 @@ export class FileService {
       );
   }
 
+  public view(fileID) {
+    return this.http.get(this.endpoints.filePath(fileID));
+  }
+
   // Manage back-end error
   private _manageError(err) {
     const error = err.error;

@@ -5,7 +5,12 @@
       <h4 class="card-title">{{ profile.firstname }} {{ profile.lastname }}</h4>
     </div>
     <div class="container">
-      <img [src]="profile.image || 'assets/images/profile.png'" class="user-img" />
+      <ng-template *ngIf="(picture$ | async) as picture; else defaultImage">
+        <img [src]="picture" class="user-img" />
+      </ng-template>
+      <ng-template #defaultImage>
+        <img src="assets/images/profile.png" class="user-img" />
+      </ng-template>
       <h4>{{ profile.username }}</h4>
       <p>{{ profile.description }}</p>
         <a [routerLink]="['edit']"
@@ -14,6 +19,7 @@
           <i class="ion-gear-a"></i> {{ 'PROFILE.EDIT.SETTINGS' | translate }}
         </a>
     </div>
+
   </div>
 
 </div>

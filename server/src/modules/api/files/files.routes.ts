@@ -21,9 +21,9 @@ export class FilesRoutes {
       }
       return fileDB.insert(req.file)
         .then((inserted) => {
-          return res.json({file: inserted, success: true});
+          return res.json({file: inserted._id, success: true});
         })
-        .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la sauvegarde du fichier dans la base de données", success: false}));
+        .catch(() => res.status(500).json({message: "Une erreur s'est produit lors de la sauvegarde du fichier dans la base de données", success: false}));
     });
   }
 
@@ -66,20 +66,19 @@ export class FilesRoutes {
       .then((file) => {
         // Remove the file in the database
         return fileDB.remove({ _id: file._id })
-          .then((deleted) => {
-            const filePath =  file.path;
+          .then(() => {
             // Delete the file in the upload directory
-            return fs.remove(filePath)
+            return fs.remove()
               .then(() => {
                 return {message: "Le fichier a été supprimé.", success: true};
               })
-              .catch((error) => {
+              .catch(() => {
                 return Promise.reject({message: "Une erreur est survenue lors de la suppression du fichier.", status: 500})
               });
           })
-          .catch((error) => Promise.reject({message: "Une erreur est survenue lors de la suppression du fichier dans la base de données.", status: 500}));
+          .catch(() => Promise.reject({message: "Une erreur est survenue lors de la suppression du fichier dans la base de données.", status: 500}));
       })
-      .catch((error) => Promise.reject({message: "Aucune fichier n'a été trouvé.", status: 404}));
+      .catch(() => Promise.reject({message: "Aucune fichier n'a été trouvé.", status: 404}));
   }
 
 }
