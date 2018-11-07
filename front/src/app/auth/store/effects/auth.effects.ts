@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, withLatestFrom, switchMap, catchError, tap } from 'rxjs/operators';
-import { Store, Action } from '@ngrx/store';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
+import { Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
 import { AuthService } from '../../services/auth.service';
-
-import { User } from '../../../../core/models/user';
 
 @Injectable()
 export class AuthEffects {
@@ -17,8 +15,7 @@ export class AuthEffects {
   @Effect() checkAuthAction$ = this._action$
     .ofType(AuthActions.CHECK_AUTH_START)
     .pipe(
-      map<Action, any>((action: Action) => (action as any).payload),
-      switchMap((payload: any) => this._auth.checkAuth(payload)
+      switchMap(() => this._auth.checkAuth(false)
         .pipe(
           map<Action, any>((_result: any) => {
               // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP
@@ -61,8 +58,8 @@ export class AuthEffects {
           // On errors dispatch LOGIN_FAILED action with result
           catchError(res => of({type: AuthActions.LOGIN_FAILED, payload: res})),
           // Redirect to the target page
-          tap(() => {
-            if (payload) {
+          tap((action) => {
+            if (action.payload) {
               const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
               this._router.navigate([`/${returnUrl}`]);
             }
@@ -99,9 +96,40 @@ export class AuthEffects {
           // On errors dispatch CREATE_USER_FAILED action with result
           catchError(res => of({type: AuthActions.CREATE_USER_FAILED, payload: res})),
           // Redirect to the target page
-          tap(() => {
-            const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
-            this._router.navigate([`/${returnUrl}`]);
+          tap((action) => {
+            if (action.payload) {
+              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
+              this._router.navigate([`/${returnUrl}`]);
+            }
+          })
+        )
+      )
+    );
+
+  // Listen for the 'CALLBACK_START' action
+  @Effect() callbackAction$ = this._action$
+    .ofType(AuthActions.CALLBACK_START)
+    .pipe(
+      switchMap(() => this._auth.checkAuth(true)
+        .pipe(
+          map<Action, any>((_result: any) => {
+              // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP
+              if (_result) {
+                return <Action>{ type: AuthActions.CALLBACK_SUCCESS, payload: _result };
+              } else {
+                return <Action>{ type: AuthActions.CHECK_AUTH_STOP, payload: _result };
+              }
+              // On errors dispatch CHECK_AUTH_FAILED action with result
+            }),
+          catchError(res => of({type: AuthActions.CALLBACK_FAILED, payload: res})),
+          // Redirect to the target page
+          tap((action) => {
+            if (action.type === AuthActions.CALLBACK_SUCCESS) {
+              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
+              this._router.navigate([`/${returnUrl}`]);
+            } else {
+              this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });
+            }
           })
         )
       )
@@ -110,7 +138,6 @@ export class AuthEffects {
   constructor(
     private readonly _action$: Actions,
     private readonly _auth: AuthService,
-    private readonly _store$: Store<Action>,
     private readonly _router: Router,
     private readonly _route: ActivatedRoute
   ) {}

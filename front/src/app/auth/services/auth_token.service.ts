@@ -120,10 +120,10 @@ export class AuthTokenService extends AuthService {
           ),
         this._storage.set('access_type', STORAGE_TYPE)
           .then(
-            () => user,
+            () => null,
             (err) => throwError(this._manageError(err))
           )
-      ])
+      ]).then((array) => array[0])
     );
   }
 

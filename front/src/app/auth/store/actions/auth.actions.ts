@@ -32,6 +32,10 @@ export const AuthActions = {
   GET_PASSWORD_SUCCESS : 'GET_PASSWORD_SUCCESS',
   GET_PASSWORD_FAILED : 'GET_PASSWORD_FAILED',
 
+  CALLBACK_START : 'CALLBACK_START',
+  CALLBACK_SUCCESS : 'CALLBACK_SUCCESS',
+  CALLBACK_FAILED : 'CALLBACK_FAILED',
+
   login(_credentials) {
     return <Action>{
       type: AuthActions.LOGIN_START,
@@ -39,10 +43,9 @@ export const AuthActions = {
     };
   },
 
-  checkAuth(_credentials = null) {
+  checkAuth() {
     return <Action>{
       type: AuthActions.CHECK_AUTH_START,
-      payload: _credentials
     };
   },
 
@@ -70,6 +73,12 @@ export const AuthActions = {
     return <Action>{
       type: AuthActions.GET_PASSWORD_START,
       payload: _credentials
+    };
+  },
+
+  callback()  {
+    return <Action>{
+      type: AuthActions.CALLBACK_START,
     };
   }
 

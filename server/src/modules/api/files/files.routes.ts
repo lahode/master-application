@@ -36,7 +36,6 @@ export class FilesRoutes {
         const filePath = file.path;
         let fileToLoad = fs.readFileSync(filePath);
         res.writeHead(200, {'Content-Type' : file.mimetype});
-        console.log(file.mimetype)
         return res.end(fileToLoad);
       } else {
         return res.status(404).json({message: "Aucune fichier n'a été trouvé.", success: false});

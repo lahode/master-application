@@ -61,9 +61,7 @@ export class AuthRoutes {
     if (req["user"] && req["user"].sub) {
       credentials.sub = req["user"].sub
       return userDB.insert(credentials)
-        .then((userInserted) => {
-          return res.json(userInserted);
-        });
+        .then((userInserted) => res.json({user: userInserted.user, token: userInserted.token, success: true}));
     }
 
     // If no username or password exists for user registration exit the route.
@@ -91,6 +89,7 @@ export class AuthRoutes {
 
         // Create the new token with the user and return the user and the token.
         const userSignedUp = await AuthStrategyToken.signup(userInserted, res);
+        delete(userSignedUp.user.password);
         res.json(userSignedUp);
       } else {
         return res.status(403).json({message: "L'utilisateur existe déjà.", success: false});
