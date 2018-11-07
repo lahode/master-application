@@ -52,8 +52,10 @@ export class EditProfileComponent implements OnInit {
         map(state => {
           // Set user data to user form or reset users form.
           this.userEdit = state.currentUser;
-          this.picture = state.currentUser.picture;
-          this.picture$ = this._file.view(state.currentUser.picture);
+          this.picture = state.currentUser ? state.currentUser.picture : null;
+          if (this.picture) {
+            this.picture$ = this._file.view(this.picture);
+          }
           const tokenCheck = this.userEdit['sub'].split('|');
           if (tokenCheck.length === 2 && tokenCheck[0]) {
             const tokenType = tokenCheck[0].split('-');
@@ -108,7 +110,6 @@ export class EditProfileComponent implements OnInit {
 
     // Update the user
     this._store.dispatch(<Action>UserActions.update(this.userEdit));
-    this._router.navigate(['/user']);
   }
 
 }

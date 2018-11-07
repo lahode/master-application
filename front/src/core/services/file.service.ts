@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { shareReplay, catchError } from 'rxjs/operators';
 
@@ -21,7 +22,8 @@ export class FileService {
   }
 
   public view(fileID) {
-    return this.http.get(this.endpoints.filePath(fileID));
+    const customHeaders: HttpHeaders = new HttpHeaders().append('Accept', 'image/jpeg');
+    return this.http.get(this.endpoints.filePath(fileID), {headers: customHeaders});
   }
 
   // Manage back-end error

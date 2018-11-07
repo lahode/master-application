@@ -42,7 +42,7 @@ export class APIRoutes {
     // Files
     this.callRoute('post', "/api/secure/files/upload", FilesRoutes.uploadFile, ["manage files", "view files"]);
     this.callRoute('get', "/api/secure/files/delete", FilesRoutes.deleteFile, ["manage files", "view files"]);
-    this.callRoute('get', "/api/files/view/:id", FilesRoutes.viewFile, ["view files"]);
+    this.callRoute('get', "/api/secure/files/view/:id", FilesRoutes.viewFile, ["view files"]);
 
     return app;
   }

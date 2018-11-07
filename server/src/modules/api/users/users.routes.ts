@@ -169,13 +169,13 @@ export class UsersRoutes {
               user.password = passwordDigest;
             }
           } else {
+            if (user.username != checkUser.username || user.passwordnew) {
+              return res.status(400).json({message: "Le mot de passe actuel est obligatoire pour modifier le nom d'utilisateur ou mot de passe", success: false});
+            }
             user.username = checkUser.username;
           }
           delete(user.passwordcurrent);
           delete(user.passwordnew);
-
-          // Get picture ID for user.
-          user.picture = user.picture ? user.picture._id : undefined;
 
           // Update user in the database.
           const updatedUser = await userDB.update({ _id: user._id }, user);
@@ -185,7 +185,9 @@ export class UsersRoutes {
         }
       }
       catch(e) {
-        console.log(e);
+        if (e.status === 403) {
+          return res.status(403).json({message: "Mot de passe invalide.", success: false});
+        }
         return res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", success: false});
       }
     } else {

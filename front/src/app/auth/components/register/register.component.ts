@@ -53,6 +53,7 @@ export class RegisterComponent implements OnInit {
   // Register the new user
   onRegister() {
     if (this.registerForm.valid) {
+      delete(this.registerForm.value.emailconfirm);
       this._store.dispatch(<Action>AuthActions.signup(this.registerForm.value));
       this.registerForm.controls['password'].reset();
     }

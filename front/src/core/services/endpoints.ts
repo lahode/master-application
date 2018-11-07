@@ -84,7 +84,7 @@ export class EndpointsService {
   }
 
   filePath(id) {
-    return this.url + `/api/files/view/${id}`;
+    return this.url + `/api/secure/files/view/${id}`;
   }
 
 }

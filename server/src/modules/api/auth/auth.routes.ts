@@ -46,6 +46,9 @@ export class AuthRoutes {
       }
     }
     catch (e) {
+      if (e.status && e.message) {
+        return res.status(e.status).json({message: e.message, success: false});
+      }
       return res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false});
     }
   }
