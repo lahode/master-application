@@ -6,7 +6,7 @@ import { User } from '../models/user';
 
 export class AuthStrategyToken {
 
-  /* Login strategy */
+  // Login strategy.
   public static async login(passwordInput:string, user:User,  res: Response) {
     try {
       const token = await AuthStrategyToken.attemptLogin(passwordInput, user);
@@ -17,7 +17,7 @@ export class AuthStrategyToken {
     }
   }
 
-  /* Verify password and create session token */
+  // Verify password and create session token.
   public static async attemptLogin(passwordInput:string, user:User) {
     const isPasswordValid = await argon2.verify(user.password, passwordInput);
     if (!isPasswordValid) {
@@ -26,13 +26,13 @@ export class AuthStrategyToken {
     return createSessionToken(user);
   }
 
-  /* Signup strategy */
+  // Signup strategy.
   public static async signup(user:User, res:Response) {
     const token = await createSessionToken(user);
     return {user, token};
   }
 
-  /* Logout strategy */
+  // Logout strategy.
   public static logout(res) {}
 
 }

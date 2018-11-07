@@ -12,7 +12,7 @@ const RSA_PRIVATE_KEY = fs.readFileSync(CONFIG.SECURITY.KEY);
 const RSA_PUBLIC_KEY = fs.readFileSync(CONFIG.SECURITY.CERT);
 const SESSION_DURATION = 1000;
 
-/* Create a session token */
+// Create a session token.
 export async function createSessionToken(user: User) {
   return signJwt({
       roles: user.roles
@@ -24,6 +24,7 @@ export async function createSessionToken(user: User) {
   });
 }
 
+// Get key for auth0 authentication.
 function getKey(header, callback) {
   let client = jwksClient({
     jwksUri: 'https://' + CONFIG.AUTH.domain + '/.well-known/jwks.json'
@@ -34,6 +35,7 @@ function getKey(header, callback) {
   });
 }
 
+// Decode JWT token.
 export async function decodeJwt(token:string) {
   try {
     const tokenPart = token.split('|');

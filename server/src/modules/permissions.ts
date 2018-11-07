@@ -19,7 +19,7 @@ export class Permissions {
   // Check permission on each route
   public static async permissionOnRoute(req, res, next) {
     const url = Permissions.sanitizeUrl(req.originalUrl) || '';
-    const permissions = Permissions.permissions.get(url) || [];
+    const permissions = Permissions.findPermissionOnUrl(url) || [];
     const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
       Permissions.checkPermissionOnUser(data.user, permissions).then(check => {
@@ -37,28 +37,51 @@ export class Permissions {
     }
   }
 
+
+  public static findPermissionOnUrl(url) {
+    let result = '';
+    Permissions.permissions.forEach((value, key, map) => {
+      if (url.includes(key)) {
+        result = value;
+      }
+    });
+    return result;
+  }
+
   // Check if a user has permissions to get further
   public static async checkPermissionOnUser(user, permissions) {
+    // If no permissions need to be checked, allow user to continue.
+    if (!permissions) {
+      return true;
+    }
+
     let roleIds = [];
     let access = false;
-    if (user.hasOwnProperty('roles')) {
-      user.roles.map(r => roleIds.push(r.role));
-    }
-    return await RolesRoutes.getPermissionsByID(roleIds).then(roles => {
-      for (let role of roles) {
-        role.permissions.map(p => {
-          if (permissions.indexOf(p)) {
-            access = true;
+    try {
+      if (user.hasOwnProperty('roles')) {
+
+        // Check for each roles the user have, if the permissions match with the one needed.
+        user.roles.map(r => roleIds.push(r.role));
+        const permissionsOnUser = await RolesRoutes.getPermissionsByID(roleIds);
+        if (permissionsOnUser.success) {
+          for (let role of permissionsOnUser.data) {
+            role.permissions.map(p => {
+              if (permissions.indexOf(p)) {
+                access = true;
+              }
+            });
           }
-        });
+        }
+        if (access) {
+          return true;
+        } else {
+          return false;
+        }
       }
-      if (access) {
-        return true;
-      } else {
-        throw false;
-      }
-    })
-    .catch(error => Promise.reject(false));
+    }
+    catch(e) {
+      return false;
+    }
   }
 
   public static sanitizeUrl(url: string): string {

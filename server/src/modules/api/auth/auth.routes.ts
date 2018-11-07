@@ -1,4 +1,3 @@
-import * as express from 'express';
 import { Request, Response } from 'express';
 
 import { CONFIG } from "../../../config";
@@ -13,8 +12,9 @@ const userDB = new Datastore(CONFIG.DATABASE.USERS);
 
 export class AuthRoutes {
 
-  // Check Authentication and return the user
+  // Check authentication route.
   public static async checkAuth(req: Request, res: Response) {
+    // Check if the user exists.
     const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
       res.json({success:true, user: data.user});
@@ -24,30 +24,34 @@ export class AuthRoutes {
     }
   }
 
-  // Log in route
-  public static loginRoute(req: Request, res: Response) {
+  // Log in route.
+  public static async loginRoute(req: Request, res: Response) {
     const credentials = req.body;
     if (!credentials.username || !credentials.password) {
       return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
     }
-    userDB.findOne({ username: credentials.username })
-      .then((user) => {
-        if (user) {
-          return AuthStrategyToken.login(credentials.password, user, res)
-            .then(result => {
-              delete(result.user.password);
-              return res.json({user: result.user, token: result.token, success: true});
-            })
-            .catch((error) => res.status(error.status).json({message: error.message, success: false}));
-        } else {
-          return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
+    try {
+      // Find the user in the database.
+      const user = await userDB.findOne({ username: credentials.username });
+      if (user) {
+        // Check if password authentification is ok.
+        const result = await AuthStrategyToken.login(credentials.password, user, res);
+        if (result) {
+          // Remove the password in the user data and return it.
+          delete(result.user.password);
+          return res.json({user: result.user, token: result.token, success: true});
         }
-      })
-      .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false}));
+      } else {
+        return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
+      }
+    }
+    catch (e) {
+      return res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false});
+    }
   }
 
   // Sign up route
-  public static signUpRoute(req: Request, res: Response) {
+  public static async signUpRoute(req: Request, res: Response) {
     const credentials = req.body;
 
     // Register with auth0.
@@ -59,38 +63,39 @@ export class AuthRoutes {
         });
     }
 
-    // Check password strategy
+    // If no username or password exists for user registration exit the route.
+    if (!credentials.username || !credentials.password) {
+      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
+    }
+
+    // Check password strategy.
     const errorValidatePassword = AuthRoutes.checkPasswordStrategy(credentials.password);
     if (errorValidatePassword) {
       return res.status(400).json({message: errorValidatePassword, success: false});
     }
 
-    if (!credentials.username || !credentials.password) {
-      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
+    // Sign up the new user.
+    try {
+      const user = await userDB.findOne({ username: credentials.username, password: credentials.password }, { password: 0 });
+      if (!user) {
+        // Get an encrypted password and set the new token name.
+        const passwordDigest = await PasswordStrategy.getPasswordDigest(credentials.password);
+        credentials.password = passwordDigest;
+        credentials.sub = 'token-' + credentials.username + '|' + Date.now();
+
+        // Insert the user into the database.
+        const userInserted = await userDB.insert(credentials);
+
+        // Create the new token with the user and return the user and the token.
+        const userSignedUp = await AuthStrategyToken.signup(userInserted, res);
+        res.json(userSignedUp);
+      } else {
+        return res.status(403).json({message: "L'utilisateur existe déjà.", success: false});
+      }
     }
-    return userDB.findOne({ username: credentials.username, password: credentials.password }, { password: 0 })
-      .then((user) => {
-        if (!user) {
-          return PasswordStrategy.getPasswordDigest(credentials.password)
-            .then((passwordDigest) => {
-              credentials.password = passwordDigest;
-              credentials.sub = 'token-' + credentials.username + '|' + Date.now();
-              return userDB.insert(credentials)
-              .then((userInserted) => {
-                AuthStrategyToken.signup(userInserted, res)
-                  .then((user) => {
-                    return res.json(user);
-                  })
-                  .catch((error) => res.status(error.status).json({message: error.message, success: false}));
-              })
-              .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false}));
-          })
-          .catch((error) => res.status(500).json({message: "Une erreur s'est produite lors du traitement d'authentification", success: false}));
-        } else {
-          return res.status(403).json({message: "L'utilisateur existe déjà.", success: false});
-        }
-      })
-      .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la vérification de l'existance de l'utilisateur.", success: false}));
+    catch (e) {
+      return res.status(500).json({message: "Une erreur s'est produite lors de la création de l'utilisateur", success: false});
+    }
   }
 
   // Log out route
@@ -100,11 +105,15 @@ export class AuthRoutes {
   }
 
   // Get password route
-  public static getPswRoute(req, res): void {
+  public static async getPswRoute(req, res) {
     let findPassword;
+
+    // Check if an e-mail has been given.
     if (!req.body.email || !req.body.email) {
       return res.status(400).json({message: "Aucun e-mail valide n'a été inséré.", success: false});
     }
+
+    // Initialize e-mail parameters.
     const transporter = nodemailer.createTransport(CONFIG.MAILER);
     const mailOptions = {
       from: CONFIG.MAILER.host.user,
@@ -112,11 +121,15 @@ export class AuthRoutes {
       subject: 'Récupération du mot de passe',
       text: ''
     };
-    userDB.findOne({ email: req.body.email}, { email: 1, password: 1, _id: 0 })
-    .then((user) => {
+
+    try {
+      // // Find the user in the database.
+      const user = await userDB.findOne({ email: req.body.email}, { email: 1, password: 1, _id: 0 });
       if (user) {
         mailOptions.text = user.password;
-        transporter.sendMail(mailOptions, function(error, info) {
+
+        // Send the e-mail to the e-mail.
+        transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
             return res.status(500).json({message: "Une erreur s'est produite lors de l'envoi du mail", success: false});
           } else {
@@ -126,8 +139,10 @@ export class AuthRoutes {
       } else {
         return res.status(401).json({message: "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré", success: false});
       }
-    })
-    .catch((error) => res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false}));
+    }
+    catch (e) {
+      return res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false});
+    }
   }
 
   // Check password validity.

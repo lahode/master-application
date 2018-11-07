@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 import { Store, Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
-import { map, withLatestFrom, switchMap, catchError, tap } from 'rxjs/operators';
+import { mergeMap, map, withLatestFrom, switchMap, catchError, tap } from 'rxjs/operators';
 
 import { UserActions } from '../actions/user.actions';
+import { AuthActions } from '../../../auth/store/actions/auth.actions';
 import { UserService } from '../../services/user.service';
 import { PagerService } from '../../../../core/services/pager.service';
 import { Range } from '../../../../core/models/range';
+import { User } from '../../../../core/models/user';
 
 @Injectable()
 export class UserEffects {
+
+  private currentUser: User;
+
 
   // Listen for the 'USERLIST_LOAD_START' action
   @Effect() userListAction$ = this.action$
@@ -83,12 +88,27 @@ export class UserEffects {
   @Effect() userUpdateAction$ = this.action$
     .ofType(UserActions.USER_UPDATE_START)
     .pipe(
+      withLatestFrom(this.store$),
+      map(([action, storeState]) => {
+        // Get current user
+        this.currentUser = (storeState as any).currentUser;
+        return action;
+      }),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: any) => this._user.update(payload)
         .pipe(
           // If successful, dispatch USER_UPDATE_SUCCESS
-          map<Action, any>((_result: any) => <Action>{ type: UserActions.USER_UPDATE_SUCCESS, payload: _result }),
-            // On errors dispatch USER_UPDATE_FAILED action with result
+          mergeMap((_result: any) => {
+            const userUpdateSuccess = <Action>{ type: UserActions.USER_UPDATE_SUCCESS, payload: _result };
+
+            // Dispatch PROFILE_UPDATE_SUCCESS if user is current user.
+            if (this.currentUser._id === _result._id) {
+              const profileUpdateSuccess = <Action>{ type: AuthActions.PROFILE_UPDATE_SUCCESS, payload: _result };
+              return from([userUpdateSuccess, profileUpdateSuccess]);
+            }
+            return from([userUpdateSuccess]);
+          }),
+          // On errors dispatch USER_UPDATE_FAILED action with result
           catchError((res: any) => of({ type: UserActions.USER_UPDATE_FAILED, payload: res })),
           // Dispatch UserActions.list() to update the list of users
           tap(() => this.store$.dispatch(UserActions.list()))

@@ -3,7 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 
 export class RetrieveUser {
 
-  public static getUser(req: Request, res: Response, next: NextFunction) {
+  // Get the user payload.
+  public static getUserPayload(req: Request, res: Response, next: NextFunction) {
     if (req.headers && req.headers.authorization) {
       var authorization = req.headers.authorization, decoded;
       let header = (authorization as string).split(' ');
@@ -19,6 +20,7 @@ export class RetrieveUser {
     }
   }
 
+  // Decode the token and attach it's payload to req['user'].
   public static async handleSession(jwt:string, req: Request, res: Response) {
     try {
       const payload = await decodeJwt(jwt);

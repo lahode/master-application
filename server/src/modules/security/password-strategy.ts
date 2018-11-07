@@ -13,7 +13,7 @@ schema
   .has().not().spaces()                           // Should not have spaces
   .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 
-/* Validate password strategy */
+// Validate password strategy.
 export class PasswordStrategy {
   public static validate(password:string) {
     return schema.validate(password, {list:true});

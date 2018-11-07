@@ -7,8 +7,6 @@ import { Permissions } from "../permissions";
 
 import { checkIfAuthenticated } from "../security/authentication.middleware";
 
-// import { getUser } from './get-user';
-
 const app = express();
 
 export class APIRoutes {

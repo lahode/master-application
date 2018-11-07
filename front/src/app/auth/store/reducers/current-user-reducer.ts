@@ -10,7 +10,8 @@ export function reducer (state: ICurrentUserState = initialState, action: any): 
 
     case AuthActions.LOGIN_SUCCESS:
     case AuthActions.CHECK_AUTH_SUCCESS:
-    case AuthActions.CREATE_USER_SUCCESS: {
+    case AuthActions.CREATE_USER_SUCCESS:
+    case AuthActions.PROFILE_UPDATE_SUCCESS: {
       return Object.assign({}, state, action.payload);
     }
 

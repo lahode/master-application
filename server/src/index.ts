@@ -21,7 +21,7 @@ export class Server {
 
   constructor() {
     this.app = express();
-    this.app.use(RetrieveUser.getUser)
+    this.app.use(RetrieveUser.getUserPayload)
     this.config();
     this.middleware();
     this.defaultServerRoute();
