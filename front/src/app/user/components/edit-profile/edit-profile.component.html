@@ -3,9 +3,9 @@
     <div class="card-header card-header-danger">
       <h4 class="card-title">{{ 'PROFILE.EDIT.EDITPROFILE' | translate }}</h4>
       <div class="picture">
-        <ng-template *ngIf="(picture$ | async) as picture; else defaultImage">
-          <img [src]="picture" class="user-img" />
-        </ng-template>
+        <div *ngIf="(picture$ | async) as picture; else defaultImage">
+          <img [src]="picture | safeUrl" class="user-img" />
+        </div>
         <ng-template #defaultImage>
           <img src="assets/images/profile.png" class="user-img" />
         </ng-template>

@@ -64,6 +64,7 @@
       "COMPLETE" : "Complete your profile",
       "EDITPROFILE" : "Edit profile",
       "CANCEL" : "Cancel",
+      "REMOVE" : "Remove",
       "SAVE" : "Save",
       "SETTINGS": "Edit profile settings"
     }

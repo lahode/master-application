@@ -72,7 +72,7 @@ export class UsersRoutes {
   public static async list(req, res) {
     try {
       // Find all active users in the database.
-      const users = await userDB.find({}, {username: 1, active: 1}).sort({title: 1})
+      const users = await userDB.find({}, {username: 1, email: 1, active: 1}).sort({title: 1})
       if (users) {
         let results = [];
         // Loop on each users and limit of "from" and "to" parameters have been set
@@ -128,9 +128,6 @@ export class UsersRoutes {
 
   // Update user route.
   public static async update(req, res) {
-    if (!req.body.username) {
-      return res.status(400).json({message: "Un utilisateur doit avoir au moins un nom d'utilisateur.", success: false});
-    }
     let user = Object.assign({}, req.body);
 
     // Manage the update

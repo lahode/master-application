@@ -34,7 +34,7 @@ export class EditProfileComponent implements OnInit {
   ngOnInit() {
     this.editProfileform = this._fb.group({
       _id: [''],
-      username: ['', [<any>Validators.required, <any>Validators.minLength(5)]],
+      username: ['', [<any>Validators.minLength(5)]],
       firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       description: [''],
@@ -81,11 +81,12 @@ export class EditProfileComponent implements OnInit {
   editPicture() {
     const dialogRef = this._dialog.open(PictureEditComponent, {
       width: '75%',
+      data: { pictureID: this.picture }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.picture = result;
-        this.picture$ = this._file.view(result);
+        this.picture = (result !== -1) ? result : '';
+        this.picture$ = this._file.view(this.picture);
       }
     });
   }

@@ -16,6 +16,7 @@ import { GetkeyPipe } from './pipes/getkey.pipe';
 import { OrderByPipe } from './pipes/orderby.pipe';
 import { ObjtoarrayPipe } from './pipes/objtoarray.pipe';
 import { Nl2brPipe } from './pipes/nl2br.pipe';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { Nl2brPipe } from './pipes/nl2br.pipe';
     GetkeyPipe,
     OrderByPipe,
     ObjtoarrayPipe,
-    Nl2brPipe
+    Nl2brPipe,
+    SafeUrlPipe
   ],
   declarations: [
     BreadcrumbComponent,
@@ -53,7 +55,8 @@ import { Nl2brPipe } from './pipes/nl2br.pipe';
     GetkeyPipe,
     OrderByPipe,
     ObjtoarrayPipe,
-    Nl2brPipe
+    Nl2brPipe,
+    SafeUrlPipe
   ],
   entryComponents: [
     ErrorComponent,

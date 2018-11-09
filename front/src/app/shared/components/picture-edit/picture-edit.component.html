@@ -11,5 +11,9 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
+  <button *ngIf="data.pictureID"
+          color="warn"
+          mat-button
+          (click)="removeFile()">{{ 'PROFILE.EDIT.REMOVE' | translate }}</button>
   <button mat-button mat-dialog-close>{{ 'PROFILE.EDIT.CANCEL' | translate }}</button>
 </mat-dialog-actions>

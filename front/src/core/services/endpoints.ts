@@ -87,4 +87,8 @@ export class EndpointsService {
     return this.url + `/api/secure/files/view/${id}`;
   }
 
+  fileRemove(id) {
+    return this.url + `/api/secure/files/delete/${id}`;
+  }
+
 }

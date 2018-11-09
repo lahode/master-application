@@ -47,16 +47,17 @@ export class FilesRoutes {
   }
 
   // Delete a file
-  public static deleteFile(req, res): void {
+  public static async deleteFile(req, res) {
     if (!req.params.id) {
       return res.status(400).json({message: "Aucun ID n'a été trouvé dans la requête.", success: false});
     }
-    // Find a course by it's ID
-    FilesRoutes.removeFile(req.params.id)
-      .then((file) => {
-        return res.json(file);
-      })
-      .catch((error) => res.status(error.status).json({message: error.message, success: false}));
+    try {
+      const fileDeleted = await FilesRoutes.removeFile(req.params.id);
+      return res.json(fileDeleted);
+    }
+    catch(error) {
+      return res.status(error.status).json({message: error.message, success: false});
+    }
   }
 
   // Remove a file from upload directory and remove them from the database
@@ -67,12 +68,12 @@ export class FilesRoutes {
       // Remove the file in the database
       const fileRemoved = await fileDB.remove({ _id: file._id });
       // Delete the file in the upload directory
-      const fileDeleted = await fs.remove();
+      const fileDeleted = await fs.remove(file.filename);
       // Return a confirmation.
       return {message: "Le fichier a été supprimé.", success: true};
     }
     catch(e) {
-      return Promise.reject({message: "Une erreur est survenue lors de la suppression du fichier dans la base de données.", status: 500});
+      return Promise.reject({message: "Une erreur est survenue lors de la suppression du fichier.", status: 500});
     }
   }
 

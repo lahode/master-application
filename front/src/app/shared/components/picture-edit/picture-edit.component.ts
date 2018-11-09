@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { FileService } from '../../../../core/services/file.service';
 import { AppActions } from '../../../../core/store';
@@ -15,6 +15,7 @@ export class PictureEditComponent {
   @ViewChild('fileInput') fileInput;
 
   constructor(private readonly _dialogRef: MatDialogRef<PictureEditComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly _store: Store<any>,
               private readonly _file: FileService) { }
 
@@ -32,6 +33,17 @@ export class PictureEditComponent {
         this._dialogRef.close();
       });
     }
+  }
+
+  removeFile() {
+    this._file.remove(this.data.pictureID).subscribe(result => {
+      if (result['success']) {
+        this._dialogRef.close(-1);
+      }
+    }, err => {
+      this._store.dispatch(<Action>AppActions.setError(err));
+      this._dialogRef.close();
+    });
   }
 
 }
