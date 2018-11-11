@@ -6,7 +6,7 @@ import { AuthStrategyToken } from "../../security/authentication-token-strategy"
 import { PasswordStrategy } from "../../security/password-strategy";
 import { UsersRoutes } from "../users/users.routes";
 
-const nodemailer = require('nodemailer');
+import * as nodemailer from 'nodemailer';
 const Datastore = require('nedb-promises');
 const userDB = new Datastore(CONFIG.DATABASE.USERS);
 
@@ -59,9 +59,15 @@ export class AuthRoutes {
 
     // Register with auth0.
     if (req["user"] && req["user"].sub) {
-      credentials.sub = req["user"].sub
-      return userDB.insert(credentials)
-        .then((userInserted) => res.json({user: userInserted.user, token: userInserted.token, success: true}));
+      try {
+        credentials.sub = req["user"].sub;
+        // Insert the user into the database.
+        const userInserted = await userDB.insert(credentials);
+        return res.json({user: userInserted, success: true})
+      }
+      catch (e) {
+        return res.status(500).json({message: "Une erreur s'est produite lors de la création de l'utilisateur", success: false});
+      }
     }
 
     // If no username or password exists for user registration exit the route.
@@ -108,8 +114,6 @@ export class AuthRoutes {
 
   // Get password route
   public static async getPswRoute(req, res) {
-    let findPassword;
-
     // Check if an e-mail has been given.
     if (!req.body.email || !req.body.email) {
       return res.status(400).json({message: "Aucun e-mail valide n'a été inséré.", success: false});

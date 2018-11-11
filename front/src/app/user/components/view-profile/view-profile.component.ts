@@ -20,7 +20,7 @@ export class ViewProfileComponent {
     this.user$ = this._store.select(state => state.currentUser)
       .pipe(
         map(user => {
-          if (user.picture) {
+          if (user && user.picture) {
             this.picture$ = this._file.view(user.picture);
           }
           return user;

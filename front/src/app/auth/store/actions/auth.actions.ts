@@ -35,6 +35,7 @@ export const AuthActions = {
   CALLBACK_START : 'CALLBACK_START',
   CALLBACK_SUCCESS : 'CALLBACK_SUCCESS',
   CALLBACK_FAILED : 'CALLBACK_FAILED',
+  CALLBACK_STOP : 'CALLBACK_STOP',
 
   login(_credentials) {
     return <Action>{

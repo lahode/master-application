@@ -117,11 +117,11 @@ export class AuthEffects {
               if (_result) {
                 return <Action>{ type: AuthActions.CALLBACK_SUCCESS, payload: _result };
               } else {
-                return <Action>{ type: AuthActions.CHECK_AUTH_STOP, payload: _result };
+                return <Action>{ type: AuthActions.CALLBACK_STOP, payload: _result };
               }
               // On errors dispatch CHECK_AUTH_FAILED action with result
             }),
-          catchError(res => of({type: AuthActions.CALLBACK_FAILED, payload: res})),
+          catchError(res => of({type: AuthActions.CALLBACK_STOP, payload: res})),
           // Redirect to the target page
           tap((action) => {
             if (action.type === AuthActions.CALLBACK_SUCCESS) {
