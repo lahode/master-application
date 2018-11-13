@@ -12,9 +12,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
-import { GetkeyPipe } from './pipes/getkey.pipe';
 import { OrderByPipe } from './pipes/orderby.pipe';
-import { ObjtoarrayPipe } from './pipes/objtoarray.pipe';
 import { Nl2brPipe } from './pipes/nl2br.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
@@ -39,9 +37,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
     LoadingComponent,
     PageNotFoundComponent,
     CommonModule,
-    GetkeyPipe,
     OrderByPipe,
-    ObjtoarrayPipe,
     Nl2brPipe,
     SafeUrlPipe
   ],
@@ -52,9 +48,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
     HeaderComponent,
     LoadingComponent,
     PageNotFoundComponent,
-    GetkeyPipe,
     OrderByPipe,
-    ObjtoarrayPipe,
     Nl2brPipe,
     SafeUrlPipe
   ],

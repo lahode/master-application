@@ -15,20 +15,16 @@ export class SigninComponent implements OnInit {
   @Output() changeBlock = new EventEmitter();
 
   public signInform: FormGroup;
-  public loading$: Observable<any>;
 
   constructor(private readonly _store: Store<any>,
               private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
-    // Authenticate form
+    // Initialize authenticate form.
     this.signInform = this._fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
-
-    // Start loading
-    this.loading$ = this._store.select(state => state.loading);
   }
 
   // Change block

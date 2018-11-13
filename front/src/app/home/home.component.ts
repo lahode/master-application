@@ -11,8 +11,8 @@ export class HomeComponent {
 
   public readonly user$: Observable<any>;
 
-  constructor(private readonly store: Store<any>) {
-    this.user$ = this.store.select(state => state.currentUser);
+  constructor(private readonly _store: Store<any>) {
+    this.user$ = this._store.select(state => state.currentUser);
   }
 
 }

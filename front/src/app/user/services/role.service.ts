@@ -8,12 +8,12 @@ import { EndpointsService } from '../../../core/services/endpoints';
 @Injectable()
 export class RoleService {
 
-  constructor(private readonly http: HttpClient,
-              private readonly endpoints: EndpointsService) {}
+  constructor(private readonly _http: HttpClient,
+              private readonly _endpoints: EndpointsService) {}
 
-  // List all roles
+  // List all roles.
   public list(): Observable<any> {
-    return this.http.get(this.endpoints.roleList())
+    return this._http.get(this._endpoints.roleList())
       .pipe(
         shareReplay(),
         map(response => <any>(response as any).roles),
@@ -21,9 +21,9 @@ export class RoleService {
       );
   }
 
-  // List all permissions
+  // List all permissions.
   public getPermissions(): Observable<any> {
-    return this.http.get(this.endpoints.getPermissions())
+    return this._http.get(this._endpoints.getPermissions())
       .pipe(
         shareReplay(),
         map(response => <any>(response as any).permissions),
@@ -31,9 +31,9 @@ export class RoleService {
       );
   }
 
-  // Get role detail by ID
+  // Get role detail by ID.
   public get(id: string): Observable<any> {
-    return this.http.get(this.endpoints.roleDetail(id))
+    return this._http.get(this._endpoints.roleDetail(id))
       .pipe(
         shareReplay(),
         map(response => <any>(response as any).role),
@@ -41,9 +41,9 @@ export class RoleService {
       );
   }
 
-  // Create role
+  // Create a new role.
   public create(values: any): Observable<any> {
-    return this.http.post(this.endpoints.roleCreate(), values)
+    return this._http.post(this._endpoints.roleCreate(), values)
       .pipe(
         shareReplay(),
         map(response => <any>(response as any).role),
@@ -51,9 +51,9 @@ export class RoleService {
       );
   }
 
-  // Update role
+  // Update an existing role.
   public update(values: any): Observable<any> {
-    return this.http.post(this.endpoints.roleUpdate(), values)
+    return this._http.post(this._endpoints.roleUpdate(), values)
       .pipe(
         shareReplay(),
         map(response => <any>(response as any).role),
@@ -61,9 +61,9 @@ export class RoleService {
       );
   }
 
-  // Remove role
+  // Remove a role by ID.
   public remove(id: string): Observable<any> {
-    return this.http.get(this.endpoints.roleRemove(id))
+    return this._http.get(this._endpoints.roleRemove(id))
       .pipe(
         shareReplay(),
         catchError(err => throwError(this._manageError(err)))

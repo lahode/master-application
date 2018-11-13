@@ -10,7 +10,7 @@ export const initialState: IPermissionsState = [];
 export function reducer (state: any = initialState, action: any): IPermissionsState {
   switch (action.type) {
     case RoleActions.PERMISSIONLIST_LOAD_SUCCESS: {
-      return Object.assign([], action.payload)
+      return [...action.payload];
     }
   }
 

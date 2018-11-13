@@ -13,8 +13,6 @@ export class ConfirmationComponent implements OnInit {
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
-  constructor() { }
-
   ngOnInit() {
     // Define email validation pattern
     const emailpattern = `[a-z0-9!#$%&'*+/=?^_"{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_"{|}~-]+)` +

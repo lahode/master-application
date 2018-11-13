@@ -7,7 +7,7 @@
         <th>{{ 'USERS.LIST.ACTIONS' | translate }}</th>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of (users$ | async)">
           <td>
             {{ user.username || user.email }}
           </td>

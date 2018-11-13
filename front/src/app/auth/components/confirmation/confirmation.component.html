@@ -9,5 +9,4 @@
   <button mat-raised-button
           color="primary"
           [disabled]="loading || !confirmationForm.valid" (click)="onRequestConfirmation()">{{ 'LOGIN.CONFIRMATIONFORM.SUBMIT' | translate }}</button>
-  <mat-spinner *ngIf="loading"></mat-spinner>
 </form>

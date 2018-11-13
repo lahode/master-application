@@ -6,7 +6,7 @@
       <th>{{ 'ROLES.LIST.ACTIONS' | translate }}</th>
     </thead>
     <tbody>
-      <tr *ngFor="let role of roles">
+      <tr *ngFor="let role of (roles$ | async)">
         <td>
           {{ role.name }}
         </td>

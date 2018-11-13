@@ -15,15 +15,17 @@ export class LoginComponent implements OnInit {
 
   constructor(private readonly _store: Store<any>) {}
 
+  // Set authentication type.
   ngOnInit() {
     this.authType = environment.authentication.type;
   }
 
-  // Change block
+  // Change block tabulation.
   public onChangeBlock(block) {
     this.showBlock = block;
   }
 
+  // Set direct login option (Not displaying username and password).
   public directLogin() {
     this._store.dispatch(<Action>AuthActions.login(null));
   }

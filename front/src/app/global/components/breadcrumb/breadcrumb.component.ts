@@ -11,7 +11,7 @@ export class BreadcrumbComponent implements OnInit {
 
   breadcrumb$: Observable<any>;
 
-  constructor(private _store: Store<any>) { }
+  constructor(private readonly _store: Store<any>) { }
 
   ngOnInit() {
     this.breadcrumb$ = this._store.select(state => state.breadcrumb);

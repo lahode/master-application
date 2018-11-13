@@ -15,7 +15,6 @@ import { DoubleValidation } from '../../../../core/services/custom-validation';
 export class RegisterComponent implements OnInit {
 
   private registerForm: FormGroup;
-  public loading$: Observable<any>;
   public directLogin = false;
 
   @Input() returnUrl: string;
@@ -30,11 +29,11 @@ export class RegisterComponent implements OnInit {
       this.directLogin = params['auth'] === 'direct';
     });
 
-    // Define email validation pattern
+    // Define email validation pattern.
     const emailpattern = `[a-z0-9!#$%&'*+/=?^_"{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_"{|}~-]+)` +
                          `@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?`;
 
-    // Register form
+    // Initialze register form.
     this.registerForm = this._fb.group({
       firstname: ['', [Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [Validators.required, <any>Validators.minLength(2)]],
@@ -45,12 +44,9 @@ export class RegisterComponent implements OnInit {
     }, {
       validator: DoubleValidation.MatchEmail
     });
-
-    // Start loading
-    this.loading$ = this._store.select(state => state.loading);
   }
 
-  // Register the new user
+  // Register the new user.
   onRegister() {
     if (this.registerForm.valid) {
       delete(this.registerForm.value.emailconfirm);

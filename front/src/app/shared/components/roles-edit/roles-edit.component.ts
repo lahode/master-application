@@ -22,13 +22,13 @@ export class RolesEditComponent implements OnInit, OnDestroy {
   roleEdit: Role;
   stateSelect: any;
 
-  constructor(private store: Store<any>,
-              private readonly dialogRef: MatDialogRef<RolesEditComponent>,
+  constructor(private readonly _store: Store<any>,
+              private readonly _dialogRef: MatDialogRef<RolesEditComponent>,
               private readonly _fb: FormBuilder) {}
 
   ngOnInit() {
     // Initialize the list of roles
-    this.store.dispatch(<Action>RoleActions.getPermissions());
+    this._store.dispatch(<Action>RoleActions.getPermissions());
 
     // Initialize edit role form.
     this.editRoleForm = this._fb.group({
@@ -38,7 +38,7 @@ export class RolesEditComponent implements OnInit, OnDestroy {
     });
 
     // Get connected user and current role edit to fill the form.
-    this.stateSelect = this.store.select(state => state)
+    this.stateSelect = this._store.select(state => state)
       .pipe(
         filter((state) => state.loading.length === 0),
         filter((state) => state.permissionsList)
@@ -75,7 +75,7 @@ export class RolesEditComponent implements OnInit, OnDestroy {
 
   // Cancel the changes.
   cancel(): void {
-    this.dialogRef.close();
+    this._dialogRef.close();
   }
 
   // Save the role form.
@@ -103,15 +103,15 @@ export class RolesEditComponent implements OnInit, OnDestroy {
 
     // Save the role
     if (this.roleEdit._id) {
-      this.store.dispatch(<Action>RoleActions.update(this.roleEdit));
+      this._store.dispatch(<Action>RoleActions.update(this.roleEdit));
     } else {
       delete(this.roleEdit._id);
       this.roleEdit.owner = this.currentUser._id;
-      this.store.dispatch(<Action>RoleActions.create(this.roleEdit));
+      this._store.dispatch(<Action>RoleActions.create(this.roleEdit));
     }
 
     // Close the form.
-    this.dialogRef.close();
+    this._dialogRef.close();
   }
 
   ngOnDestroy() {

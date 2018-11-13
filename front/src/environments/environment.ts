@@ -7,10 +7,11 @@ import { IEnvironment } from './env-model';
 
 export const environment: IEnvironment = {
   production: false,
+  homepage: '/home',
   authentication: {
-    type: 'auth0',
+    type: 'token',
     value : {
-      callback: 'http://localhost:4200/callback', // callback URL
+      callback: '', // callback URL
       domain: '',  // auth0 domain name
       client_id: ''  // client ID
     }

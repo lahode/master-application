@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { User } from '../../../../core/models/user';
 import { Range } from '../../../../core/models/range';
@@ -15,46 +16,51 @@ import { UsersEditComponent } from '../../../shared/components/users-edit/users-
 })
 export class UsersListComponent implements OnInit {
 
-  users: User[];
+  users$: Observable<User[]>;
   total: number;
   pageIndex = 0;
   pageSize = 10;
 
-  constructor(private readonly store: Store<any>,
-              private readonly dialog: MatDialog,
-              private readonly router: Router) {
-    this.store.select(state => state.usersList)
-    .subscribe(userList => {
-      if (userList) {
-        this.users = userList.items;
-        this.total = userList.total;
-        this.pageIndex = userList.pageIndex;
-        this.pageSize = userList.pageSize;
-      }
-    });
+  constructor(private readonly _store: Store<any>,
+              private readonly _dialog: MatDialog) {
+    // Retrieve the list of current users pagination.
+    this.users$ = this._store.select(state => state.usersList).pipe(
+      map(userList => {
+        if (userList) {
+          this.total = userList.total;
+          this.pageIndex = userList.pageIndex;
+          this.pageSize = userList.pageSize;
+          return userList.items;
+        }
+      })
+    );
   }
 
   ngOnInit() {
+    // Dispatch the list of roles.
     const range = <Range>{from: this.pageIndex * this.pageSize, to: ((this.pageIndex + 1) * this.pageSize) - 1};
-    this.store.dispatch(<Action>UserActions.list(range));
+    this._store.dispatch(<Action>UserActions.list(range));
   }
 
+  // Change the page on the pagination.
   changePage(event) {
-    this.store.dispatch(<Action>UserActions.changePage(event));
+    this._store.dispatch(<Action>UserActions.changePage(event));
   }
 
+  // Dispatch the new or existing roles and open the modal to create/edit it.
   manageUser(userID: string = null) {
     if (userID) {
-      this.store.dispatch(<Action>UserActions.load(userID));
+      this._store.dispatch(<Action>UserActions.load(userID));
     } else {
-      this.store.dispatch(<Action>UserActions.new());
+      this._store.dispatch(<Action>UserActions.new());
     }
-    const dialogRef = this.dialog.open(UsersEditComponent, {
+    const dialogRef = this._dialog.open(UsersEditComponent, {
       width: '75%',
     });
     dialogRef.disableClose = true;
   }
 
+  // Delete an existing user.
   deleteUser(user: User) {
     const confirmMessage = {
       title: 'USERS.DELETE.TITLE',
@@ -62,7 +68,7 @@ export class UsersListComponent implements OnInit {
       name: user.username,
       action: <Action>UserActions.remove(user._id)
     };
-    this.store.dispatch(<Action>UserActions.confirm(confirmMessage));
+    this._store.dispatch(<Action>UserActions.confirm(confirmMessage));
   }
 
 }

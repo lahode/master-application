@@ -7,60 +7,61 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class AuthEffects {
 
-  // Listen for the 'CHECK_AUTH_START' action
+  // Listen for the 'CHECK_AUTH_START' action.
   @Effect() checkAuthAction$ = this._action$
     .ofType(AuthActions.CHECK_AUTH_START)
     .pipe(
       switchMap(() => this._auth.checkAuth(false)
         .pipe(
           map<Action, any>((_result: any) => {
-              // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP
+              // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP.
               if (_result) {
                 return <Action>{ type: AuthActions.CHECK_AUTH_SUCCESS, payload: _result };
               } else {
                 return <Action>{ type: AuthActions.CHECK_AUTH_STOP, payload: null };
               }
-              // On errors dispatch CHECK_AUTH_FAILED action with result
+              // On errors dispatch CHECK_AUTH_FAILED action with result.
             }),
           catchError(res => of({type: AuthActions.CHECK_AUTH_FAILED, payload: res}))
         )
       )
     );
 
-  // Listen for the 'CHECK_PERMISSIONS_START' action
+  // Listen for the 'CHECK_PERMISSIONS_START' action.
   @Effect() checkPermissionsAction$ = this._action$
     .ofType(AuthActions.CHECK_PERMISSIONS_START)
     .pipe(
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: string[]) => this._auth.checkPermissions(payload)
         .pipe(
-          // If successful, dispatch CHECK_PERMISSIONS_SUCCESS action with result
+          // If successful, dispatch CHECK_PERMISSIONS_SUCCESS action with result.
           map<Action, any>((_result: any) => <Action>{ type: AuthActions.CHECK_PERMISSIONS_SUCCESS, payload: _result }),
-            // On errors dispatch CHECK_PERMISSIONS_FAILED action with result
+            // On errors dispatch CHECK_PERMISSIONS_FAILED action with result.
           catchError(res => of({type: AuthActions.CHECK_PERMISSIONS_FAILED, payload: res}))
         )
       )
     );
 
-  // Listen for the 'LOGIN_START' action
+  // Listen for the 'LOGIN_START' action.
   @Effect() loginAction$ = this._action$
     .ofType(AuthActions.LOGIN_START)
     .pipe(
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: Observable<any>) => this._auth.login(payload)
         .pipe(
-          // If successful, dispatch LOGIN_SUCCESS action with result
+          // If successful, dispatch LOGIN_SUCCESS action with result.
           map<Action, any>((_result: any) => <Action>{ type: AuthActions.LOGIN_SUCCESS, payload: _result }),
-          // On errors dispatch LOGIN_FAILED action with result
+          // On errors dispatch LOGIN_FAILED action with result.
           catchError(res => of({type: AuthActions.LOGIN_FAILED, payload: res})),
-          // Redirect to the target page
+          // Redirect to the target page.
           tap((action) => {
             if (action.payload) {
-              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
+              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
               this._router.navigate([`/${returnUrl}`]);
             }
           })
@@ -84,21 +85,38 @@ export class AuthEffects {
       )
     );
 
-  // Listen for the 'CREATE_USER_START' action
+  // Listen for the 'GET_PASSWORD_START' action
+  @Effect() getPasswordAction$ = this._action$
+    .ofType(AuthActions.GET_PASSWORD_START)
+    .pipe(
+      map<Action, any>((action: Action) => (action as any).payload),
+      switchMap((payload: Observable<any>) => this._auth.retrievePassword(payload)
+        .pipe(
+          // If successful, dispatch GET_PASSWORD_SUCCESS action with result
+          map<Action, any>((_result: any) => <Action>{ type: AuthActions.GET_PASSWORD_SUCCESS, payload: null }),
+          // On errors dispatch GET_PASSWORD_FAILED action with result
+          catchError(res => of({type: AuthActions.GET_PASSWORD_FAILED, payload: res})),
+          // Redirect to Homepage
+          tap(() => this._router.navigate(['/signin']))
+        )
+      )
+    );
+
+  // Listen for the 'CREATE_USER_START' action.
   @Effect() createUserAction$ = this._action$
     .ofType(AuthActions.CREATE_USER_START)
     .pipe(
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: Observable<any>) => this._auth.signup(payload)
         .pipe(
-          // If successful, dispatch CREATE_USER_SUCCESS action with result
+          // If successful, dispatch CREATE_USER_SUCCESS action with result.
           map<Action, any>((_result: any) => <Action>{ type: AuthActions.CREATE_USER_SUCCESS, payload: _result }),
-          // On errors dispatch CREATE_USER_FAILED action with result
+          // On errors dispatch CREATE_USER_FAILED action with result.
           catchError(res => of({type: AuthActions.CREATE_USER_FAILED, payload: res})),
-          // Redirect to the target page
+          // Redirect to the target page.
           tap((action) => {
             if (action.payload) {
-              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
+              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
               this._router.navigate([`/${returnUrl}`]);
             }
           })
@@ -106,26 +124,26 @@ export class AuthEffects {
       )
     );
 
-  // Listen for the 'CALLBACK_START' action
+  // Listen for the 'CALLBACK_START' action.
   @Effect() callbackAction$ = this._action$
     .ofType(AuthActions.CALLBACK_START)
     .pipe(
       switchMap(() => this._auth.checkAuth(true)
         .pipe(
           map<Action, any>((_result: any) => {
-              // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP
+              // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP.
               if (_result) {
                 return <Action>{ type: AuthActions.CALLBACK_SUCCESS, payload: _result };
               } else {
                 return <Action>{ type: AuthActions.CALLBACK_STOP, payload: _result };
               }
-              // On errors dispatch CHECK_AUTH_FAILED action with result
+              // On errors dispatch CHECK_AUTH_FAILED action with result.
             }),
           catchError(res => of({type: AuthActions.CALLBACK_STOP, payload: res})),
-          // Redirect to the target page
+          // Redirect to the target page.
           tap((action) => {
             if (action.type === AuthActions.CALLBACK_SUCCESS) {
-              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
+              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
               this._router.navigate([`/${returnUrl}`]);
             } else {
               this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });

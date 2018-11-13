@@ -29,17 +29,19 @@ export class AuthTokenService extends AuthService {
     return fromPromise(this._storage.get(STORAGE_ITEM))
       .pipe(
         mergeMap(jwt => {
-          // If storage is not found.
+          // If storage is not found destroy existing auth tokens and return false.
           if (!jwt || this._jwtHelper.isTokenExpired(jwt)) {
             this._destroyTokens();
             return of(false);
           }
 
+          // Check if user is authenticate in the backend.
           return this._http.get(this._endpoints.checkAuth())
             .pipe(
               shareReplay(),
               map(response => (response as any).user),
               catchError(err => {
+                // Destroy existing auth tokens on error.
                 this._destroyTokens();
                 return throwError(this._manageError(err));
               })
@@ -148,6 +150,11 @@ export class AuthTokenService extends AuthService {
 
 }
 
+/**
+ * Token interceptor.
+ *
+ * Use to add auth tokens on http requests.
+ */
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 

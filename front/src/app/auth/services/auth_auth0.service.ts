@@ -42,7 +42,7 @@ export class AuthAuth0Service extends AuthService {
     return fromPromise(this._storage.get(STORAGE_ITEM))
       .pipe(
         mergeMap(jwt => {
-          // If storage is not found.
+          // If storage is not found destroy existing auth tokens and return false.
           if (!jwt || this._jwtHelper.isTokenExpired(jwt)) {
             this._destroyTokens();
             return of(false);
@@ -54,6 +54,7 @@ export class AuthAuth0Service extends AuthService {
               shareReplay(),
               map(response => (response as any).user),
               catchError(err => {
+                // Destroy existing auth tokens on error (if skipDestroyToken is false).
                 if (!skipDestroyToken) {
                   this._destroyTokens();
                 }

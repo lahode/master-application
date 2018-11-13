@@ -13,31 +13,26 @@ import { AuthActions } from '../../store';
 export class PasswordComponent implements OnInit {
 
   public passwordForm: FormGroup;
-  public loading$: Observable<any>;
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
   constructor(private _store: Store<any>) { }
 
   ngOnInit() {
-    // Define email validation pattern
+    // Define email validation pattern.
     const emailpattern = `[a-z0-9!#$%&'*+/=?^_"{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_"{|}~-]+)` +
                          `@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?`;
 
-    // Password request form
+    // Initialze password request form.
     this.passwordForm = new FormGroup({
       email: new FormControl(null, [
         Validators.required,
         Validators.pattern(emailpattern)
       ]),
     });
-
-    // Start loading
-    this.loading$ = this._store.select(state => state.loading);
-
   }
 
-  // Request a new password
+  // Request a new password.
   onRequestPassword() {
     if (this.passwordForm.valid) {
       this._store.dispatch(<Action>AuthActions.getPassword(this.passwordForm.value));

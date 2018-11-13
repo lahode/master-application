@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Store, Action } from '@ngrx/store';
@@ -10,19 +10,18 @@ import { filter, map, take } from 'rxjs/operators';
   templateUrl: './callback.component.html',
   styleUrls: ['./callback.component.scss']
 })
-export class CallbackComponent {
+export class CallbackComponent implements OnInit {
 
   constructor(private readonly _auth: AuthService,
               private readonly _router: Router,
-              private readonly _store: Store<any>) {
+              private readonly _store: Store<any>) { }
 
+  ngOnInit() {
+    // Check if user is authentication on auth0.
     this._auth.handleAuthentication().then(result => {
-      if (result) {
-        this._router.navigate(['/signin']);
-      } else {
-        // Dispatch check callback action
-        this._store.dispatch(<Action>AuthActions.callback());
-      }
+      // Dispatch check callback action.
+      this._store.dispatch(<Action>AuthActions.callback());
+    // Redirect on signin page if an error has been found.
     }).catch(() => this._router.navigate(['/signin']));
   }
 

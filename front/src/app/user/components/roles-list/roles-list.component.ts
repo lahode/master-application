@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Role } from '../../../../core/models/role';
 import { RoleActions } from '../../store';
@@ -14,34 +15,39 @@ import { RolesEditComponent } from '../../../shared/components/roles-edit/roles-
 })
 export class RolesListComponent implements OnInit {
 
-  roles: Role[];
+  roles$: Observable<Role[]>;
 
-  constructor(private readonly store: Store<any>,
-              private readonly dialog: MatDialog,
-              private readonly router: Router) {
-    this.store.select(state => state.rolesList).subscribe(roleList => {
-      if (Object.keys(roleList).length > 0) {
-        this.roles = roleList;
-      }
-    });
+  constructor(private readonly _store: Store<any>,
+              private readonly _dialog: MatDialog) {
+    // Retrieve the list of every roles.
+    this.roles$ = this._store.select(state => state.rolesList).pipe(
+      map(roleList => {
+        if (Object.keys(roleList).length > 0) {
+          return roleList;
+        }
+      })
+    );
   }
 
   ngOnInit() {
-    this.store.dispatch(<Action>RoleActions.list());
+    // Dispatch the list of roles.
+    this._store.dispatch(<Action>RoleActions.list());
   }
 
+  // Dispatch the new or existing roles and open the modal to create/edit it.
   manageRole(roleID: string = null) {
     if (roleID) {
-      this.store.dispatch(<Action>RoleActions.load(roleID));
+      this._store.dispatch(<Action>RoleActions.load(roleID));
     } else {
-      this.store.dispatch(<Action>RoleActions.new());
+      this._store.dispatch(<Action>RoleActions.new());
     }
-    const dialogRef = this.dialog.open(RolesEditComponent, {
+    const dialogRef = this._dialog.open(RolesEditComponent, {
       width: '75%',
     });
     dialogRef.disableClose = true;
   }
 
+  // Delete an existing role.
   deleteRole(role: Role) {
     const confirmMessage = {
       title: 'USERS.DELETE.TITLE',
@@ -49,7 +55,7 @@ export class RolesListComponent implements OnInit {
       name: role.name,
       action: <Action>RoleActions.remove(role._id)
     };
-    this.store.dispatch(<Action>RoleActions.confirm(confirmMessage));
+    this._store.dispatch(<Action>RoleActions.confirm(confirmMessage));
   }
 
 }

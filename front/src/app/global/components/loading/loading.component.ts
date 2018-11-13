@@ -12,10 +12,10 @@ export class LoadingComponent implements OnInit {
 
   loading$: Observable<Boolean>;
 
-  constructor(private router: Router) {}
+  constructor(private readonly _router: Router) {}
 
   ngOnInit() {
-    this.loading$ = this.router.events
+    this.loading$ = this._router.events
       .pipe(
         map(event => event instanceof NavigationStart || event instanceof RoutesRecognized)
       );

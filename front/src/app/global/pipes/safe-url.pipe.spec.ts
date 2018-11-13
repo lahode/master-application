@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async } from '@angular/core/testing';
-import { GetkeyPipe } from './getkey.pipe';
+import { SafeUrlPipe } from './safe-url.pipe';
 
-describe('Pipe: Getkey', () => {
+describe('Pipe: SafeUrl', () => {
   it('create an instance', () => {
-    const pipe = new GetkeyPipe();
+    const pipe = new SafeUrlPipe();
     expect(pipe).toBeTruthy();
   });
 });

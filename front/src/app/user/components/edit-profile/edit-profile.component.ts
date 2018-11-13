@@ -32,6 +32,7 @@ export class EditProfileComponent implements OnInit {
               private readonly _file: FileService) { }
 
   ngOnInit() {
+    // Initialize edit profile form.
     this.editProfileform = this._fb.group({
       _id: [''],
       username: ['', [<any>Validators.minLength(5)]],
@@ -56,11 +57,13 @@ export class EditProfileComponent implements OnInit {
           if (this.picture) {
             this.picture$ = this._file.view(this.picture);
           }
+          // Check if user connection type is by token.
           const tokenCheck = this.userEdit['sub'].split('|');
           if (tokenCheck.length === 2 && tokenCheck[0]) {
             const tokenType = tokenCheck[0].split('-');
             this.enableAuthChange = tokenType.length === 2 && tokenType[0] === 'token' ? true : false;
           }
+          // Update the form data with the current user.
           if (Object.keys(this.userEdit).length > 0) {
             Object.keys(this.userEdit).forEach(key => {
               if (this.editProfileform.controls.hasOwnProperty(key)) {
@@ -73,11 +76,12 @@ export class EditProfileComponent implements OnInit {
       );
   }
 
-  // Cancel the changes.
+  // Cancel the changes and return to user page.
   cancel(): void {
     this._router.navigate(['/user']);
   }
 
+  // Open a modal to change the picture.
   editPicture() {
     const dialogRef = this._dialog.open(PictureEditComponent, {
       width: '75%',
@@ -103,13 +107,15 @@ export class EditProfileComponent implements OnInit {
         }
       });
     }
+    // Remove password confirm field.
     delete(model.passwordconfirm);
+    // Update the picture if it has been changed.
     if (this.picture) {
       model.picture = this.picture;
     }
     this.userEdit = model;
 
-    // Update the user
+    // Update the user in the back-end.
     this._store.dispatch(<Action>UserActions.update(this.userEdit));
   }
 

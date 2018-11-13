@@ -20,14 +20,17 @@ export class HeaderComponent implements OnInit {
   public user$: Observable<boolean>;
   public language$: Observable<any>;
 
-  constructor(private translate: TranslateService,
+  constructor(public translate: TranslateService,
               private readonly _store: Store<any>,
               private readonly _router: Router) {
     translate.addLangs(['en', 'fr']);
   }
 
   ngOnInit() {
+    // Dispatch authentication check.
     this._store.dispatch(<Action>AuthActions.checkAuth());
+
+    // Find the current user.
     this.user$ = this._store.select(state => state.currentUser)
       .pipe(
         map(user => {
@@ -35,6 +38,8 @@ export class HeaderComponent implements OnInit {
           return user !== null;
         })
       );
+
+    // Find the current language.
     this.language$ = this._store.select(state => state.language)
       .pipe(
         filter(language => language !== ''),
@@ -42,6 +47,7 @@ export class HeaderComponent implements OnInit {
       );
   }
 
+  // Set the language by default.
   setDefaultLang(userlang) {
     const browserLang = this.translate.getBrowserLang();
     let currentLang = DEFAULT_LANGUAGE;
@@ -53,10 +59,12 @@ export class HeaderComponent implements OnInit {
     this._store.dispatch(<Action>AppActions.setLanguage(currentLang));
   }
 
+  // Log out the user.
   logout() {
     this._store.dispatch(<Action>AuthActions.logout());
   }
 
+  // Change application language.
   setLanguage(value) {
     this._store.dispatch(<Action>AppActions.setLanguage(value));
   }

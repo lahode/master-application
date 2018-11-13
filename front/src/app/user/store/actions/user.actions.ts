@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 
 /**
- * Define every actions for Users
+ * Define every actions for Users.
  */
 export const UserActions = {
 

@@ -13,26 +13,28 @@ export class AuthGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot,
                 routerState: RouterStateSnapshot): Observable<boolean> {
-      // Manage redirect link
+      // Manage redirect link.
       const path = routerState.url.indexOf('?') > 0 ? routerState.url.substring(0, routerState.url.indexOf('?')).slice(1)
                    : routerState.url.slice(1);
       const queryParams = path.length > 0 ? { queryParams: { returnUrl: path }} : {};
 
-      // Dispatch check auth action
+      // Dispatch check auth action.
       this._store.dispatch(<Action>AuthActions.checkAuth());
 
-      // Dispatch check permissions action
+      // Dispatch check permissions action.
       const permissions = route.data['perms'];
       this._store.dispatch(<Action>AuthActions.checkPermission(permissions));
 
-      // Check Auth on store select
+      // Check Auth on store select.
       return this._store.select(state => state)
         .pipe(
           filter((state) => state.loading.length === 0),
           map((state) => {
+            // Allow access if authCheck and permissionCheck is valid.
             if (state.authCheck && state.permissionCheck) {
               return true;
             }
+            // Else redirect to signin page.
             this._router.navigate(['/signin'], queryParams);
             return false;
           }),
