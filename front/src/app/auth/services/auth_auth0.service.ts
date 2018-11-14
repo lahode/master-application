@@ -119,6 +119,11 @@ export class AuthAuth0Service extends AuthService {
     return of(null);
   }
 
+  // Retrieve password.
+  public resetPassword(): Observable<any> {
+    return of(null);
+  }
+
   // Destroy tokens and deconnect.
   private _destroyTokens() {
     this._storage.remove(TOKEN_STORAGE).then(() => true);

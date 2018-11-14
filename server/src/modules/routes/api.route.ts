@@ -15,7 +15,8 @@ export class APIRoutes {
     // Authentication
     app.post("/api/login", AuthRoutes.loginRoute);
     app.post("/api/signup", AuthRoutes.signUpRoute);
-    app.post("/api/retrieve-password", AuthRoutes.getPswRoute);
+    app.post("/api/retrieve-password", AuthRoutes.sendPswRoute);
+    app.post("/api/init-password", AuthRoutes.initPswRoute);
     app.use("/api/secure", checkIfAuthenticated);
     app.post("/api/secure/logout", AuthRoutes.logoutRoute);
     app.get("/api/secure/check-auth", AuthRoutes.checkAuth);

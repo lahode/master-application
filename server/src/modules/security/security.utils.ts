@@ -13,13 +13,13 @@ const RSA_PUBLIC_KEY = fs.readFileSync(CONFIG.SECURITY.CERT);
 const SESSION_DURATION = 1000;
 
 // Create a session token.
-export async function createSessionToken(user: User) {
+export async function createSessionToken(user: User, expiresIn = null) {
   return signJwt({
       roles: user.roles
     },
     RSA_PRIVATE_KEY, {
     algorithm: CONFIG.AUTH.algorithm || 'RS256',
-    expiresIn: CONFIG.AUTH.expire || 7200,
+    expiresIn: expiresIn ? expiresIn : (CONFIG.AUTH.expire || 7200),
     subject: user.sub
   });
 }

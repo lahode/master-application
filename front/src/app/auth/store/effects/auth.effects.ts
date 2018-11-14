@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
-import { Action } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
 import { AuthService } from '../../services/auth.service';
+import { AppActions } from '../../../../core/store';
 import { environment } from '../../../../environments/environment';
 
 @Injectable()
@@ -97,7 +98,31 @@ export class AuthEffects {
           // On errors dispatch GET_PASSWORD_FAILED action with result
           catchError(res => of({type: AuthActions.GET_PASSWORD_FAILED, payload: res})),
           // Redirect to Homepage
-          tap(() => this._router.navigate(['/signin']))
+          tap(() => {
+            this._store.dispatch(<Action>AppActions.setError('Une nouvelle demande de mot de passe vous a été envoyée par e-mail'));
+            this._router.navigate(['/signin']);
+          })
+        )
+      )
+    );
+
+  // Listen for the 'RESET_PASSWORD_START' action
+  @Effect() resetPasswordAction$ = this._action$
+    .ofType(AuthActions.RESET_PASSWORD_START)
+    .pipe(
+      map<Action, any>((action: Action) => (action as any).payload),
+      switchMap((payload: Observable<any>) => this._auth.resetPassword(payload)
+        .pipe(
+          // If successful, dispatch RESET_PASSWORD_SUCCESS action with result
+          map<Action, any>((_result: any) => <Action>{ type: AuthActions.RESET_PASSWORD_SUCCESS, payload: null }),
+          // On errors dispatch RESET_PASSWORD_FAILED action with result
+          catchError(res => of({type: AuthActions.RESET_PASSWORD_FAILED, payload: res})),
+          // Redirect to Homepage on succeed.
+          tap((action) => {
+            if (action.type === AuthActions.RESET_PASSWORD_SUCCESS) {
+              this._router.navigate([environment.homepage]);
+            }
+          })
         )
       )
     );
@@ -155,6 +180,7 @@ export class AuthEffects {
 
   constructor(
     private readonly _action$: Actions,
+    private readonly _store: Store<Action>,
     private readonly _auth: AuthService,
     private readonly _router: Router,
     private readonly _route: ActivatedRoute

@@ -14,7 +14,7 @@ import { DoubleValidation } from '../../../../core/services/custom-validation';
 })
 export class RegisterComponent implements OnInit {
 
-  private registerForm: FormGroup;
+  public registerForm: FormGroup;
   public directLogin = false;
 
   @Input() returnUrl: string;

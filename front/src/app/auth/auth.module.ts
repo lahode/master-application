@@ -12,7 +12,8 @@ import { AuthStoreModule } from './store';
 import { LoginComponent } from './components/login/login.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { RegisterComponent } from './components/register/register.component';
-import { PasswordComponent } from './components/password/password.component';
+import { PasswordRecoverComponent } from './components/password-recover/password-recover.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 import { CallbackComponent } from './components/callback/callback.component';
 
@@ -25,7 +26,8 @@ import { NoGuard } from './services/noguard.service';
     LoginComponent,
     SigninComponent,
     RegisterComponent,
-    PasswordComponent,
+    PasswordRecoverComponent,
+    PasswordResetComponent,
     ConfirmationComponent,
     CallbackComponent
   ],

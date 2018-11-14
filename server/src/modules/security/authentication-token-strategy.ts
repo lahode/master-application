@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import * as argon2 from 'argon2';
 
+import { decodeJwt } from "./security.utils";
 import { createSessionToken } from './security.utils';
 import { User } from '../models/user';
 
@@ -27,9 +28,15 @@ export class AuthStrategyToken {
   }
 
   // Signup strategy.
-  public static async signup(user:User, res:Response) {
-    const token = await createSessionToken(user);
+  public static async signup(user:User, expiresIn = null) {
+    const token = await createSessionToken(user, expiresIn);
     return {user, token};
+  }
+
+  // Retrieve the payload in a token.
+  public static async getPayloadByToken(jwt:string) {
+    const payload = await decodeJwt(jwt);
+    return payload;
   }
 
   // Logout strategy.

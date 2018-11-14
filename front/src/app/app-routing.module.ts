@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/components/login/login.component';
 import { RegisterComponent } from './auth/components/register/register.component';
+import { PasswordResetComponent } from './auth/components/password-reset/password-reset.component';
 import { CallbackComponent } from './auth/components/callback/callback.component';
 import { PageNotFoundComponent } from './global/components/page-not-found/page-not-found.component';
 
@@ -29,6 +30,11 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+  },
+  {
+    path: 'reset-password',
+    component: PasswordResetComponent,
+    canActivate: [NoGuard]
   },
   {
     path: 'callback',

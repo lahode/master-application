@@ -22,6 +22,9 @@ export abstract class AuthService {
   // Retrieve password.
   public abstract retrievePassword(values: any): Observable<any>;
 
+  // Reset password.
+  public abstract resetPassword(values: any): Observable<any>;
+
   // Handle authentication for third party authentication.
   public abstract handleAuthentication(): Promise<any>;
 

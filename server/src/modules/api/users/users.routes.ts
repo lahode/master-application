@@ -48,7 +48,7 @@ export class UsersRoutes {
       }
     }
     else {
-      return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
+      return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
     }
   }
 

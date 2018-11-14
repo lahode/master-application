@@ -8,5 +8,5 @@
   </mat-form-field>
   <button mat-raised-button
           color="primary"
-          [disabled]="loading || !confirmationForm.valid" (click)="onRequestConfirmation()">{{ 'LOGIN.CONFIRMATIONFORM.SUBMIT' | translate }}</button>
+          [disabled]="!confirmationForm?.valid" (click)="onRequestConfirmation()">{{ 'LOGIN.CONFIRMATIONFORM.SUBMIT' | translate }}</button>
 </form>

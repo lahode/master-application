@@ -32,6 +32,10 @@ export const AuthActions = {
   GET_PASSWORD_SUCCESS : 'GET_PASSWORD_SUCCESS',
   GET_PASSWORD_FAILED : 'GET_PASSWORD_FAILED',
 
+  RESET_PASSWORD_START : 'RESET_PASSWORD_START',
+  RESET_PASSWORD_SUCCESS : 'RESET_PASSWORD_SUCCESS',
+  RESET_PASSWORD_FAILED : 'RESET_PASSWORD_FAILED',
+
   CALLBACK_START : 'CALLBACK_START',
   CALLBACK_SUCCESS : 'CALLBACK_SUCCESS',
   CALLBACK_FAILED : 'CALLBACK_FAILED',
@@ -73,6 +77,13 @@ export const AuthActions = {
   getPassword(_credentials)  {
     return <Action>{
       type: AuthActions.GET_PASSWORD_START,
+      payload: _credentials
+    };
+  },
+
+  resetPassword(_credentials)  {
+    return <Action>{
+      type: AuthActions.RESET_PASSWORD_START,
       payload: _credentials
     };
   },

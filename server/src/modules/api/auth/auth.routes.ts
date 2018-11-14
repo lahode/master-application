@@ -32,7 +32,7 @@ export class AuthRoutes {
     }
     try {
       // Find the user in the database.
-      const user = await userDB.findOne({ username: credentials.username });
+      const user = await userDB.findOne({ $or: [{ username: credentials.username}, { email: credentials.username }] });
       if (user) {
         // Check if password authentification is ok.
         const result = await AuthStrategyToken.login(credentials.password, user, res);
@@ -94,7 +94,7 @@ export class AuthRoutes {
         const userInserted = await userDB.insert(credentials);
 
         // Create the new token with the user and return the user and the token.
-        const userSignedUp = await AuthStrategyToken.signup(userInserted, res);
+        const userSignedUp = await AuthStrategyToken.signup(userInserted);
         delete(userSignedUp.user.password);
         res.json(userSignedUp);
       } else {
@@ -112,8 +112,8 @@ export class AuthRoutes {
     res.json({success: true});
   }
 
-  // Get password route
-  public static async getPswRoute(req, res) {
+  // Send new password route
+  public static async sendPswRoute(req, res) {
     // Check if an e-mail has been given.
     if (!req.body.email || !req.body.email) {
       return res.status(400).json({message: "Aucun e-mail valide n'a été inséré.", success: false});
@@ -125,14 +125,16 @@ export class AuthRoutes {
       from: CONFIG.MAILER.host.user,
       to: req.body.email,
       subject: 'Récupération du mot de passe',
-      text: ''
+      html: ''
     };
 
     try {
-      // // Find the user in the database.
-      const user = await userDB.findOne({ email: req.body.email}, { email: 1, password: 1, _id: 0 });
+      // Find the user in the database.
+      const user = await userDB.findOne({ email: req.body.email});
       if (user) {
-        mailOptions.text = user.password;
+        // Create a new token and attach it to the message.
+        const newToken = await AuthStrategyToken.signup(user, 300);
+        mailOptions.html = `Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}/reset-password?reset=${newToken.token}">récupérer votre mot de passe</a>`;
 
         // Send the e-mail to the e-mail.
         transporter.sendMail(mailOptions, (error, info) => {
@@ -144,6 +146,45 @@ export class AuthRoutes {
         });
       } else {
         return res.status(401).json({message: "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré", success: false});
+      }
+    }
+    catch (e) {
+      return res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false});
+    }
+  }
+
+  // Reinitialize the new password route
+  public static async initPswRoute(req, res) {
+    const credentials = req.body;
+
+    // Check if an e-mail has been given.
+    if (!credentials.password) {
+      return res.status(400).json({message: "Un nouveau mot de passe est obligatoire.", success: false});
+    }
+
+    // Check password strategy.
+    const errorValidatePassword = AuthRoutes.checkPasswordStrategy(credentials.password);
+    if (errorValidatePassword) {
+      return res.status(400).json({message: errorValidatePassword, success: false});
+    }
+
+    try {
+      // Find the user in the database.
+      const payload = await AuthStrategyToken.getPayloadByToken(`${credentials.token}|jwt`);
+      const data = await UsersRoutes.findUserBySub(payload);
+      if (data.success) {
+        // Get an encrypted password and update it in the database.
+        const passwordDigest = await PasswordStrategy.getPasswordDigest(credentials.password);
+        const user = data.user;
+        user.password = passwordDigest;
+        const updatedUser = await userDB.update({ _id: user._id }, user);
+        delete(user.password);
+
+        // Create the new token with the user and return the user and the token.
+        const newToken = await AuthStrategyToken.signup(user);
+        return res.json({user: newToken.user, token: newToken.token, success: true});
+      } else {
+        return res.status(data.error).json({message: data.message, success: data.success});
       }
     }
     catch (e) {

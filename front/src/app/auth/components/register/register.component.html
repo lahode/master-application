@@ -45,5 +45,5 @@
   </mat-form-field>
   <button mat-raised-button
           color="primary"
-          [disabled]="!registerForm.valid" (click)="onRegister()">{{ 'LOGIN.REGISTERFORM.SUBMIT' | translate }}</button>
+          [disabled]="!registerForm?.valid" (click)="onRegister()">{{ 'LOGIN.REGISTERFORM.SUBMIT' | translate }}</button>
 </form>

@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
 import { AuthActions } from '../../store';
 
 @Component({
-  selector: 'app-password',
-  templateUrl: './password.component.html',
-  styleUrls: ['./password.component.scss']
+  selector: 'app-password-recover',
+  templateUrl: './password-recover.component.html',
+  styleUrls: ['./password-recover.component.scss']
 })
-export class PasswordComponent implements OnInit {
+export class PasswordRecoverComponent implements OnInit {
 
   public passwordForm: FormGroup;
   @Output() alertReceived = new EventEmitter();

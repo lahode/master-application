@@ -8,8 +8,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class ConfirmationComponent implements OnInit {
 
-  private confirmationForm: FormGroup;
-  private loading;
+  public confirmationForm: FormGroup;
   @Output() alertReceived = new EventEmitter();
   @Output() changeBlock = new EventEmitter();
 
@@ -29,7 +28,6 @@ export class ConfirmationComponent implements OnInit {
 
   // Request a new confirmation email
   onRequestConfirmation() {
-    this.loading = true;
 /*
     this.authService.requestConfirmation(this.confirmationForm.value.email)
       .subscribe(

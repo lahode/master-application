@@ -95,6 +95,18 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.getPassword(), values)
       .pipe(
         shareReplay(),
+        catchError(err => {
+          this._storage.remove(STORAGE_ITEM).then(() => true);
+          return throwError(this._manageError(err));
+        })
+      );
+  }
+
+  // Retrieve password.
+  public resetPassword(values: any): Observable<any> {
+    return this._http.post(this._endpoints.resetPassword(), values)
+      .pipe(
+        shareReplay(),
         switchMap(jwt => this.handleJwtResponse((jwt as any).token, (jwt as any).user)),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
@@ -113,6 +125,9 @@ export class AuthTokenService extends AuthService {
 
   // Save JWT Token and return user object.
   private handleJwtResponse(jwt: string, user: any): Observable<any> {
+    if (!jwt) {
+      return of(null);
+    }
     return from(
       Promise.all([
         this._storage.set(STORAGE_ITEM, jwt)

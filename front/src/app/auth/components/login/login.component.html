@@ -41,7 +41,7 @@
         <mat-tab-group>
           <mat-tab id="password">
             <ng-template mat-tab-label>{{ 'LOGIN.TAB.PASSWORD' | translate }}</ng-template>
-            <app-password (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-password>
+            <app-password-recover (alertReceived)="addAlert($event)" (changeBlock)="onChangeBlock($event)"></app-password-recover>
           </mat-tab>
         </mat-tab-group>
         <div class="space-between">

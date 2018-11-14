@@ -32,6 +32,10 @@ export class EndpointsService {
     return this.url + '/api/retrieve-password';
   }
 
+  resetPassword() {
+    return this.url + '/api/init-password';
+  }
+
   // Endpoint for UserService
   userList(range?: Range) {
     return (range) ? this.url + `/api/secure/users/list/${range.from}/${range.to}` : this.url + '/api/secure/users/list';
