@@ -98,9 +98,14 @@ export class AuthEffects {
           // On errors dispatch GET_PASSWORD_FAILED action with result
           catchError(res => of({type: AuthActions.GET_PASSWORD_FAILED, payload: res})),
           // Redirect to Homepage
-          tap(() => {
-            this._store.dispatch(<Action>AppActions.setError('Une nouvelle demande de mot de passe vous a été envoyée par e-mail'));
-            this._router.navigate(['/signin']);
+          tap((action) => {
+            if (action.type === AuthActions.GET_PASSWORD_SUCCESS) {
+              this._store.dispatch(<Action>AppActions.setMessage({
+                title: 'Réinitialisation du mot de passe',
+                message: 'Une nouvelle demande de mot de passe vous a été envoyée par e-mail'
+              }));
+              this._router.navigate(['/signin']);
+            }
           })
         )
       )

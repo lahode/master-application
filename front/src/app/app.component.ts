@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { NgProgress, NgProgressRef } from '@ngx-progressbar/core';
 
 import { AppActions } from '../core/store';
-import { ErrorComponent } from './global/components/error/error.component';
+import { MessageComponent } from './global/components/message/message.component';
 import { ConfirmComponent } from './global/components/confirm/confirm.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { ConfirmComponent } from './global/components/confirm/confirm.component'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private storeErrorSubscription;
+  private storeMessageSubscription;
   private storeConfirmSubscription;
   private storeLoadingSubscription;
   private progressBar: NgProgressRef;
@@ -26,14 +26,16 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Managing error in app
-    this.storeErrorSubscription = this._store.select(state => state.error).subscribe(error => {
-      if (error) {
-        const dialogRef = this._dialog.open(ErrorComponent, {
+    // Managing messages in app
+    this.storeMessageSubscription = this._store.select(state => state.message).subscribe(result => {
+      if (result) {
+        const message = result.data.message ? result.data.message : result.data.toString();
+        const title = result.data.title ? result.data.title : '';
+        const dialogRef = this._dialog.open(MessageComponent, {
           width: '50%',
-          data: {error: error.toString()}
+          data: {title: title, message: message}
         });
-        dialogRef.afterClosed().subscribe(result => this._store.dispatch(<Action>AppActions.resetError()));
+        dialogRef.afterClosed().subscribe(() => this._store.dispatch(<Action>AppActions.resetError()));
       }
     });
 
@@ -69,7 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // Destroy store subscriptions when leaving component
   ngOnDestroy() {
-    this.storeErrorSubscription.unsubscribe();
+    this.storeMessageSubscription.unsubscribe();
     this.storeConfirmSubscription.unsubscribe();
     this.storeLoadingSubscription.unsubscribe();
     this._store.dispatch(<Action>AppActions.disconnectSocket());

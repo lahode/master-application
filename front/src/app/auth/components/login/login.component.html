@@ -31,10 +31,12 @@
             <app-register [returnUrl]="returnUrl" (alertReceived)="addAlert($event)"></app-register>
           </mat-tab>
         </mat-tab-group>
+        <!--
         <mat-card>
           <span>{{ 'LOGIN.REQUESTCONFIRMATION.TEXT' | translate }}</span>
           <button mat-button (click)="onChangeBlock('confirmation')">{{ 'LOGIN.REQUESTCONFIRMATION.ACTION' | translate }}</button>
         </mat-card>
+        -->
       </div>
 
       <div *ngIf="showBlock == 'password'">

@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule, MatSelectModule,  MatToolbarModule, MatMenuModule, MatIconModule } from '@angular/material';
 
 import { ConfirmComponent } from './components/confirm/confirm.component';
-import { ErrorComponent } from './components/error/error.component';
+import { MessageComponent } from './components/message/message.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingComponent } from './components/loading/loading.component';
@@ -32,7 +32,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
     BreadcrumbComponent,
     CommonModule,
     ConfirmComponent,
-    ErrorComponent,
+    MessageComponent,
     HeaderComponent,
     LoadingComponent,
     PageNotFoundComponent,
@@ -44,7 +44,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
   declarations: [
     BreadcrumbComponent,
     ConfirmComponent,
-    ErrorComponent,
+    MessageComponent,
     HeaderComponent,
     LoadingComponent,
     PageNotFoundComponent,
@@ -53,7 +53,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
     SafeUrlPipe
   ],
   entryComponents: [
-    ErrorComponent,
+    MessageComponent,
     ConfirmComponent,
   ],
 })

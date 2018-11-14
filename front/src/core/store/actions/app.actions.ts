@@ -10,6 +10,7 @@ export const AppActions = {
 
   NOERROR : 'NOERROR',
   FAILED: 'FAILED',
+  MESSAGE: 'MESSAGE',
 
   LOADING: 'LOADING',
   LOADED: 'LOADED',
@@ -51,6 +52,13 @@ export const AppActions = {
   setError(_credentials)  {
     return <Action>{
       type: AppActions.FAILED,
+      payload: _credentials
+    };
+  },
+
+  setMessage(_credentials)  {
+    return <Action>{
+      type: AppActions.MESSAGE,
       payload: _credentials
     };
   },

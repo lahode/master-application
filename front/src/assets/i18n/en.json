@@ -116,9 +116,16 @@
       "PASSWORD" : "Password",
       "SUBMIT" : "Register"
     },
-    "PASSWORDFORM" : {
+    "RETRIEVEPASSWORDFORM" : {
       "EMAIL" : "Email",
       "SUBMIT" : "Reset password"
+    },
+    "RESETPASSWORDFORM" : {
+      "TITLE": "Reset your password",
+      "MESSAGE" : "Please enter your new password.",
+      "NEWPASSWORD" : "New password",
+      "CONFIRMPASSWORD" : "Confirm new password",
+      "SAVE" : "Save"
     },
     "CONFIRMATIONFORM" : {
       "EMAIL" : "Email",
