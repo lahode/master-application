@@ -8,6 +8,7 @@ export const prodVariables:IEnvironment = {
     ROLES: `${root}/data/roles.json`,
     FILES: `${root}/data/files.json`,
   },
+  LOGNAME: 'LOG_MASTER_PROD',
   FRONTEND: 'https://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,

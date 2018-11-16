@@ -8,6 +8,7 @@ export const devVariables:IEnvironment = {
     ROLES: `${root}/data/roles.json`,
     FILES: `${root}/data/files.json`
   },
+  LOGNAME: 'LOG_MASTER_DEV',
   FRONTEND: 'http://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,

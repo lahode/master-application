@@ -1,3 +1,4 @@
+import { CONFIG } from "../../config";
 
 var logParams = {
     consoleOutput : false,
@@ -6,7 +7,7 @@ var logParams = {
     dateTimeFormat: "DD-MM-YYYY HH:mm:ss.S",
     outputPath: "logs/",
     fileNameDateFormat: "DDMMYYYY",
-    fileNamePrefix:"log_facttemet-"
+    fileNamePrefix: (CONFIG.LOGNAME || 'log') + "-"
 };
 var log = require('noogger').init(logParams);
 
