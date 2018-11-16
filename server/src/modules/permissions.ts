@@ -1,5 +1,6 @@
 import { RolesRoutes } from "./api/roles/roles.routes";
 import { UsersRoutes } from "./api/users/users.routes";
+import { returnHandler } from './common/return-handlers';
 
 // Export the permissions class
 export class Permissions {
@@ -25,15 +26,12 @@ export class Permissions {
       Permissions.checkPermissionOnUser(data.user, permissions).then(check => {
         next();
       })
-      .catch(error => {
-        res.status(403).json({
-          message: "Erreur, vous n'avez pas les droits requis.",
-          success: false
-        });
+      .catch(e => {
+        return res.status(403).json( returnHandler(null, "Erreur, vous n'avez pas les droits requis.", e) );
       });
     }
     else {
-      res.status(data.error).json({message: data.message, success: data.success});
+      return res.status(data.error).json( returnHandler(null, data.message) );
     }
   }
 

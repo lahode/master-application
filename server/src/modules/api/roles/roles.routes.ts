@@ -1,6 +1,9 @@
+import { Request, Response } from 'express';
+
 import { CONFIG } from "../../../config";
 import { Permissions } from "../../permissions";
 import { UsersRoutes } from "../users/users.routes";
+import { returnHandler } from '../../common/return-handlers';
 
 const Datastore = require('nedb-promises');
 const roleDB = new Datastore(CONFIG.DATABASE.ROLES);
@@ -35,48 +38,45 @@ export class RolesRoutes {
   }
 
   // Check permissions route.
-  public static async checkPermissions(req, res) {
+  public static async checkPermissions(req: Request, res: Response) {
     // Check if permissions has been set
     if (!Array.isArray(req.body)) {
-      return res.json({success: true});
+      return res.json( returnHandler( {} ) );
     }
     const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
       Permissions.checkPermissionOnUser(data.user, req.body).then(check => {
-        return res.json({success: true});
+        return res.json( returnHandler( {} ) );
       })
-      .catch(error => {
-        res.status(405).json({
-          message: "Vous n'êtes pas autorisé à accéder.",
-          success: false
-        });
+      .catch(e => {
+        res.status(405).json( returnHandler(null, "Vous n'êtes pas autorisé à accéder.", e) );
       });
     }
     else {
-      res.status(data.error).json({message: data.message, success: data.success});
+      res.status(data.error).json( returnHandler(null, data.message) );
     }
   }
 
   // Get all permissions.
-  public static getPermissions(req, res) {
-    return res.json({permissions: Permissions.permissionsList, success: true});
+  public static getPermissions(req: Request, res: Response) {
+    return res.json( returnHandler( { permissions: Permissions.permissionsList} ) );
   }
 
   // Get role by ID route route.
   public static get(req, res) {
     if (!req.params.id) {
-      return res.status(400).json({message: "Aucun ID n'a été trouvé dans la requête.", success: false});
+      return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
     }
     // Find a role by it's ID
     roleDB.findOne({ _id: req.params.id })
       .then((role) => {
-        return res.json({role: role, success: true});
+        return res.json( returnHandler( {role: role} ) );
       })
-      .catch(error => res.status(500).json({message: "Une erreur s'est produite lors de la récupération de le rôle.", success: false}));
+      .catch(e => res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de le rôle.", e) ) );
   }
 
   // Get all roles route.
-  public static list(req, res): void {
+  public static list(req: Request, res: Response): void {
     // Find all roles
     roleDB.find({}, {name: 1, active: 1})
     .sort({title: 1})
@@ -94,18 +94,18 @@ export class RolesRoutes {
             results.push(roles);
           }
         });
-        return res.json({roles: results, total: roles.length, success: true});
+        return res.json( returnHandler( {roles: results, total: roles.length } ) );
       } else {
-        return res.status(404).json({message: "Aucun rôle n'a été trouvée.", success: false});
+        return res.status(404).json( returnHandler(null, "Aucun rôle n'a été trouvée." ) );
       }
     })
-    .catch(error => res.status(500).json({message: "Une erreur s'est produite lors de la récupération des rôles.", success: false}));
+    .catch(e => res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération des rôles.", e) ));
   }
 
   // Create role route
-  public static async create(req, res) {
+  public static async create(req: Request, res: Response) {
     if (!req.body.name) {
-      return res.status(400).json({message: "Un rôle doit avoir au moins un nom.", success: false});
+      return res.status(400).json( returnHandler(null, "Un rôle doit avoir au moins un nom.") );
     }
     let role = Object.assign({}, req.body);
 
@@ -121,22 +121,22 @@ export class RolesRoutes {
       try {
         // Insert role to the database.
         const insertedRole = await roleDB.insert(role);
-        return res.json({role: insertedRole, success: true});
+        return res.json( returnHandler( {role: insertedRole} ) );
       }
       catch (e) {
-        return res.status(500).json({message: "Une erreur est survenue au moment de la sauvegarde de le rôle", success: false});
+        return res.status(500).json( returnHandler(null, "Une erreur est survenue au moment de la sauvegarde de le rôle", e) );
       }
     }
     else {
-      return res.status(500).json({message: "Impossible d'insérer cet rôle, le rôle existe déjà.", success: false});
+      return res.status(500).json( returnHandler(null, "Impossible d'insérer cet rôle, le rôle existe déjà.") );
     }
 
   }
 
   // Save role route
-  public static async update(req, res) {
+  public static async update(req: Request, res: Response) {
     if (!req.body.name) {
-      return res.status(400).json({message: "Un rôle doit avoir au moins un nom.", success: false});
+      return res.status(400).json( returnHandler(null, "Un rôle doit avoir au moins un nom.") );
     }
     let role = Object.assign({}, req.body);
 
@@ -152,25 +152,25 @@ export class RolesRoutes {
         if (checkRole) {
           // Update role to the database.
           const updated = await roleDB.update({ _id: role._id }, role);
-          return res.json({role: role, success: true});
+          return res.json( returnHandler( {role: role} ) );
         } else {
-          return res.status(404).json({message: "Impossible de modifier cet rôle, aucun rôle n'a été trouvé.", success: false});
+          return res.status(404).json( returnHandler(null, "Impossible de modifier cet rôle, aucun rôle n'a été trouvé.") );
         }
       }
       catch (e) {
-        return res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de le rôle.", success: false});
+        return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la mise à jour de le rôle.", e) );
       }
     }
     else {
-      return res.status(500).json({message: "Impossible de modifier cet rôle, le rôle n'a pas d'identifiant.", success: false});
+      return res.status(500).json( returnHandler(null, "Impossible de modifier cet rôle, le rôle n'a pas d'identifiant.") );
     }
 
   }
 
   // Delete role route
-  public static async remove(req, res) {
+  public static async remove(req: Request, res: Response) {
     if (!req.params.id) {
-      return res.status(400).json({message: "Aucun ID n'a été trouvé dans la requête.", success: false});
+      return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
     }
 
     try {
@@ -180,13 +180,13 @@ export class RolesRoutes {
 
         // Delete the role in the database.
         const deletedRole = await roleDB.remove({ _id: req.params.id });
-        return res.json({deleted: req.params.id, success: true});
+        return res.json( returnHandler( {deleted: req.params.id} ) );
       } else {
-        return res.status(404).json({message: "Impossible de supprimer cet rôle, aucun rôle n'a été trouvé.", success: false});
+        return res.status(404).json( returnHandler(null, "Impossible de supprimer cet rôle, aucun rôle n'a été trouvé.") );
       }
     }
     catch (e) {
-      return res.status(500).json({message: "Une erreur s'est produite lors de la suppression de le rôle.", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la suppression de le rôle.", e) );
     }
 
   }

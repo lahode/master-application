@@ -13,6 +13,10 @@ export class ErrorHandlerService {
 
   // Manage back-end error with standard HTTP calls
   public errorHTTP(err: any): string {
+    const error = err.error;
+    if (error.hasOwnProperty('msg') && error.msg) {
+      return error.msg;
+    }
     return 'Erreur de connexion avec le serveur';
   }
 

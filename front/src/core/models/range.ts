@@ -1,4 +1,6 @@
 export interface Range {
-  from: number;
-  to: number;
+  length: number;
+  pageIndex: number;
+  pageSize: number;
+  previousPageIndex: number;
 }

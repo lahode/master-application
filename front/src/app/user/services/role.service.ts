@@ -4,20 +4,22 @@ import { Observable, throwError } from 'rxjs';
 import { shareReplay, map, catchError } from 'rxjs/operators';
 
 import { EndpointsService } from '../../../core/services/endpoints';
+import { ErrorHandlerService } from '../../../core/services/errorhandler.service';
 
 @Injectable()
 export class RoleService {
 
   constructor(private readonly _http: HttpClient,
-              private readonly _endpoints: EndpointsService) {}
+              private readonly _endpoints: EndpointsService,
+              private readonly _error: ErrorHandlerService) {}
 
   // List all roles.
   public list(): Observable<any> {
     return this._http.get(this._endpoints.roleList())
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).roles),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.roles),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -26,8 +28,8 @@ export class RoleService {
     return this._http.get(this._endpoints.getPermissions())
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).permissions),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.permissions),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -36,8 +38,8 @@ export class RoleService {
     return this._http.get(this._endpoints.roleDetail(id))
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).role),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.role),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -46,8 +48,8 @@ export class RoleService {
     return this._http.post(this._endpoints.roleCreate(), values)
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).role),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.role),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -56,8 +58,8 @@ export class RoleService {
     return this._http.post(this._endpoints.roleUpdate(), values)
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).role),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.role),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -66,17 +68,8 @@ export class RoleService {
     return this._http.get(this._endpoints.roleRemove(id))
       .pipe(
         shareReplay(),
-        catchError(err => throwError(this._manageError(err)))
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
-  }
-
-  // Manage back-end error
-  private _manageError(err) {
-    const error = err.error;
-    if (error.hasOwnProperty('message') && error.message) {
-      return error.message;
-    }
-    return 'Erreur de connexion avec le serveur';
   }
 
 }

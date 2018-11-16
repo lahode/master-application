@@ -1,7 +1,7 @@
 import { ActionReducerMap, combineReducers, ActionReducer, Action } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
-import * as fromUsers from './users-reducer';
+import * as fromUsers from './userslist-reducer';
 import * as fromUser from './user-reducer';
 import * as fromRoles from './roles-reducer';
 import * as fromRole from './role-reducer';

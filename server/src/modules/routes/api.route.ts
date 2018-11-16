@@ -26,7 +26,7 @@ export class APIRoutes {
     app.use("/api/secure", Permissions.permissionOnRoute);
 
     // Users
-    this.callRoute('get', "/api/secure/users/list/:from?/:to?", UsersRoutes.list, ["manage users", "view users"]);
+    this.callRoute('get', "/api/secure/users/list/:offset/:limit/:sort?/:field?/:value?", UsersRoutes.list, ["manage users", "view users"]);
     this.callRoute('get', "/api/secure/users/get/:id", UsersRoutes.get, ["manage users", "view users"]);
     this.callRoute('post', "/api/secure/users/create", UsersRoutes.create, ["manage users"]);
     this.callRoute('post', "/api/secure/users/update", UsersRoutes.update, ["manage users"]);

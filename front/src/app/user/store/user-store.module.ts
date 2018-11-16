@@ -12,7 +12,7 @@ import { reducers } from './reducers';
 export const UserProviders = [
   UserService,
   RoleService,
-]
+];
 
 @NgModule({
   imports: [

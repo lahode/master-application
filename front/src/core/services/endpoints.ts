@@ -37,8 +37,12 @@ export class EndpointsService {
   }
 
   // Endpoint for UserService
-  userList(range?: Range) {
-    return (range) ? this.url + `/api/secure/users/list/${range.from}/${range.to}` : this.url + '/api/secure/users/list';
+  userList(range: any, sort?: string, field?: string, value?: string) {
+    let url =  this.url + `/api/secure/users/list/${range.from}/${range.to}/${sort}`;
+    if (field) {
+      url += value ? `/${field}/${value}` : `/${field}`;
+    }
+    return url;
   }
 
   userDetail(id: string) {

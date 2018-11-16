@@ -39,11 +39,11 @@ export class AuthTokenService extends AuthService {
           return this._http.get(this._endpoints.checkAuth())
             .pipe(
               shareReplay(),
-              map(response => (response as any).user),
+              map(response => (response as any).data.user),
               catchError(err => {
                 // Destroy existing auth tokens on error.
                 this._destroyTokens();
-                return throwError(this._manageError(err));
+                return throwError(this._error.errorHTTP(err));
               })
             );
         })
@@ -55,7 +55,8 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.checkPermissions(), permissions)
       .pipe(
         shareReplay(),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => (response as any).data),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -64,10 +65,10 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.login(), values)
       .pipe(
         shareReplay(),
-        switchMap(jwt => this.handleJwtResponse((jwt as any).token, (jwt as any).user)),
+        switchMap(jwt => this.handleJwtResponse((jwt as any).data.token, (jwt as any).data.user)),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
-          return throwError(this._manageError(err));
+          return throwError(this._error.errorHTTP(err));
         })
       );
   }
@@ -82,10 +83,10 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.signup(), values)
       .pipe(
         shareReplay(),
-        switchMap(jwt => this.handleJwtResponse((jwt as any).token, (jwt as any).user)),
+        switchMap(jwt => this.handleJwtResponse((jwt as any).data.token, (jwt as any).data.user)),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
-          return throwError(this._manageError(err));
+          return throwError(this._error.errorHTTP(err));
         })
       );
   }
@@ -95,9 +96,10 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.getPassword(), values)
       .pipe(
         shareReplay(),
+        map(response => (response as any).data),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
-          return throwError(this._manageError(err));
+          return throwError(this._error.errorHTTP(err));
         })
       );
   }
@@ -107,10 +109,10 @@ export class AuthTokenService extends AuthService {
     return this._http.post(this._endpoints.resetPassword(), values)
       .pipe(
         shareReplay(),
-        switchMap(jwt => this.handleJwtResponse((jwt as any).token, (jwt as any).user)),
+        switchMap(jwt => this.handleJwtResponse((jwt as any).data.token, (jwt as any).data.user)),
         catchError(err => {
           this._storage.remove(STORAGE_ITEM).then(() => true);
-          return throwError(this._manageError(err));
+          return throwError(this._error.errorHTTP(err));
         })
       );
   }
@@ -133,12 +135,12 @@ export class AuthTokenService extends AuthService {
         this._storage.set(STORAGE_ITEM, jwt)
           .then(
             () => user,
-            (err) => throwError(this._manageError(err))
+            (err) => throwError(this._error.errorHTTP(err))
           ),
         this._storage.set('access_type', STORAGE_TYPE)
           .then(
             () => null,
-            (err) => throwError(this._manageError(err))
+            (err) => throwError(this._error.errorHTTP(err))
           )
       ]).then((array) => array[0])
     );
@@ -152,15 +154,6 @@ export class AuthTokenService extends AuthService {
         StorageService.getItem('access_type')
       ]).then(result => result.join('|'))
     );
-  }
-
-  // Manage back-end error.
-  private _manageError(err) {
-    const error = err.error;
-    if (error.hasOwnProperty('message') && error.message) {
-      return error.message;
-    }
-    return 'Erreur de connexion avec le serveur';
   }
 
 }

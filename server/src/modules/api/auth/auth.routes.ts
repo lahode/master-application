@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 
 import { CONFIG } from "../../../config";
-
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 import { PasswordStrategy } from "../../security/password-strategy";
 import { UsersRoutes } from "../users/users.routes";
+import { returnHandler } from '../../common/return-handlers';
 
 import * as nodemailer from 'nodemailer';
 const Datastore = require('nedb-promises');
@@ -17,10 +17,10 @@ export class AuthRoutes {
     // Check if the user exists.
     const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
-      res.json({success:true, user: data.user});
+      res.json( returnHandler( { user: data.user } ) );
     }
     else {
-      res.status(data.error).json({message: data.message, success: data.success});
+      res.status(data.error).json( returnHandler(null, data.message) );
     }
   }
 
@@ -28,7 +28,7 @@ export class AuthRoutes {
   public static async loginRoute(req: Request, res: Response) {
     const credentials = req.body;
     if (!credentials.username || !credentials.password) {
-      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
+      return res.status(400).json( returnHandler(null, "Les champs username et password sont obligatoires.") );
     }
     try {
       // Find the user in the database.
@@ -39,17 +39,17 @@ export class AuthRoutes {
         if (result) {
           // Remove the password in the user data and return it.
           delete(result.user.password);
-          return res.json({user: result.user, token: result.token, success: true});
+          return res.json( returnHandler( { user: result.user, token: result.token } ) );
         }
       } else {
-        return res.status(404).json({message: "Aucun utilisateur n'a été trouvé.", success: false});
+        return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
       }
     }
     catch (e) {
       if (e.status && e.message) {
-        return res.status(e.status).json({message: e.message, success: false});
+        return res.status(e.status).json( returnHandler(null, e.message, e) );
       }
-      return res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de l'utilisateur.", e) );
     }
   }
 
@@ -63,22 +63,22 @@ export class AuthRoutes {
         credentials.sub = req["user"].sub;
         // Insert the user into the database.
         const userInserted = await userDB.insert(credentials);
-        return res.json({user: userInserted, success: true})
+        return res.json( returnHandler( {user: userInserted} ) );
       }
       catch (e) {
-        return res.status(500).json({message: "Une erreur s'est produite lors de la création de l'utilisateur", success: false});
+        return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur", e) );
       }
     }
 
     // If no username or password exists for user registration exit the route.
     if (!credentials.username || !credentials.password) {
-      return res.status(400).json({message: "Les champs username et password sont obligatoires.", success: false});
+      return res.status(400).json( returnHandler(null, "Les champs username et password sont obligatoires.") );
     }
 
     // Check password strategy.
     const errorValidatePassword = AuthRoutes.checkPasswordStrategy(credentials.password);
     if (errorValidatePassword) {
-      return res.status(400).json({message: errorValidatePassword, success: false});
+      return res.status(400).json( returnHandler(null, errorValidatePassword) );
     }
 
     // Sign up the new user.
@@ -96,27 +96,27 @@ export class AuthRoutes {
         // Create the new token with the user and return the user and the token.
         const userSignedUp = await AuthStrategyToken.signup(userInserted);
         delete(userSignedUp.user.password);
-        res.json(userSignedUp);
+        return res.json( returnHandler( userSignedUp ) );
       } else {
-        return res.status(403).json({message: "L'utilisateur existe déjà.", success: false});
+        return res.status(403).json( returnHandler(null, "L'utilisateur existe déjà.") );
       }
     }
     catch (e) {
-      return res.status(500).json({message: "Une erreur s'est produite lors de la création de l'utilisateur", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur", e) );
     }
   }
 
   // Log out route
   public static logoutRoute(req: Request, res: Response) {
     AuthStrategyToken.logout(res);
-    res.json({success: true});
+    res.json( returnHandler( {} ) );
   }
 
   // Send new password route
   public static async sendPswRoute(req, res) {
     // Check if an e-mail has been given.
     if (!req.body.email || !req.body.email) {
-      return res.status(400).json({message: "Aucun e-mail valide n'a été inséré.", success: false});
+      return res.status(400).json( returnHandler(null, "Aucun e-mail valide n'a été inséré." ) );
     }
 
     // Initialize e-mail parameters.
@@ -139,17 +139,17 @@ export class AuthRoutes {
         // Send the e-mail to the e-mail.
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
-            return res.status(500).json({message: "Une erreur s'est produite lors de l'envoi du mail", success: false});
+            return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de l'envoi du mail", error) );
           } else {
-            return res.json({mailID: info.response, success: true});
+            return res.json( returnHandler( { mailID: info.response } ) );
           };
         });
       } else {
-        return res.status(401).json({message: "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré", success: false});
+        return res.status(401).json( returnHandler(null, "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré") );
       }
     }
     catch (e) {
-      return res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la récupération de l'utilisateur", e) );
     }
   }
 
@@ -159,13 +159,13 @@ export class AuthRoutes {
 
     // Check if an e-mail has been given.
     if (!credentials.password) {
-      return res.status(400).json({message: "Un nouveau mot de passe est obligatoire.", success: false});
+      return res.status(400).json( returnHandler(null, "Un nouveau mot de passe est obligatoire.") );
     }
 
     // Check password strategy.
     const errorValidatePassword = AuthRoutes.checkPasswordStrategy(credentials.password);
     if (errorValidatePassword) {
-      return res.status(400).json({message: errorValidatePassword, success: false});
+      return res.status(400).json( returnHandler(null, errorValidatePassword) );
     }
 
     try {
@@ -182,13 +182,13 @@ export class AuthRoutes {
 
         // Create the new token with the user and return the user and the token.
         const newToken = await AuthStrategyToken.signup(user);
-        return res.json({user: newToken.user, token: newToken.token, success: true});
+        return res.json( returnHandler( {user: newToken.user, token: newToken.token} ) );
       } else {
-        return res.status(data.error).json({message: data.message, success: data.success});
+        return res.status(data.error).json( returnHandler(null, data.message) );
       }
     }
     catch (e) {
-      return res.status(500).json({message: "Une erreur s'est produit lors de la récupération de l'utilisateur", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la récupération de l'utilisateur", e) );
     }
   }
 

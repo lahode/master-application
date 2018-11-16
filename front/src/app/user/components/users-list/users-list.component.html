@@ -1,30 +1,77 @@
-<h2>{{ 'USERS.LIST.TITLE' | translate }}</h2>
-<div class="example-container mat-elevation-z8">
-  <div>
-    <table>
-      <thead>
-        <th>{{ 'USERS.LIST.USERNAME' | translate }}</th>
-        <th>{{ 'USERS.LIST.ACTIONS' | translate }}</th>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of (users$ | async)">
-          <td>
-            {{ user.username || user.email }}
-          </td>
-          <td>
-            <span class="action" (click)="manageUser(user._id)">[ {{ 'USERS.LIST.EDIT' | translate }} ]</span>
-            <span class="action" (click)="deleteUser(user)">[ {{ 'USERS.LIST.DELETE' | translate }} ]</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button mat-raised-button
-            color="primary"
-            (click)="manageUser()">{{ 'USERS.LIST.ADD' | translate }}</button>
-  </div>
-  <mat-paginator [length]="total"
-                 [pageSize]="pageSize"
-                 [pageIndex]="pageIndex"
-                 [pageSizeOptions]="[2, 5, 10, 25]"
-                 (page)="changePage($event)"></mat-paginator>
+<div fxLayout
+     fxLayoutAlign="start center"
+     fxLayoutGap="12px">
+  <h2>{{ 'USERS.LIST.TITLE' | translate }}</h2>
 </div>
+
+<div fxLayout
+     fxLayoutGap="12px"
+     fxLayoutAlign="start center">
+  <mat-form-field fxFlex="40%">
+    <mat-select #fieldRef
+                [value]="pageFilter?.field"
+                (selectionChange)="updateList('filterField', $event.value)">
+      <mat-option *ngFor="let field of filterableFields"
+                  [value]="field[0]">{{field[1]}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field fxFlex="60%">
+    <input matInput
+           #filterRef
+           type="text"
+           [value]="pageFilter?.value"
+           (keyup)="updateList('filterValue', $event.target.value)"
+           [disabled]="!fieldRef.selected">
+    <button mat-icon-button
+            matSuffix
+            #filterResetRef
+            (click)="updateList('filterValue', '')"
+            [disabled]="filterRef.value === ''">
+             <mat-icon>clear</mat-icon>
+           </button>
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z8" *ngIf="(users$ | async) as users">
+  <mat-table [dataSource]="users"
+             (matSortChange)="updateList('sort', $event)"
+             matSort
+             matSortActive="username"
+             matSortDisableClear
+             matSortDirection="asc">
+
+    <ng-container cdkColumnDef="username">
+      <mat-header-cell *cdkHeaderCellDef
+                       [style.minWidth.px]="140"
+                       mat-sort-header> {{ 'USERS.LIST.USERNAME' | translate }} </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"
+                [style.minWidth.px]="140"> {{ row.username || row.email }} </mat-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="actions">
+      <mat-header-cell *cdkHeaderCellDef
+                       [style.maxWidth.px]="200"
+                       [style.minWidth.px]="100"> {{ 'USERS.LIST.ACTIONS' | translate }} </mat-header-cell>
+      <mat-cell *cdkCellDef="let row"
+                [style.maxWidth.px]="200"
+                [style.minWidth.px]="100">
+        <span class="action" (click)="manageUser(row._id)">[ {{ 'USERS.LIST.EDIT' | translate }} ]</span>
+        <span class="action" (click)="deleteUser(row)">[ {{ 'USERS.LIST.DELETE' | translate }} ]</span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *cdkHeaderRowDef="fields"></mat-header-row>
+    <mat-row *cdkRowDef="let row; columns: fields;"></mat-row>
+  </mat-table>
+
+  <mat-paginator [length]="pageRange.length"
+                 [pageSize]="pageRange.pageSize"
+                 [pageIndex]="pageRange.pageIndex"
+                 [pageSizeOptions]="[2, 5, 10, 25]"
+                 (page)="updateList('pager', $event)"></mat-paginator>
+</div>
+<p>&nbsp;</p>
+<button mat-raised-button
+        color="primary"
+        (click)="manageUser()">{{ 'USERS.LIST.ADD' | translate }}</button>

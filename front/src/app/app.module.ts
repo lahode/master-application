@@ -27,6 +27,7 @@ import { HomeComponent } from './home/home.component';
 /* Store */
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppStoreModule } from '../core/store';
+import { UserStoreModule } from './user/store';
 
 /* Providers */
 import { TokenInterceptor } from './auth/services/auth_token.service';
@@ -72,6 +73,7 @@ export function tokenGetter() {
     GlobalModule,
     SharedModule,
     AppStoreModule.forRoot(),
+    UserStoreModule.forRoot(),
     AppRoutingModule,
     StoreDevtoolsModule.instrument(),
   ],

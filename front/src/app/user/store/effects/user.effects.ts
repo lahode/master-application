@@ -26,7 +26,12 @@ export class UserEffects {
       map(([action, storeState]) => {
         // If action payload is empty, get the previous pageIndex and pageSize to set the payload.
         if (!action.hasOwnProperty('payload') || !(action as any).payload) {
-          (action as any).payload = this._pagerService.getRange((storeState as any).usersList);
+          const usersList = (storeState as any).usersList;
+          (action as any).payload = {
+            range: this._pagerService.getRange(usersList ? usersList.range : null),
+            filter: usersList ? usersList.filter : null,
+            sort: usersList ? usersList.sort : null
+          };
         }
         return action;
       }),
@@ -47,9 +52,8 @@ export class UserEffects {
     .pipe(
       map<Action, any>((action: Action) => (action as any).payload),
       map((payload: any) => {
-        // Get page range, dispatch USERLIST_LOAD_START with range and USERLIST_CHANGE_PAGE_SUCCESS.
-        const range = this._pagerService.getRange(payload);
-        this._store$.dispatch(UserActions.list(range));
+        // dispatch USERLIST_LOAD_START and return USERLIST_CHANGE_PAGE_SUCCESS.
+        this._store$.dispatch(UserActions.list(payload));
         return <Action>{ type: UserActions.USERLIST_CHANGE_PAGE_SUCCESS, payload };
       })
     );

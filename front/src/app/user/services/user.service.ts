@@ -1,24 +1,44 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { shareReplay, map, catchError } from 'rxjs/operators';
 
 import { EndpointsService } from '../../../core/services/endpoints';
+import { ErrorHandlerService } from '../../../core/services/errorhandler.service';
+import { PagerService } from '../../../core/services/pager.service';
 import { Range } from '../../../core/models/range';
 
 @Injectable()
 export class UserService {
 
   constructor(private readonly _http: HttpClient,
-              private readonly _endpoints: EndpointsService) {}
+              private readonly _endpoints: EndpointsService,
+              private readonly _error: ErrorHandlerService,
+              private readonly _pager: PagerService) {}
 
   // List all users or a range of users.
-  public list(range?: Range): Observable<any> {
-    return this._http.get(this._endpoints.userList(range))
-      .pipe(
-        shareReplay(),
-        catchError(err => throwError(this._manageError(err)))
-      );
+  public list(payload: any): Observable<any> {
+    let field = null;
+    let value = null;
+    let sort = '';
+    if (payload.sort && payload.sort.active && payload.sort.direction) {
+      const sortField = payload.sort.active;
+      sort = payload.sort.direction === 'desc' ? `-${sortField}` : sortField;
+    }
+    if (payload.filter && payload.filter.field && payload.filter.value) {
+      field = payload.filter.field;
+      value = payload.filter.value;
+    }
+    if (payload.range) {
+      return this._http.get(this._endpoints.userList(this._pager.getFromTo(payload.range), sort, field, value))
+        .pipe(
+          shareReplay(),
+          map(users => <any>(users as any).data),
+          catchError(err => throwError(this._error.errorHTTP(err)))
+        );
+    } else {
+      return of(null);
+    }
   }
 
   // Get user detail by ID.
@@ -26,8 +46,8 @@ export class UserService {
     return this._http.get(this._endpoints.userDetail(id))
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).user),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.user),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -36,8 +56,8 @@ export class UserService {
     return this._http.post(this._endpoints.userCreate(), values)
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).user),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.user),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -46,8 +66,8 @@ export class UserService {
     return this._http.post(this._endpoints.userUpdate(), values)
       .pipe(
         shareReplay(),
-        map(response => <any>(response as any).user),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => <any>(response as any).data.user),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -56,17 +76,8 @@ export class UserService {
     return this._http.get(this._endpoints.userRemove(id))
       .pipe(
         shareReplay(),
-        catchError(err => throwError(this._manageError(err)))
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
-  }
-
-  // Manage back-end error.
-  private _manageError(err) {
-    const error = err.error;
-    if (error.hasOwnProperty('message') && error.message) {
-      return error.message;
-    }
-    return 'Erreur de connexion avec le serveur';
   }
 
 }

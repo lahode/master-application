@@ -1,6 +1,9 @@
+import { Request, Response } from 'express';
+
 import { CONFIG } from "../../../config";
 import { AuthRoutes } from "../auth/auth.routes";
 import { PasswordStrategy } from "../../security/password-strategy";
+import { returnHandler } from '../../common/return-handlers';
 
 const Datastore = require('nedb-promises');
 const userDB = new Datastore(CONFIG.DATABASE.USERS);
@@ -38,7 +41,7 @@ export class UsersRoutes {
         const user = await userDB.findOne({sub: userInfo.sub});
         if (user) {
           delete(user.password);
-          return {success:true, user: user};
+          return {user: user, success:true};
         } else {
           return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
         }
@@ -53,53 +56,58 @@ export class UsersRoutes {
   }
 
   // Get user by ID route.
-  public static async get(req, res) {
+  public static async get(req: Request, res: Response) {
     if (!req.params.id) {
-      return res.status(400).json({message: "Aucun ID n'a été trouvé dans la requête.", success: false});
+      return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
     }
     // Find a user by it's ID.
     try {
       const user = await userDB.findOne({ _id: req.params.id });
       user.password = '';
-      return res.json({user: user, success: true});
+      return res.json( returnHandler( {user: user} ) );
     }
     catch(e) {
-      return res.status(500).json({message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de l'utilisateur.", e) );
     }
   }
 
   // Get all users route
-  public static async list(req, res) {
+  public static async list(req: Request, res: Response) {
     try {
-      // Find all active users in the database.
-      const users = await userDB.find({}, {username: 1, email: 1, active: 1}).sort({title: 1})
-      if (users) {
-        let results = [];
-        // Loop on each users and limit of "from" and "to" parameters have been set
-        users.map((users, index) => {
-          if (req.params.from && req.params.to) {
-            if (index >= parseInt(req.params.from) && index <= parseInt(req.params.to)) {
-              results.push(users);
-            }
-          }
-          else {
-            results.push(users);
-          }
-        });
-        return res.json({items: results, total: users.length, success: true});
-      } else {
-        return res.status(404).json({message: "Aucun utilisateur n'a été trouvée.", success: false});
+      // Détermine l'ordre des résultats
+      let sort: any = {lastname: 1};
+      if (req.params.sort) {
+        sort = req.params.sort.charAt(0) === '-' ? { [req.params.sort.substr(1)] : -1} : { [req.params.sort] : 1 };
       }
+
+      let search = {};
+      if (req.params.field) {
+        search[req.params.field] = new RegExp(req.params.value, "i");
+      }
+
+      const limit = (parseInt(req.params.limit) - parseInt(req.params.offset) > 0) ? parseInt(req.params.limit) - parseInt(req.params.offset) : 0;
+      const query = search;
+
+      // Find all users in the database.
+      const items = await userDB.find(query, {username: 1, email: 1, active: 1})
+                                .sort(sort)
+                                .skip(parseInt(req.params.offset) || 0)
+                                .limit(limit || 50);
+
+      // Return the number of results.
+      const count = await userDB.find(query, { lastname: 1 });
+      const total = count.length;
+      return res.status(200).json( returnHandler( { items, total } ) );
     }
     catch(e) {
-      return res.status(500).json({message: "Une erreur s'est produite lors de la récupération des utilisateurs.", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération des utilisateurs.", e) );
     }
   }
 
   // Create user route.
-  public static async create(req, res) {
+  public static async create(req: Request, res: Response) {
     if (!req.body.username) {
-      return res.status(400).json({message: "Un utilisateur doit avoir au moins un nom d'utilisateur.", success: false});
+      return res.status(400).json( returnHandler(null, "Un utilisateur doit avoir au moins un nom d'utilisateur.") );
     }
     let user = Object.assign({}, req.body);
 
@@ -115,19 +123,19 @@ export class UsersRoutes {
       try {
         // Create the user in the database.
         const userInserted = await userDB.insert(user);
-        return res.json({user: userInserted, success: true});
+        return res.json( returnHandler( {user: userInserted} ) );
       }
       catch(e) {
-        return res.status(500).json({message: "Une erreur s'est produit lors de l'insertion de l'utilisateur", success: false});
+        return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de l'insertion de l'utilisateur", e) );
       }
     }
     else {
-      return res.status(500).json({message: "Impossible d'insérer cet utilisateur, l'utilisateur existe déjà.", success: false});
+      return res.status(500).json( returnHandler(null, "Impossible d'insérer cet utilisateur, l'utilisateur existe déjà.") );
     }
   }
 
   // Update user route.
-  public static async update(req, res) {
+  public static async update(req: Request, res: Response) {
     let user = Object.assign({}, req.body);
 
     // Manage the update
@@ -158,7 +166,7 @@ export class UsersRoutes {
               // Check if new password is valid.
               const errorValidatePassword = AuthRoutes.checkPasswordStrategy(passwordnew);
               if (errorValidatePassword) {
-                return res.status(400).json({message: errorValidatePassword, success: false});
+                return res.status(400).json( returnHandler(null, errorValidatePassword) );
               }
 
               // Get an encrypted password and set the new token name.
@@ -167,7 +175,7 @@ export class UsersRoutes {
             }
           } else {
             if (user.username != checkUser.username || user.passwordnew) {
-              return res.status(400).json({message: "Le mot de passe actuel est obligatoire pour modifier le nom d'utilisateur ou mot de passe", success: false});
+              return res.status(400).json( returnHandler(null, "Le mot de passe actuel est obligatoire pour modifier le nom d'utilisateur ou mot de passe") );
             }
             user.username = checkUser.username;
           }
@@ -176,27 +184,27 @@ export class UsersRoutes {
 
           // Update user in the database.
           const updatedUser = await userDB.update({ _id: user._id }, user);
-          return res.json({user: user, success: true});
+          return res.json( returnHandler( { user } ) );
         } else {
-          return res.status(404).json({message: "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.", success: false});
+          return res.status(404).json( returnHandler(null, "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.") );
         }
       }
       catch(e) {
         if (e.status === 403) {
-          return res.status(403).json({message: "Mot de passe invalide.", success: false});
+          return res.status(403).json( returnHandler(null, "Mot de passe invalide.", e) );
         }
-        return res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", success: false});
+        return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", e) );
       }
     } else {
-      return res.status(500).json({message: "Impossible de modifier cet utilisateur, l'utilisateur n'a pas d'identifiant.", success: false});
+      return res.status(500).json( returnHandler(null, "Impossible de modifier cet utilisateur, l'utilisateur n'a pas d'identifiant.") );
     }
 
   }
 
   // Delete user route.
-  public static async remove(req, res) {
+  public static async remove(req: Request, res: Response) {
     if (!req.params.id) {
-      return res.status(400).json({message: "Aucun ID n'a été trouvé dans la requête.", success: false});
+      return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
     }
     try {
       // Check if the user exists.
@@ -205,12 +213,12 @@ export class UsersRoutes {
 
         //Delete the user in the database.
         const userDeleted = await userDB.remove({ _id: req.params.id });
-        return res.json({deleted: req.params.id, success: true});
+        return res.json(returnHandler( {deleted: req.params.id} ) );
       } else {
-        return res.status(404).json({message: "Impossible de supprimer cet utilisateur, aucun utilisateur n'a été trouvé.", success: false});
+        return res.status(404).json( returnHandler(null, "Impossible de supprimer cet utilisateur, aucun utilisateur n'a été trouvé.") );
       }
     } catch(e) {
-      return res.status(500).json({message: "Une erreur s'est produite lors de la suppression de l'utilisateur.", success: false});
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la suppression de l'utilisateur.", e) );
     }
   }
 

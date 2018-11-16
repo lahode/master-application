@@ -52,13 +52,13 @@ export class AuthAuth0Service extends AuthService {
           return this._http.get(this._endpoints.checkAuth())
             .pipe(
               shareReplay(),
-              map(response => (response as any).user),
+              map(response => (response as any).data.user),
               catchError(err => {
                 // Destroy existing auth tokens on error (if skipDestroyToken is false).
                 if (!skipDestroyToken) {
                   this._destroyTokens();
                 }
-                return throwError(this._manageError(err));
+                return throwError(this._error.errorHTTP(err));
               })
             );
         })
@@ -70,7 +70,8 @@ export class AuthAuth0Service extends AuthService {
     return this._http.post(this._endpoints.checkPermissions(), permissions)
       .pipe(
         shareReplay(),
-        catchError(err => throwError(this._manageError(err)))
+        map(response => (response as any).data),
+        catchError(err => throwError(this._error.errorHTTP(err)))
       );
   }
 
@@ -94,7 +95,7 @@ export class AuthAuth0Service extends AuthService {
           window.location.hash = '';
           resolve(this._setSession(authResult).then(() => false));
         } else if (err) {
-          reject(this._manageError(err));
+          reject(this._error.errorHTTP(err));
         } else {
           resolve(false);
         }
@@ -107,9 +108,10 @@ export class AuthAuth0Service extends AuthService {
     return this._http.post(this._endpoints.signup(), values)
       .pipe(
         shareReplay(),
+        map(response => (response as any).data),
         catchError(err => {
           this._destroyTokens();
-          return throwError(this._manageError(err));
+          return throwError(this._error.errorHTTP(err));
         })
       );
   }
@@ -130,15 +132,6 @@ export class AuthAuth0Service extends AuthService {
     this._storage.remove(STORAGE_ITEM).then(() => true);
     this._storage.remove('access_type').then(() => true);
     this._storage.remove(EXPIREAT).then(() => true);
-  }
-
-  // Manage back-end error.
-  private _manageError(err) {
-    const error = err.error;
-    if (error.hasOwnProperty('message') && error.message) {
-      return error.message;
-    }
-    return 'Erreur de connexion avec le serveur';
   }
 
   private _setSession(authResult): Promise<any> {

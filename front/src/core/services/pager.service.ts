@@ -3,24 +3,34 @@ import { Injectable } from '@angular/core';
 import { Pager } from '../models/pager';
 import { Range } from '../models/range';
 
+const DEFAULT_PAGESIZE = 100;
+
 @Injectable()
 export class PagerService {
 
   // Return the range for the pager.
-  public getRange(payload: any): Range {
-    const pageIndex = this.getPageIndex(payload);
-    const pageSize = this.getPageSize(payload);
-    return <Range>{from: pageIndex * pageSize, to: ((pageIndex + 1) * pageSize) - 1};
+  public getRange(payload: any, defaultLength = null): Range {
+    const previousPageIndex = payload && payload.hasOwnProperty('previousPageIndex') &&
+                              !isNaN(payload.previousPageIndex) ? payload.previousPageIndex : 0;
+    const pageIndex = payload && payload.hasOwnProperty('pageIndex') &&
+                      !isNaN(payload.pageIndex) ? payload.pageIndex : 0;
+    const pageSize = payload && payload.hasOwnProperty('pageSize') &&
+                    !isNaN(payload.pageSize) ? payload.pageSize : DEFAULT_PAGESIZE;
+    let length = 0;
+    if (defaultLength) {
+      length = defaultLength;
+    } else if (payload && payload.hasOwnProperty('length') && !isNaN(payload.length)) {
+      length = payload.pageSize;
+    }
+    return { previousPageIndex, pageIndex, pageSize, length };
   }
 
-  // Return the page index for the pager.
-  public getPageIndex (payload: any): number {
-    return payload && payload.hasOwnProperty('pageIndex') && !isNaN(payload.pageIndex) ? payload.pageIndex : 0;
+  public getFromTo(range: Range) {
+    return {from: range.pageIndex * range.pageSize, to: ((range.pageIndex + 1) * range.pageSize)};
   }
 
-  // Return the page size for the pager.
-  public getPageSize (payload: any): number {
-    return payload && payload.hasOwnProperty('pageSize') && !isNaN(payload.pageSize) ? payload.pageSize : 10;
+  public getDefaultPageSize () {
+    return DEFAULT_PAGESIZE;
   }
 
 }
