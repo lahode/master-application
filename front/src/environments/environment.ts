@@ -8,6 +8,7 @@ import { IEnvironment } from './env-model';
 export const environment: IEnvironment = {
   production: false,
   homepage: '/home',
+  server: 'http://localhost:4300',
   authentication: {
     type: 'token',
     value : {
@@ -16,8 +17,5 @@ export const environment: IEnvironment = {
       client_id: ''  // client ID
     }
   },
-  socket: {
-    baseUrl: '',
-    config: {}
-  }
+  socket: false
 };

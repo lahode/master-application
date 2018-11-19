@@ -101,6 +101,19 @@ export const AppActions = {
     return <Action>{
       type: AppActions.SOCKET_DISCONNECT,
     };
+  },
+
+  refresh(data) {
+    if (data.id) {
+      return <Action>{
+        type: data.type.toUpperCase() + '_REFRESH',
+        payload: data.id
+      };
+    } else {
+      return <Action>{
+        type: data.type.toUpperCase() + '_REFRESH'
+      };
+    }
   }
 
 };

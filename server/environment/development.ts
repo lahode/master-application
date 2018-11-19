@@ -12,6 +12,7 @@ export const devVariables:IEnvironment = {
   FRONTEND: 'http://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
   PORT: 4300,
+  SOCKET_ACTIVE: false,
   SECURITY: {
     HTTPS: false,
     KEY: `${root}/security/key.pem`,

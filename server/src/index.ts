@@ -6,6 +6,7 @@ import * as cors from 'cors';
 import * as path from 'path';
 import * as morgan from 'morgan';
 import * as fs from 'fs-extra';
+import * as socketIo from 'socket.io';
 
 import { RetrieveUser } from "./modules/security/retrieve-user.middleware";
 import { APIRoutes }  from "./modules/routes/api.route";
@@ -96,6 +97,7 @@ export class Server {
 
   // Bootstrap the application with HTTPS or HTTP depending if the "--secure" option has been set.
   bootstrap():void {
+    let server;
     if (CONFIG.SECURITY.HTTPS) {
       const httpsServer = https.createServer({
         key: fs.readFileSync(CONFIG.SECURITY.KEY),
@@ -104,15 +106,35 @@ export class Server {
       httpsServer.on('error', this.onError);
 
       // Launch an HTTPS Server.
-      httpsServer.listen(this.port, () => console.log("HTTPS Secure Server running at https://localhost:" + this.port));
+      server = httpsServer.listen(this.port, () => console.log("HTTPS Secure Server running at https://localhost:" + this.port));
     }
     else {
       const httpServer = http.createServer(this.app);
       httpServer.on('error', this.onError);
 
       // Launch an HTTP Server.
-      httpServer.listen(this.port, () => console.log("HTTP Server running at http://localhost:" + this.port));
+      server = httpServer.listen(this.port, () => console.log("HTTP Server running at http://localhost:" + this.port));
     }
+
+    if (server && CONFIG.SOCKET_ACTIVE) {
+      this.sockets(server);
+    }
+
+  }
+
+  private sockets(server): void {
+    const io = socketIo(server, { serveClient: false });
+    io.on('connect', (socket: any) => {
+      console.log('Connected client on port %s.', this.port);
+      socket.on('refresh', (m: any) => {
+        console.log('[server](refresh): %s', JSON.stringify(m));
+        io.emit('refresh', m);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Client disconnected');
+      });
+    });
   }
 
 }

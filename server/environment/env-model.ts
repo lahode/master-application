@@ -5,6 +5,7 @@ export interface IEnvironment {
   FRONTEND: string,
   UPLOAD_DIRECTORY: string;
   PORT: number,
+  SOCKET_ACTIVE: boolean,
   SECURITY: any,
   AUTH: any,
   MAILER: any

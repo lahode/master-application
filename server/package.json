@@ -27,7 +27,8 @@
     "nedb-promises": "^3.0.2",
     "nodemailer": "^4.6.8",
     "noogger": "^0.1.8",
-    "password-validator": "^4.1.1"
+    "password-validator": "^4.1.1",
+    "socket.io": "^2.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -37,6 +38,7 @@
     "@types/express": "^4.16.0",
     "@types/node": "^10.12.0",
     "@types/nodemailer": "^4.6.5",
+    "@types/socket.io": "^2.1.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.4",

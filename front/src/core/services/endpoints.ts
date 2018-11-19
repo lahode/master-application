@@ -1,11 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 
 import { Range } from '../models/range';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class EndpointsService {
 
-  private url = 'http://localhost:4300';
+  private url = environment.server;
 
   // Endpoint for AuthService
   checkAuth() {
