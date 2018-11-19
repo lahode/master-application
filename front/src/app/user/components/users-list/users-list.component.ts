@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from '../../../../core/models/user';
-import { Range } from '../../../../core/models/range';
 import { UserActions } from '../../store';
 import { UsersEditComponent } from '../../../shared/components/users-edit/users-edit.component';
 import { PagerService } from '../../../../core/services/pager.service';
