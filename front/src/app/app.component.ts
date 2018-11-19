@@ -2,10 +2,12 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
 import { NgProgress, NgProgressRef } from '@ngx-progressbar/core';
+import { SocketService } from '../core/services/socket.service';
 
 import { AppActions } from '../core/store';
 import { MessageComponent } from './global/components/message/message.component';
 import { ConfirmComponent } from './global/components/confirm/confirm.component';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -16,16 +18,18 @@ export class AppComponent implements OnInit, OnDestroy {
   private storeMessageSubscription;
   private storeConfirmSubscription;
   private storeLoadingSubscription;
+  private storeUpdateSubscription;
   private progressBar: NgProgressRef;
 
   constructor(private readonly _store: Store<any>,
               private readonly _dialog: MatDialog,
-              private readonly _progress: NgProgress) {
-    // Get an instance of NgProgressRef.
-    this.progressBar = _progress.ref();
-  }
+              private readonly _progress: NgProgress,
+              private readonly _socket: SocketService) {}
 
   ngOnInit() {
+    // Get an instance of NgProgressRef.
+    this.progressBar = this._progress.ref();
+
     // Managing messages in app
     this.storeMessageSubscription = this._store.select(state => state.message).subscribe(result => {
       if (result) {
@@ -67,13 +71,31 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
 
+      // Launch socket client connection.
+      this.initIoConnection(true);
+  }
+
+  // Socket client.
+  private initIoConnection(open: boolean): void {
+    if (environment.socket) {
+      if (open) {
+        this._socket.connect();
+        this.storeUpdateSubscription = this._socket.listen('refresh')
+          .subscribe((data) => {
+            this._store.dispatch(<Action>AppActions.refresh({type: data.type , id: data.id}));
+          });
+      } else {
+        this.storeUpdateSubscription.unsubscribe();
+      }
+    }
   }
 
   // Destroy store subscriptions when leaving component
   ngOnDestroy() {
-    this.storeMessageSubscription.unsubscribe();
     this.storeConfirmSubscription.unsubscribe();
     this.storeLoadingSubscription.unsubscribe();
+    this.storeMessageSubscription.unsubscribe();
+    this.initIoConnection(false);
     this._store.dispatch(<Action>AppActions.disconnectSocket());
   }
 
