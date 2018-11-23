@@ -48,7 +48,7 @@ export class APIRoutes {
     return app;
   }
 
-  callRoute(method, url, func, permission) {
+  callRoute(method, url, func, permission = []) {
     app[method](url, func);
     Permissions.setPermissions(url, permission);
   }

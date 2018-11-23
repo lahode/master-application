@@ -49,7 +49,7 @@ export class Permissions {
   // Check if a user has permissions to get further
   public static async checkPermissionOnUser(user, permissions) {
     // If no permissions need to be checked, allow user to continue.
-    if (!permissions) {
+    if (!permissions || permissions.length === 0) {
       return true;
     }
 
