@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { AuthActions } from '../actions/auth.actions';
+import { UserActions } from '../../../user/store/actions/user.actions';
 
 export interface ICurrentUserState extends Object {}
 
@@ -11,7 +12,7 @@ export function reducer (state: ICurrentUserState = initialState, action: any): 
     case AuthActions.LOGIN_SUCCESS:
     case AuthActions.CHECK_AUTH_SUCCESS:
     case AuthActions.CREATE_USER_SUCCESS:
-    case AuthActions.PROFILE_UPDATE_SUCCESS: {
+    case UserActions.PROFILE_UPDATE_SUCCESS: {
       return Object.assign({}, state, action.payload);
     }
 

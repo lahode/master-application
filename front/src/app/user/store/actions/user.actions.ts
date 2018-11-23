@@ -13,6 +13,10 @@ export const UserActions = {
   USERLIST_LOAD_SUCCESS : 'USERLIST_LOAD_SUCCESS',
   USERLIST_LOAD_FAILED : 'USERLIST_LOAD_FAILED',
 
+  USERS_LOAD_START : 'USERS_LOAD_START',
+  USERS_LOAD_SUCCESS : 'USERS_LOAD_SUCCESS',
+  USERS_LOAD_FAILED : 'USERS_LOAD_FAILED',
+
   USER_NEW : 'USER_NEW',
 
   USER_LOAD_START : 'USER_LOAD_START',
@@ -31,10 +35,25 @@ export const UserActions = {
   USER_REMOVE_SUCCESS : 'USER_REMOVE_SUCCESS',
   USER_REMOVE_FAILED : 'USER_REMOVE_FAILED',
 
+  PROFILE_LOAD_START: 'PROFILE_LOAD_START',
+  PROFILE_LOAD_SUCCESS: 'PROFILE_LOAD_SUCCESS',
+  PROFILE_LOAD_FAILED: 'PROFILE_LOAD_FAILED',
+
+  PROFILE_UPDATE_START: 'PROFILE_UPDATE_START',
+  PROFILE_UPDATE_SUCCESS: 'PROFILE_UPDATE_SUCCESS',
+  PROFILE_UPDATE_FAILED: 'PROFILE_UPDATE_FAILED',
+
+
   confirm(_credentials = null) {
     return <Action>{
       type: UserActions.CONFIRM_DIALOG,
       payload: _credentials
+    };
+  },
+
+  all() {
+    return <Action>{
+      type: UserActions.USERS_LOAD_START
     };
   },
 
@@ -79,6 +98,13 @@ export const UserActions = {
     };
   },
 
+  updateProfile(_credentials) {
+    return <Action>{
+      type: UserActions.PROFILE_UPDATE_START,
+      payload: _credentials
+    };
+  },
+
   remove(_credentials) {
     return <Action>{
       type: UserActions.USER_REMOVE_START,
@@ -86,4 +112,4 @@ export const UserActions = {
     };
   },
 
-}
+};

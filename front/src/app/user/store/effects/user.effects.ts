@@ -58,6 +58,20 @@ export class UserEffects {
       })
     );
 
+  // Listen for the 'USERS_LOAD_START' action.
+  @Effect() userAllAction$ = this._action$
+    .ofType(UserActions.USERS_LOAD_START)
+    .pipe(
+      switchMap(() => this._user.all()
+        .pipe(
+          // If successful, dispatch USERS_LOAD_SUCCESS.
+          map<Action, any>((_result: any) => <Action>{ type: UserActions.USERS_LOAD_SUCCESS, payload: _result }),
+          // On errors dispatch USERS_LOAD_FAILED action with result.
+          catchError((res: any) => of({ type: UserActions.USERS_LOAD_FAILED, payload: res }))
+        )
+      )
+    );
+
   // Listen for the 'USER_LOAD_START' action.
   @Effect() userLoadAction$ = this._action$
     .ofType(UserActions.USER_LOAD_START)
@@ -69,6 +83,21 @@ export class UserEffects {
           map<Action, any>((_result: any) => <Action>{ type: UserActions.USER_LOAD_SUCCESS, payload: _result }),
           // On errors dispatch USER_LOAD_FAILED action with result.
           catchError((res: any) => of({ type: UserActions.USER_LOAD_FAILED, payload: res }))
+        )
+      )
+    );
+
+  // Listen for the 'PROFILE_LOAD_START' action.
+  @Effect() userProfileLoadAction$ = this._action$
+    .ofType(UserActions.PROFILE_LOAD_START)
+    .pipe(
+      map<Action, any>((action: Action) => (action as any).payload),
+      switchMap((payload: string) => this._user.get(payload)
+        .pipe(
+          // If successful, dispatch PROFILE_LOAD_SUCCESS.
+          map<Action, any>((_result: any) => <Action>{ type: UserActions.PROFILE_LOAD_SUCCESS, payload: _result }),
+          // On errors dispatch PROFILE_LOAD_FAILED action with result.
+          catchError((res: any) => of({ type: UserActions.PROFILE_LOAD_FAILED, payload: res }))
         )
       )
     );
@@ -110,7 +139,7 @@ export class UserEffects {
 
             // Dispatch as well PROFILE_UPDATE_SUCCESS if user is current user.
             if (this.currentUser._id === _result._id) {
-              const profileUpdateSuccess = <Action>{ type: AuthActions.PROFILE_UPDATE_SUCCESS, payload: _result };
+              const profileUpdateSuccess = <Action>{ type: UserActions.PROFILE_UPDATE_SUCCESS, payload: _result };
               return from([userUpdateSuccess, profileUpdateSuccess]);
             }
             return from([userUpdateSuccess]);
@@ -119,11 +148,34 @@ export class UserEffects {
           catchError((res: any) => of({ type: UserActions.USER_UPDATE_FAILED, payload: res })),
           // Dispatch UserActions.list() to update the list of users and redirect to user (only for user/edit) if profile is on success.
           tap((action) => {
-            if (action.type === AuthActions.PROFILE_UPDATE_SUCCESS) {
+            if (action.type === UserActions.PROFILE_UPDATE_SUCCESS) {
               this._store$.dispatch(UserActions.list());
               if (this.currentRoute.url === '/user/edit') {
                 this._router.navigate(['/user']);
               }
+            }
+          })
+        )
+      )
+    );
+
+  // Listen for the 'PROFILE_UPDATE_START' action.
+  @Effect() profileUpdateAction$ = this._action$
+    .ofType(UserActions.PROFILE_UPDATE_START)
+    .pipe(
+      map<Action, any>((action: Action) => (action as any).payload),
+      switchMap((payload: any) => this._user.updateProfile(payload)
+        .pipe(
+          // If successful, dispatch PROFILE_UPDATE_SUCCESS.
+          map<Action, any>((_result: any) => <Action>{ type: UserActions.PROFILE_UPDATE_SUCCESS, payload: _result }),
+
+          // On errors dispatch PROFILE_UPDATE_FAILED action with result
+          catchError((res: any) => of({ type: UserActions.PROFILE_UPDATE_FAILED, payload: res })),
+          // Dispatch UserActions.list() to update the list of users and redirect to user/edit).
+          tap((action) => {
+            if (action.type === UserActions.PROFILE_UPDATE_SUCCESS) {
+              this._store$.dispatch(UserActions.list());
+              this._router.navigate(['/user']);
             }
           })
         )

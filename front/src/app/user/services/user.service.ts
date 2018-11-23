@@ -42,8 +42,28 @@ export class UserService {
   }
 
   // Get user detail by ID.
+  public all(): Observable<any> {
+    return this._http.get(this._endpoints.userAll())
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).data),
+        catchError(err => throwError(this._error.errorHTTP(err)))
+      );
+  }
+
+  // Get user detail by ID.
   public get(id: string): Observable<any> {
     return this._http.get(this._endpoints.userDetail(id))
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).data.user),
+        catchError(err => throwError(this._error.errorHTTP(err)))
+      );
+  }
+
+  // Get user profile  detail by ID.
+  public getProfile(id: string): Observable<any> {
+    return this._http.get(this._endpoints.userProfileDetail())
       .pipe(
         shareReplay(),
         map(response => <any>(response as any).data.user),
@@ -64,6 +84,16 @@ export class UserService {
   //  Update an existing user.
   public update(values: any): Observable<any> {
     return this._http.post(this._endpoints.userUpdate(), values)
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).data.user),
+        catchError(err => throwError(this._error.errorHTTP(err)))
+      );
+  }
+
+  //  Update own profile.
+  public updateProfile(values: any): Observable<any> {
+    return this._http.post(this._endpoints.userProfileUpdate(), values)
       .pipe(
         shareReplay(),
         map(response => <any>(response as any).data.user),

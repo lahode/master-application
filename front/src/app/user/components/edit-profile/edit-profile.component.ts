@@ -116,7 +116,7 @@ export class EditProfileComponent implements OnInit {
     this.userEdit = model;
 
     // Update the user in the back-end.
-    this._store.dispatch(<Action>UserActions.update(this.userEdit));
+    this._store.dispatch(<Action>UserActions.updateProfile(this.userEdit));
   }
 
 }

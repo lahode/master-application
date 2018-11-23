@@ -27,13 +27,18 @@ export class APIRoutes {
 
     // Users
     this.callRoute('get', "/api/secure/users/list/:offset/:limit/:sort?/:field?/:value?", UsersRoutes.list, ["manage users", "view users"]);
-    this.callRoute('get', "/api/secure/users/get/:id", UsersRoutes.get, ["manage users", "view users"]);
+    this.callRoute('get', "/api/secure/users/all", UsersRoutes.all);
+    this.callRoute('get', "/api/secure/users/get/:id", UsersRoutes.get, ["view users"]);
     this.callRoute('post', "/api/secure/users/create", UsersRoutes.create, ["manage users"]);
     this.callRoute('post', "/api/secure/users/update", UsersRoutes.update, ["manage users"]);
     this.callRoute('get', "/api/secure/users/remove/:id", UsersRoutes.remove, ["manage users"]);
 
+    // profile
+    this.callRoute('get', "/api/secure/profile/get", UsersRoutes.getProfile);
+    this.callRoute('post', "/api/secure/profile/update", UsersRoutes.updateProfile);
+
     // Roles
-    this.callRoute('get', "/api/secure/roles/list", RolesRoutes.list, ["manage roles"]);
+    this.callRoute('get', "/api/secure/roles/list", RolesRoutes.list);
     this.callRoute('get', "/api/secure/roles/get-permissions", RolesRoutes.getPermissions, ["manage roles"]);
     this.callRoute('get', "/api/secure/roles/get/:id", RolesRoutes.get, ["manage roles"]);
     this.callRoute('post', "/api/secure/roles/create", RolesRoutes.create, ["manage roles"]);

@@ -17,6 +17,7 @@ export const UserProviders = [
 @NgModule({
   imports: [
     StoreModule.forFeature('usersList', reducers.usersList),
+    StoreModule.forFeature('users', reducers.users),
     StoreModule.forFeature('userEdit', reducers.userEdit),
     StoreModule.forFeature('rolesList', reducers.rolesList),
     StoreModule.forFeature('roleEdit', reducers.roleEdit),

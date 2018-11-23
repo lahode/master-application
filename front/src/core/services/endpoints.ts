@@ -50,12 +50,24 @@ export class EndpointsService {
     return this.url + `/api/secure/users/get/${id}`;
   }
 
+  userProfileDetail() {
+    return this.url + '/api/secure/profile/get';
+  }
+
+  userAll() {
+    return this.url + '/api/secure/users/all';
+  }
+
   userCreate() {
     return this.url + '/api/secure/users/create';
   }
 
   userUpdate() {
     return this.url + '/api/secure/users/update';
+  }
+
+  userProfileUpdate() {
+    return this.url + '/api/secure/profile/update';
   }
 
   userRemove(id: string) {

@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 
+import { CONFIG } from "../../../config";
 import { AuthRoutes } from "../auth/auth.routes";
 import { PasswordStrategy } from "../../security/password-strategy";
 import { returnHandler } from '../../common/return-handlers';
 
-import { userDB } from './users.db';
+const Datastore = require('nedb-promises');
+const userDB = new Datastore(CONFIG.DATABASE.USERS);
 
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 
@@ -69,7 +71,30 @@ export class UsersRoutes {
     }
   }
 
-  // Get all users route
+  // Get profile route.
+  public static async getProfile(req: Request, res: Response) {
+    try {
+      const data = await UsersRoutes.findUserBySub(req['user']);
+      return res.json( returnHandler( {user: data.user} ) );
+    }
+    catch(e) {
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de l'utilisateur.", e) );
+    }
+  }
+
+  // Get all users route.
+  public static async all(req: Request, res: Response) {
+    try {
+      // Find all active users in the database.
+      const users = await userDB.find({active:1}, {username: 1, firstname: 1, lastname: 1}).sort('username')
+      return res.status(200).json( returnHandler( users ) );
+    }
+    catch(e) {
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération des utilisateurs.", e) );
+    }
+  }
+
+  // List users route.
   public static async list(req: Request, res: Response) {
     try {
       // Détermine l'ordre des résultats
@@ -131,8 +156,36 @@ export class UsersRoutes {
 
   // Update user route.
   public static async update(req: Request, res: Response) {
-    let user = Object.assign({}, req.body);
+    try {
+      let body = Object.assign({}, req.body);
+      const user = await UsersRoutes.updateUser(body, res);
+      return res.json( returnHandler( { user } ) );
+    }
+    catch(e) {
+      return res.status(e.status).json( returnHandler(null, e.message, e.error) );
+    }
+  }
 
+  // Update user route.
+  public static async updateProfile(req: Request, res: Response) {
+    try {
+      let body = Object.assign({}, req.body);
+
+      const data = await UsersRoutes.findUserBySub(req['user']);
+      if (data.user._id.toString() !== body._id) {
+        return res.status(403).json( returnHandler(null, "Impossible de mettre à jour, cet utilisateur ne correspond pas à votre profil.") );
+      }
+
+      const user = await UsersRoutes.updateUser(body, res);
+      return res.json( returnHandler( { user } ) );
+    }
+    catch(e) {
+      return res.status(e.status).json( returnHandler(null, e.message, e.error) );
+    }
+  }
+
+  // Update the user.
+  public static async updateUser(user, res: Response) {
     // Manage the update
     if (user._id) {
       if (user.owner) {
@@ -161,7 +214,7 @@ export class UsersRoutes {
               // Check if new password is valid.
               const errorValidatePassword = AuthRoutes.checkPasswordStrategy(passwordnew);
               if (errorValidatePassword) {
-                return res.status(400).json( returnHandler(null, errorValidatePassword) );
+                throw({status: 400, message: errorValidatePassword, error: null});
               }
 
               // Get an encrypted password and set the new token name.
@@ -170,7 +223,7 @@ export class UsersRoutes {
             }
           } else {
             if (user.username != checkUser.username || user.passwordnew) {
-              return res.status(400).json( returnHandler(null, "Le mot de passe actuel est obligatoire pour modifier le nom d'utilisateur ou mot de passe") );
+              throw({status: 400, message: "Le mot de passe actuel est obligatoire pour modifier le nom d'utilisateur ou mot de passe.", error: null});
             }
             user.username = checkUser.username;
           }
@@ -179,19 +232,19 @@ export class UsersRoutes {
 
           // Update user in the database.
           const updatedUser = await userDB.update({ _id: user._id }, user);
-          return res.json( returnHandler( { user } ) );
+          return user;
         } else {
-          return res.status(404).json( returnHandler(null, "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.") );
+          throw({status: 404, message: "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.", error: null});
         }
       }
       catch(e) {
         if (e.status === 403) {
-          return res.status(403).json( returnHandler(null, "Mot de passe invalide.", e) );
+          throw({status: 403, message: "Mot de passe invalide.", error: e})
         }
-        return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", e) );
+        throw({status: 500, message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", error: e});
       }
     } else {
-      return res.status(500).json( returnHandler(null, "Impossible de modifier cet utilisateur, l'utilisateur n'a pas d'identifiant.") );
+      throw({status: 500, message: "Impossible de modifier cet utilisateur, l'utilisateur n'a pas d'identifiant.", error: null});
     }
 
   }
