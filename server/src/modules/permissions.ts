@@ -56,29 +56,23 @@ export class Permissions {
     let roleIds = [];
     let access = false;
     try {
-      if (user.hasOwnProperty('roles')) {
+      if (user.roles && user.roles.length > 0) {
 
         // Check for each roles the user have, if the permissions match with the one needed.
         user.roles.map(r => roleIds.push(r.role));
         const permissionsOnUser = await RolesRoutes.getPermissionsByID(roleIds);
         if (permissionsOnUser.success) {
-          for (let role of permissionsOnUser.data) {
-            role.permissions.map(p => {
-              if (permissions.indexOf(p)) {
-                access = true;
-              }
-            });
+          for (let permissionUser of permissionsOnUser.data) {
+            if (permissions.indexOf(permissionUser)) {
+              return true;
+            }
           }
         }
-        if (access) {
-          return true;
-        } else {
-          return false;
-        }
       }
+      throw false;
     }
     catch(e) {
-      return false;
+      throw false;
     }
   }
 

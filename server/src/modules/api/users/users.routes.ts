@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
 
-import { CONFIG } from "../../../config";
 import { AuthRoutes } from "../auth/auth.routes";
 import { PasswordStrategy } from "../../security/password-strategy";
 import { returnHandler } from '../../common/return-handlers';
 
-const Datastore = require('nedb-promises');
-const userDB = new Datastore(CONFIG.DATABASE.USERS);
+import { userDB } from './users.db';
 
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 
@@ -22,7 +20,7 @@ export class UsersRoutes {
         if (!user) {
           return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
         }
-        if (user.hasOwnProperty('data')) {
+        if (user.data) {
           results.push(user.data);
         }
       }
@@ -113,14 +111,11 @@ export class UsersRoutes {
 
     // Check if ID exists
     if (!user._id) {
-      // Set the user owner.
-      if (typeof user.owner !== 'string') {
-        user.owner = user.owner._id;
-      }
-      user.created = new Date().toISOString();
-      user.updated = new Date().toISOString();
-      user.active = true;
       try {
+        // Set the user owner.
+        // const data = await UsersRoutes.findUserBySub(req['user']);
+        // user.owner = data.user._id;
+
         // Create the user in the database.
         const userInserted = await userDB.insert(user);
         return res.json( returnHandler( {user: userInserted} ) );
