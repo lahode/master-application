@@ -6,7 +6,6 @@ import { shareReplay, map, catchError } from 'rxjs/operators';
 import { EndpointsService } from '../../../core/services/endpoints';
 import { ErrorHandlerService } from '../../../core/services/errorhandler.service';
 import { PagerService } from '../../../core/services/pager.service';
-import { Range } from '../../../core/models/range';
 
 @Injectable()
 export class UserService {
@@ -62,7 +61,7 @@ export class UserService {
   }
 
   // Get user profile  detail by ID.
-  public getProfile(id: string): Observable<any> {
+  public getProfile(): Observable<any> {
     return this._http.get(this._endpoints.userProfileDetail())
       .pipe(
         shareReplay(),

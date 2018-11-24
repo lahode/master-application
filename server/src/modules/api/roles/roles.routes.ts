@@ -10,31 +10,47 @@ const roleDB = new Datastore(CONFIG.DATABASE.ROLES);
 
 export class RolesRoutes {
 
-  // Get permissions by IDs.
-  public static async getPermissionsByID(roles) {
-    let results = [];
+  // Find or return permission in a user.
+  public static async findPermission(user, perm = null) {
+    let results: string[] = [];
+    let result = false;
+
+    // Return access denied if user has no role.
+    if (!user.roles) {
+      return { error: 403, message: "Accès interdit.", success: false };
+    }
+
     try {
-      for (let id of roles) {
+
+      for (let roleLine of user.roles) {
         // Get each role in the database.
-        const role = await roleDB.findOne({ _id: id });
-        if (!role) {
-          return {error: 404, message: "Aucun rôle n'a été trouvé.", success: false};
-        }
+        const role = roleLine.role;
 
         // Retrieve each permission on each role.
-        if (role.hasOwnProperty('permissions')) {
+        if (role.permissions && role.permissions.length > 0) {
           role.permissions.map((permission) => {
-            if (results.indexOf(permission) === -1) {
+
+            // If a permission has been set in entry, return true whenever the permission is found.
+            if (perm && permission.toString() === perm) {
+              result = true;
+            }
+
+            // Add each permissions to the result.
+            if (!results.includes(permission)) {
               results.push(permission);
             }
           });
         }
       }
+      if (!perm) {
+        return { data: results, success: true };
+      } else {
+        return result ? { data: null, success: true } : { error: 403, message: "Accès interdit.", success: false };
+      }
     }
     catch(e) {
-      return {error: 500, message: "Une erreur s'est produite lors de la récupération de le rôle.", success: false};
+      return { error: 500, message: "Une erreur s'est produite lors de la récupération de le rôle.", success: false };
     }
-    return {data: results, success: true}; ;
   }
 
   // Check permissions route.
@@ -111,16 +127,13 @@ export class RolesRoutes {
 
     // Check if ID exists
     if (!role._id) {
-      if (typeof role.owner !== 'string') {
-        role.owner = role.owner._id;
-      }
-      role.created = new Date().toISOString();
-      role.updated = new Date().toISOString();
-      role.active = true;
-
       try {
+        // Set the user owner.
+        const data = await UsersRoutes.findUserBySub(req['user']);
+        role.owner = data.user._id;
+
         // Insert role to the database.
-        const insertedRole = await roleDB.insert(role);
+        const insertedRole = await roleDB.create(role);
         return res.json( returnHandler( {role: insertedRole} ) );
       }
       catch (e) {
@@ -142,8 +155,12 @@ export class RolesRoutes {
 
     // Manage the update
     if (role._id) {
-      if (typeof role.owner !== 'string') {
-        role.owner = role.owner._id;
+      if (role.owner) {
+        if (typeof role.owner !== 'string') {
+          role.owner = role.owner._id;
+        }
+      } else {
+        role.owner = role._id;
       }
       role.updated = new Date().toISOString();
       try {

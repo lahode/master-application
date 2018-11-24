@@ -7,31 +7,11 @@ import { returnHandler } from '../../common/return-handlers';
 
 const Datastore = require('nedb-promises');
 const userDB = new Datastore(CONFIG.DATABASE.USERS);
+const roleDB = new Datastore(CONFIG.DATABASE.ROLES);
 
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 
 export class UsersRoutes {
-
-  // Get user by IDs.
-  public static async getUsersByID(ids) {
-    let results = [];
-    try {
-      for (let id of ids) {
-        // Get each user in the database.
-        const user = await userDB.findOne({ _id: id });
-        if (!user) {
-          return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
-        }
-        if (user.data) {
-          results.push(user.data);
-        }
-      }
-    }
-    catch(e) {
-      return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
-    }
-    return results;
-  }
 
   // Fetch the user by sub.
   public static async findUserBySub(userInfo) {
@@ -39,6 +19,16 @@ export class UsersRoutes {
       try {
         // Find the user by sub (token) info.
         const user = await userDB.findOne({sub: userInfo.sub});
+        let index = 0;
+        for (let userRole of user.roles) {
+          const roleID = userRole.role;
+          const role = await roleDB.findOne({_id: roleID});
+          user.roles[index].role = {
+            _id: roleID,
+            permissions: role.permissions
+          };
+          index++;
+        }
         if (user) {
           delete(user.password);
           return {user: user, success:true};

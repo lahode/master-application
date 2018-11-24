@@ -1,33 +1,31 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 
-import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 
+/* Custom modules */
+import { GlobalModule } from '../global/global.module';
 import { PictureEditComponent } from './components/picture-edit/picture-edit.component';
 import { RolesEditComponent } from './components/roles-edit/roles-edit.component';
 import { UsersEditComponent } from './components/users-edit/users-edit.component';
 
 @NgModule({
+
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    TranslateModule,
-    MatButtonModule,
+    GlobalModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatInputModule
+    MatInputModule,
+    ReactiveFormsModule
   ],
   exports: [
-    MatButtonModule,
+    GlobalModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatInputModule,
+    ReactiveFormsModule
   ],
   declarations: [
     PictureEditComponent,

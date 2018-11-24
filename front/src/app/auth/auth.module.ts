@@ -1,14 +1,16 @@
 /* Contrib modules */
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GlobalModule } from '../global/global.module';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatInputModule, MatCheckboxModule, MatButtonModule,
-         MatTabsModule, MatProgressSpinnerModule, MatCardModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 /* Custom modules */
 import { AuthStoreModule } from './store';
+import { GlobalModule } from '../global/global.module';
 import { LoginComponent } from './components/login/login.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -35,14 +37,11 @@ import { NoGuard } from './services/noguard.service';
     GlobalModule,
     MatInputModule,
     MatCheckboxModule,
-    MatButtonModule,
     MatTabsModule,
-    MatProgressSpinnerModule,
+    MatTableModule,
     MatCardModule,
     BrowserAnimationsModule,
-    FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
     AuthStoreModule.forRoot()
   ],
   providers: [

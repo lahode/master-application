@@ -35,7 +35,7 @@ export class Permissions {
     }
   }
 
-
+  // Find permission on url.
   public static findPermissionOnUrl(url) {
     let result = '';
     Permissions.permissions.forEach((value, key, map) => {
@@ -52,20 +52,13 @@ export class Permissions {
     if (!permissions || permissions.length === 0) {
       return true;
     }
-
-    let roleIds = [];
-    let access = false;
     try {
-      if (user.roles && user.roles.length > 0) {
-
-        // Check for each roles the user have, if the permissions match with the one needed.
-        user.roles.map(r => roleIds.push(r.role));
-        const permissionsOnUser = await RolesRoutes.getPermissionsByID(roleIds);
-        if (permissionsOnUser.success) {
-          for (let permissionUser of permissionsOnUser.data) {
-            if (permissions.indexOf(permissionUser)) {
-              return true;
-            }
+      // Check for each roles the user have, if the permissions match with the one needed.
+      const permissionsOnUser = await RolesRoutes.findPermission(user);
+      if (permissionsOnUser.success) {
+        for (let permissionUser of permissionsOnUser.data) {
+          if (permissions.includes(permissionUser)) {
+            return true;
           }
         }
       }

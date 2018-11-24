@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { mergeMap, map, withLatestFrom, switchMap, catchError, tap } from 'rxjs/operators';
 
 import { UserActions } from '../actions/user.actions';
-import { AuthActions } from '../../../auth/store/actions/auth.actions';
 import { UserService } from '../../services/user.service';
 import { PagerService } from '../../../../core/services/pager.service';
 import { Range } from '../../../../core/models/range';
@@ -91,8 +90,7 @@ export class UserEffects {
   @Effect() userProfileLoadAction$ = this._action$
     .ofType(UserActions.PROFILE_LOAD_START)
     .pipe(
-      map<Action, any>((action: Action) => (action as any).payload),
-      switchMap((payload: string) => this._user.get(payload)
+      switchMap(() => this._user.getProfile()
         .pipe(
           // If successful, dispatch PROFILE_LOAD_SUCCESS.
           map<Action, any>((_result: any) => <Action>{ type: UserActions.PROFILE_LOAD_SUCCESS, payload: _result }),

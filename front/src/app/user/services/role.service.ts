@@ -72,4 +72,10 @@ export class RoleService {
       );
   }
 
+  // Check if user has permissions.
+  public checkUsersPermission(user, permissions) {
+    return user.roles.filter(role =>
+      role.role.permissions.filter(perm => permissions.includes(perm)).length > 0).length > 0;
+  }
+
 }
