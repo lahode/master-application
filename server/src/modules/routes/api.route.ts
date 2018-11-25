@@ -26,7 +26,7 @@ export class APIRoutes {
     app.use("/api/secure", Permissions.permissionOnRoute);
 
     // Users
-    this.callRoute('get', "/api/secure/users/list/:offset/:limit/:sort?/:field?/:value?", UsersRoutes.list, ["manage users", "view users"]);
+    this.callRoute('get', "/api/secure/users/list/:offset/:limit/:sort?/:field?/:value?", UsersRoutes.list);
     this.callRoute('get', "/api/secure/users/all", UsersRoutes.all);
     this.callRoute('get', "/api/secure/users/get/:id", UsersRoutes.get, ["view users"]);
     this.callRoute('post', "/api/secure/users/create", UsersRoutes.create, ["manage users"]);
@@ -46,9 +46,9 @@ export class APIRoutes {
     this.callRoute('get', "/api/secure/roles/remove/:id", RolesRoutes.remove, ["manage roles"]);
 
     // Files
-    this.callRoute('post', "/api/secure/files/upload", FilesRoutes.uploadFile, ["manage files", "view files"]);
-    this.callRoute('get', "/api/secure/files/delete/:id", FilesRoutes.deleteFile, ["manage files", "view files"]);
-    this.callRoute('get', "/api/secure/files/view/:id", FilesRoutes.viewFile, ["view files"]);
+    this.callRoute('post', "/api/secure/files/upload", FilesRoutes.uploadFile);
+    this.callRoute('get', "/api/secure/files/delete/:id", FilesRoutes.deleteFile, ["manage files"]);
+    this.callRoute('get', "/api/secure/files/view/:id", FilesRoutes.viewFile);
 
     return app;
   }
