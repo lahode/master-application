@@ -32,7 +32,11 @@ export class AuthRoutes {
     }
     try {
       // Find the user in the database.
-      const user = await userDB.findOne({ $or: [{ username: credentials.username}, { email: credentials.username }] });
+      let user = await userDB.findOne({ $or: [{ username: credentials.username}, { email: credentials.username }] });
+
+      // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
+      user.roles = await UsersRoutes.populateRoles(user);
+
       if (user) {
         // Check if password authentification is ok.
         const result = await AuthStrategyToken.login(credentials.password, user, res);
@@ -83,7 +87,11 @@ export class AuthRoutes {
 
     // Sign up the new user.
     try {
-      const user = await userDB.findOne({ username: credentials.username, password: credentials.password }, { password: 0 });
+      let user = await userDB.findOne({ username: credentials.username, password: credentials.password }, { password: 0 });
+
+      // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
+      user.roles = UsersRoutes.populateRoles(user);
+
       if (!user) {
         // Get an encrypted password and set the new token name.
         const passwordDigest = await PasswordStrategy.getPasswordDigest(credentials.password);

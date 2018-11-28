@@ -22,19 +22,10 @@ export class UsersRoutes {
     if (userInfo) {
       try {
         // Find the user by sub (token) info.
-        const user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1});
+        let user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1});
 
-        // Add permissions to user's roles
-        let index = 0;
-        for (let userRole of user.roles) {
-          const roleID = userRole.role;
-          const role = await roleDB.findOne({_id: roleID});
-          user.roles[index].role = {
-            _id: roleID,
-            permissions: role.permissions
-          };
-          index++;
-        }
+        // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
+        user.roles = await UsersRoutes.populateRoles(user);
 
         // Return the user.
         if (user) {
@@ -50,6 +41,24 @@ export class UsersRoutes {
     else {
       return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
     }
+  }
+
+  // Populate roles (only usefull if using nedDB).
+  public static async populateRoles(user) {
+    if (!user.roles) {
+      return [];
+    }
+    let index = 0;
+    for (let userRole of user.roles) {
+      const roleID = userRole.role;
+      const role = await roleDB.findOne({_id: roleID});
+      user.roles[index].role = {
+        _id: roleID,
+        permissions: role.permissions
+      };
+      index++;
+    }
+    return user.roles;
   }
 
   // Get user by ID route.
