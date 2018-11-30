@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
 import { NgProgress, NgProgressRef } from '@ngx-progressbar/core';

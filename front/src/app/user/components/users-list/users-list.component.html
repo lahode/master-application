@@ -18,7 +18,6 @@
 
   <mat-form-field fxFlex="60%">
     <input matInput
-           #filterRef
            type="text"
            [value]="pageFilter?.value"
            (keyup)="updateList('filterValue', $event.target.value)"
@@ -27,7 +26,7 @@
             matSuffix
             #filterResetRef
             (click)="updateList('filterValue', '')"
-            [disabled]="filterRef.value === ''">
+            [disabled]="pageFilter?.value === ''">
              <mat-icon>clear</mat-icon>
            </button>
   </mat-form-field>

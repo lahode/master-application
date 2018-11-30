@@ -36,7 +36,7 @@ export class UsersListComponent implements OnInit {
         map(users => {
           if (users) {
             this.pageRange =  this._pager.getRange(users.range, users.total);
-            this.pageFilter = {...users.filter} || {field: 'username', value: ''};
+            this.pageFilter = users.filter || {field: 'username', value: ''};
             this.pageSort = users.sort || {active: 'username', direction: 'asc'};
             return users.items;
           }

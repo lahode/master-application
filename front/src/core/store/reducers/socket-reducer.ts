@@ -10,9 +10,7 @@ export function reducer (state: ISocketState = initialState, action: any): ISock
     case AppActions.SOCKET_CONNECTED: {
       return true;
     }
-  }
 
-  switch (action.type) {
     case AppActions.SOCKET_DISCONNECTED: {
       return false;
     }

@@ -19,6 +19,10 @@ export const AppActions = {
 
   BREADCRUMB: 'BREADCRUMB',
 
+  SETMENU: 'SETMENU',
+  ADDTOMENU: 'ADDTOMENU',
+  RESETMENU: 'RESETMENU',
+
   SOCKET_CONNECT: 'SOCKET_CONNECT',
   SOCKET_CONNECTED: 'SOCKET_CONNECTED',
   SOCKET_DISCONNECT: 'SOCKET_DISCONNECT',
@@ -88,6 +92,26 @@ export const AppActions = {
     return <Action>{
       type: AppActions.LOADED,
       payload: _credentials
+    };
+  },
+
+  setMenu(_credentials)  {
+    return <Action>{
+      type: AppActions.SETMENU,
+      payload: _credentials
+    };
+  },
+
+  addToMenu(_credentials)  {
+    return <Action>{
+      type: AppActions.ADDTOMENU,
+      payload: _credentials
+    };
+  },
+
+  resetMenu() {
+    return <Action>{
+      type: AppActions.RESETMENU
     };
   },
 

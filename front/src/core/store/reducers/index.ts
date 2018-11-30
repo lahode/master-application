@@ -7,6 +7,7 @@ import * as fromMessage from './message-reducer';
 import * as fromLanguage from './language-reducer';
 import * as fromBreadcrumb from './breadcrumb-reducer';
 import * as fromConfirm from './confirm-reducer';
+import * as fromMenuLinks from './menulinks-reducer';
 import * as fromSocket from './socket-reducer';
 
 import { AppStateI, AppReducerStateI } from '../app-states';
@@ -20,6 +21,7 @@ export const reducer: AppReducerStateI = {
   language: fromLanguage.reducer,
   breadcrumb: fromBreadcrumb.reducer,
   confirm: fromConfirm.reducer,
+  menuLinks: fromMenuLinks.reducer,
   socket: fromSocket.reducer
 };
 
