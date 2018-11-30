@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
+import { environment } from '../../../../environments/environment';
 import { User } from '../../../../core/models/user';
 import { PictureEditComponent } from '../../../shared/components/picture-edit/picture-edit.component';
 import { DoubleValidation } from '../../../../core/services/custom-validation';
@@ -78,7 +79,7 @@ export class EditProfileComponent implements OnInit {
 
   // Cancel the changes and return to user page.
   cancel(): void {
-    this._router.navigate(['/user']);
+    this._router.navigate([environment.homepage]);
   }
 
   // Open a modal to change the picture.

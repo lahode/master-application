@@ -25,12 +25,12 @@
                style="width:240px;"
                *ngIf="(menuLinks$ | async) as menuLinks">
     <div class="header-profile" *ngIf="(user$ | async) as user">
-      <a [routerLink]="['/user']">
+      <a (click)="viewProfile()">
         <img [src]="user.icon" [title]="user.firstname + ' ' + user.lastname" />
+        <div class="header-profile-name">{{ user.firstname }} {{ user.lastname }}</div>
       </a>
     </div>
     <app-sidenav-list [links]="menuLinks" (goto)="moveTo($event)"></app-sidenav-list>
-    <!-- <app-doc-add></app-doc-add> -->
   </mat-sidenav>
 
   <main class="container">

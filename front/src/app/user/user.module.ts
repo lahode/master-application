@@ -16,7 +16,6 @@ import { ManageUsersComponent } from './components/manage-users/manage-users.com
 import { RolesListComponent } from './components/roles-list/roles-list.component';
 import { UsersListComponent } from './components/users-list/users-list.component';
 import { UserRoutingModule } from './user-routing.module';
-import { ViewProfileComponent } from './components/view-profile/view-profile.component';
 
 export class MatPaginatorIntApp extends MatPaginatorIntl {
   itemsPerPageLabel = 'PAGER_ITEMPERPAGE';
@@ -29,8 +28,7 @@ export class MatPaginatorIntApp extends MatPaginatorIntl {
     EditProfileComponent,
     ManageUsersComponent,
     RolesListComponent,
-    UsersListComponent,
-    ViewProfileComponent
+    UsersListComponent
   ],
   imports: [
     GlobalModule,

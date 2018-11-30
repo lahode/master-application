@@ -10,6 +10,7 @@ import { GlobalModule } from '../global/global.module';
 import { PictureEditComponent } from './components/picture-edit/picture-edit.component';
 import { RolesEditComponent } from './components/roles-edit/roles-edit.component';
 import { UsersEditComponent } from './components/users-edit/users-edit.component';
+import { ViewProfileComponent } from './components/view-profile/view-profile.component';
 
 @NgModule({
 
@@ -30,12 +31,14 @@ import { UsersEditComponent } from './components/users-edit/users-edit.component
   declarations: [
     PictureEditComponent,
     RolesEditComponent,
-    UsersEditComponent
+    UsersEditComponent,
+    ViewProfileComponent
   ],
   entryComponents: [
     PictureEditComponent,
     RolesEditComponent,
-    UsersEditComponent
+    UsersEditComponent,
+    ViewProfileComponent
   ]
 })
 export class SharedModule {}

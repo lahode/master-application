@@ -5,15 +5,9 @@ import { AuthGuard } from '../auth/services/authguard.service';
 
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { ManageUsersComponent } from './components/manage-users/manage-users.component';
-import { ViewProfileComponent } from './components/view-profile/view-profile.component';
 
 export const routes: Routes = [
   { path: '', children: [
-    {
-      path: '',
-      component: ViewProfileComponent,
-      canActivate: [AuthGuard],
-    },
     {
       path: 'edit',
       component: EditProfileComponent,

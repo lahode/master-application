@@ -5,6 +5,7 @@ import { Effect, Actions } from '@ngrx/effects';
 import { Router } from '@angular/router';
 import { mergeMap, map, withLatestFrom, switchMap, catchError, tap } from 'rxjs/operators';
 
+import { environment } from '../../../../environments/environment';
 import { UserActions } from '../actions/user.actions';
 import { UserService } from '../../services/user.service';
 import { PagerService } from '../../../../core/services/pager.service';
@@ -149,7 +150,7 @@ export class UserEffects {
             if (action.type === UserActions.PROFILE_UPDATE_SUCCESS) {
               this._store$.dispatch(UserActions.list());
               if (this.currentRoute.url === '/user/edit') {
-                this._router.navigate(['/user']);
+                this._router.navigate([environment.homepage]);
               }
             }
           })
@@ -173,7 +174,7 @@ export class UserEffects {
           tap((action) => {
             if (action.type === UserActions.PROFILE_UPDATE_SUCCESS) {
               this._store$.dispatch(UserActions.list());
-              this._router.navigate(['/user']);
+              this._router.navigate([environment.homepage]);
             }
           })
         )

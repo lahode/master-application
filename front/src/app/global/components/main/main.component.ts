@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone, AfterViewInit, ViewContainerRef, ViewChild  } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, delay, filter } from 'rxjs/operators';
@@ -9,6 +10,7 @@ import { AuthActions } from '../../../auth/store';
 import { RoleService } from '../../../user/services/role.service';
 import { AppActions } from '../../../../core/store';
 
+import { ViewProfileComponent } from '../../../shared/components/view-profile/view-profile.component';
 import { SidenavLink } from '../sidenav-list/sidenav-list.component';
 import { MenuLink } from '../../../../core/models/menu-link';
 
@@ -37,7 +39,10 @@ export class MainComponent implements OnInit, AfterViewInit {
               private readonly _router: Router,
               private readonly _ngZone: NgZone,
               public translate: TranslateService,
-              private readonly _role: RoleService) { }
+              private readonly _role: RoleService,
+              private readonly _dialog: MatDialog) {
+    translate.addLangs(['en', 'fr']);
+  }
 
   ngOnInit() {
     // Dispatch authentication check.
@@ -144,6 +149,14 @@ export class MainComponent implements OnInit, AfterViewInit {
   // Change application language.
   setLanguage(value) {
     this._store.dispatch(<Action>AppActions.setLanguage(value));
+  }
+
+  // View the user's profile in a modal.
+  viewProfile() {
+    this._dialog.open(ViewProfileComponent, {
+      width: '75%',
+      data: null,
+    });
   }
 
 }

@@ -22,6 +22,7 @@ import { SidenavListComponent } from './components/sidenav-list/sidenav-list.com
 import { Nl2brPipe } from './pipes/nl2br.pipe';
 import { OrderByPipe } from './pipes/orderby.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
     Nl2brPipe,
     OrderByPipe,
     SafeUrlPipe,
+    TruncatePipe
   ],
   declarations: [
     BreadcrumbComponent,
@@ -66,6 +68,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
     Nl2brPipe,
     OrderByPipe,
     SafeUrlPipe,
+    TruncatePipe,
     SidenavListComponent
   ],
   entryComponents: [
