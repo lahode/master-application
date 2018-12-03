@@ -108,6 +108,8 @@
       "SUBMIT" : "Se connecter"
     },
     "REGISTERFORM" : {
+      "TITLE" : "Bienvenue",
+      "INFO" : "Merci d'entrer vos informations pour vous enregistrer.",
       "FIRSTNAME" : "Prénom",
       "LASTNAME" : "Nom",
       "USERNAME" : "Nom d'utilisateur",

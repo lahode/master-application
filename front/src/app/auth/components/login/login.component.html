@@ -1,24 +1,15 @@
-<div class="row">
+<div class="login-page">
 
-  <div class="col-sm-7 brand-holder pull-left">
-    <h1>
-    {{ 'APPLICATION.TITLE' | translate }}
-    </h1>
-    <p>{{ 'LOGIN.WELCOME_TEXT' | translate }}</p>
-  </div>
-
-  <div *ngIf="authType === 'auth0'; then buttonloginBlock; else credentialBlock">this is ignored</div>
+  <div *ngIf="authType === 'auth0'; then buttonloginBlock; else credentialBlock"></div>
 
   <ng-template #buttonloginBlock>
-    <div class="col-sm-5 pull-right new-session-forms-container centered-button">
-      <button mat-raised-button
-              color="primary"
-              (click)="directLogin()">{{ 'LOGIN.SIGNINFORM.SUBMIT' | translate }}</button>
+    <div class="col-sm-5 pull-right new-session-forms-container direct-login">
+      <i class="material-icons" (click)="directLogin()">touch_app</i>
     </div>
   </ng-template>
 
   <ng-template #credentialBlock>
-    <div class="col-sm-5 pull-right new-session-forms-container">
+    <div class="col-sm-5 pull-right new-session-forms-container standard-login">
 
       <div *ngIf="showBlock == 'login'">
         <mat-tab-group>

@@ -28,12 +28,18 @@ input.mat-input-element {
   }
 }
 
-h2 {
-  font-size: 1.8rem;
-}
+.edit-action {
+  position: absolute;
+  right: 0;
+  top: 0;
 
-h3 {
-  font-size: 1.4rem;
+  i {
+    background: white;
+    border: 1px dotted #aaa;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 3px;
+  }
 }
 
 input:not([type]), input[type=text]:not(.browser-default),

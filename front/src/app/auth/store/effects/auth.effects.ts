@@ -28,7 +28,7 @@ export class AuthEffects {
               }
               // On errors dispatch CHECK_AUTH_FAILED action with result.
             }),
-          catchError(res => of({type: AuthActions.CHECK_AUTH_FAILED, payload: res}))
+          catchError(res => of({type: AuthActions.CHECK_AUTH_FAILED, payload: res.message}))
         )
       )
     );
@@ -169,14 +169,27 @@ export class AuthEffects {
               }
               // On errors dispatch CHECK_AUTH_FAILED action with result.
             }),
-          catchError(res => of({type: AuthActions.CALLBACK_STOP, payload: res})),
+          catchError(res => {
+            if (res.code === 401) {
+              // Intercept 401 (in this case user exists but is not active) initiate CALLBACK_FAILED.
+              return of({type: AuthActions.CALLBACK_FAILED, payload: res.message});
+            } else {
+              return of({type: AuthActions.CALLBACK_STOP, payload: null});
+            }
+          }),
           // Redirect to the target page.
           tap((action) => {
-            if (action.type === AuthActions.CALLBACK_SUCCESS) {
-              const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
-              this._router.navigate([`/${returnUrl}`]);
-            } else {
-              this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });
+            switch (action.type) {
+              case AuthActions.CALLBACK_SUCCESS:
+                const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
+                this._router.navigate([`/${returnUrl}`]);
+                break;
+              case AuthActions.CALLBACK_STOP:
+                this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });
+                break;
+              case AuthActions.CALLBACK_FAILED:
+                this._router.navigate(['/signin']);
+                break;
             }
           })
         )

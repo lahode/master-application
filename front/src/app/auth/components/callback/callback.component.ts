@@ -3,7 +3,6 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Store, Action } from '@ngrx/store';
 import { AuthActions } from '../../store';
-import { filter, map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-callback',
@@ -18,7 +17,7 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit() {
     // Check if user is authentication on auth0.
-    this._auth.handleAuthentication().then(result => {
+    this._auth.handleAuthentication().then(() => {
       // Dispatch check callback action.
       this._store.dispatch(<Action>AuthActions.callback());
     // Redirect on signin page if an error has been found.

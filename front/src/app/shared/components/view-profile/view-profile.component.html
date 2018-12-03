@@ -1,5 +1,5 @@
 <div class="profile-page" *ngIf="(user$ | async) as profile">
-  <h4>{{ profile.firstname }} {{ profile.lastname }}</h4>
+  <h4>{{ profile.firstname }} {{ profile.lastname }} ({{ profile.username }})</h4>
 
   <div class="container">
     <div *ngIf="(picture$ | async) as picture; else defaultImage">
@@ -8,8 +8,7 @@
     <ng-template #defaultImage>
       <img src="assets/images/profile.png" class="user-img" />
     </ng-template>
-    <h4>{{ profile.username }}</h4>
-    <p>{{ profile.description }}</p>
+    <p [innerHTML]="profile.description | nl2br"></p>
     <a (click)="editProfile()"
       *ngIf="canEdit"
       class="btn btn-sm btn-outline-secondary action-btn">

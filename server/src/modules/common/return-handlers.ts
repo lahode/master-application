@@ -17,14 +17,16 @@ var log = require('noogger').init(logParams);
 export const returnHandler = (data, defaultMessage = "", err = null) => {
   let errors = defaultMessage || '';
 
-  // Log les message
+  // Log les messages
   if (defaultMessage) {
     log.notice(defaultMessage);
   }
-
-  let success = !(typeof err != 'undefined' && err) ? true : false;
-  if (err && typeof(err) === 'object' && 'errors' in err) {
+  if (err) {
     log.error(err);
+  }
+
+  let success = !(typeof err != 'undefined' && err) && (typeof data != 'undefined' && data) ? true : false;
+  if (err && typeof(err) === 'object' && 'errors' in err) {
     if (process.env.DISPLAY_ERROR == 'true') {
       console.log(err);
     }

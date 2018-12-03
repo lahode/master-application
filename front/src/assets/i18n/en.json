@@ -108,6 +108,8 @@
       "SUBMIT" : "Sign in"
     },
     "REGISTERFORM" : {
+      "TITLE" : "Welcome",
+      "INFO" : "Please enter your information to register.",
       "FIRSTNAME" : "First name",
       "LASTNAME" : "Last name",
       "USERNAME" : "Username",

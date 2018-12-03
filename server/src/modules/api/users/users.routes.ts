@@ -22,7 +22,7 @@ export class UsersRoutes {
     if (userInfo) {
       try {
         // Find the user by sub (token) info.
-        let user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1});
+        let user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1, active: 1, description: 1});
 
         // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
         user.roles = await UsersRoutes.populateRoles(user);
@@ -246,7 +246,6 @@ export class UsersRoutes {
             if (imageResult.success) {
               user.icon = `data:${imageFile.mimetype};base64,${imageResult.data}`;
             }
-            console.log('icon', user.icon)
           }
 
           // Remove permissions on roles.
@@ -264,7 +263,6 @@ export class UsersRoutes {
         }
       }
       catch(e) {
-        console.log(e)
         if (e.status === 403) {
           throw({status: 403, message: "Mot de passe invalide.", error: e})
         }

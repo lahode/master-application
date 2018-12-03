@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 
 import { CONFIG } from "../../../config";
+import { Mailer } from '../../common/mailer';
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
 import { PasswordStrategy } from "../../security/password-strategy";
 import { UsersRoutes } from "../users/users.routes";
 import { returnHandler } from '../../common/return-handlers';
 
-import * as nodemailer from 'nodemailer';
 const Datastore = require('nedb-promises');
 const userDB = new Datastore(CONFIG.DATABASE.USERS);
 
@@ -17,10 +17,14 @@ export class AuthRoutes {
     // Check if the user exists.
     const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
-      res.json( returnHandler( { user: data.user } ) );
+      if (data.user.active) {
+        return res.json( returnHandler( { user: data.user } ) );
+      } else {
+        return res.status(401).json( returnHandler(null, "Votre compte n'est pas actif pour le moment.") );
+      }
     }
     else {
-      res.status(data.error).json( returnHandler(null, data.message) );
+      return res.status(data.error).json( returnHandler(null, data.message) );
     }
   }
 
@@ -64,13 +68,24 @@ export class AuthRoutes {
     // Register with auth0.
     if (req["user"] && req["user"].sub) {
       try {
-        credentials.sub = req["user"].sub;
-        // Insert the user into the database.
-        const userInserted = await userDB.insert(credentials);
-        return res.json( returnHandler( {user: userInserted} ) );
+        const user = await userDB.findOne({$or: [{ username: credentials.username }, { email: credentials.email }]}, { password: 0 });
+        if (!user) {
+          credentials.sub = req["user"].sub;
+          credentials.active = 0;
+
+          // Insert the user into the database.
+          const userInserted = await userDB.create(credentials);
+
+          // Send the e-mail.
+          const sentMail = await Mailer.sendMail(req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
+
+          return res.json( returnHandler( {user: userInserted} ) );
+        } else {
+          return res.status(403).json( returnHandler(null, "L'utilisateur existe déjà avec cet identifiant ou e-mail.") );
+        }
       }
       catch (e) {
-        return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur", e) );
+        return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur.", e) );
       }
     }
 
@@ -87,19 +102,20 @@ export class AuthRoutes {
 
     // Sign up the new user.
     try {
-      let user = await userDB.findOne({ username: credentials.username, password: credentials.password }, { password: 0 });
-
-      // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
-      user.roles = UsersRoutes.populateRoles(user);
-
+      const user = await userDB.findOne({$or: [{ username: credentials.username }, { email: credentials.email }]}, { password: 0 });
       if (!user) {
+
         // Get an encrypted password and set the new token name.
         const passwordDigest = await PasswordStrategy.getPasswordDigest(credentials.password);
         credentials.password = passwordDigest;
         credentials.sub = 'token-' + credentials.username + '|' + Date.now();
+        credentials.active = 0;
 
         // Insert the user into the database.
         const userInserted = await userDB.insert(credentials);
+
+        // Send the e-mail.
+        const sentMail = await Mailer.sendMail(req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
 
         // Create the new token with the user and return the user and the token.
         const userSignedUp = await AuthStrategyToken.signup(userInserted);
@@ -127,31 +143,16 @@ export class AuthRoutes {
       return res.status(400).json( returnHandler(null, "Aucun e-mail valide n'a été inséré." ) );
     }
 
-    // Initialize e-mail parameters.
-    const transporter = nodemailer.createTransport(CONFIG.MAILER);
-    const mailOptions = {
-      from: CONFIG.MAILER.host.user,
-      to: req.body.email,
-      subject: 'Récupération du mot de passe',
-      html: ''
-    };
-
     try {
       // Find the user in the database.
       const user = await userDB.findOne({ email: req.body.email});
       if (user) {
         // Create a new token and attach it to the message.
         const newToken = await AuthStrategyToken.signup(user, 300);
-        mailOptions.html = `Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}/reset-password?reset=${newToken.token}">récupérer votre mot de passe</a>`;
 
-        // Send the e-mail to the e-mail.
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de l'envoi du mail", error) );
-          } else {
-            return res.json( returnHandler( { mailID: info.response } ) );
-          };
-        });
+        // Send the e-mail.
+        const sentMail = await Mailer.sendMail(req.body.email, `Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}/reset-password?reset=${newToken.token}">récupérer votre mot de passe.</a>`);
+        return res.json( returnHandler( { mailID: sentMail['mailID'] } ) );
       } else {
         return res.status(401).json( returnHandler(null, "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré") );
       }

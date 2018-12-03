@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, from, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { shareReplay, map, catchError, mergeMap } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal/observable/fromPromise';
 import * as auth0 from 'auth0-js';
@@ -55,10 +55,10 @@ export class AuthAuth0Service extends AuthService {
               map(response => (response as any).data.user),
               catchError(err => {
                 // Destroy existing auth tokens on error (if skipDestroyToken is false).
-                if (!skipDestroyToken) {
+                if (!skipDestroyToken || err.status !== 404) {
                   this._destroyTokens();
                 }
-                return throwError(this._error.errorHTTP(err));
+                return throwError({code: err.status, message: this._error.errorHTTP(err)});
               })
             );
         })

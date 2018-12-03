@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 import { throwError, of } from 'rxjs';
-import { map, shareReplay, catchError } from 'rxjs/operators';
+import { map, tap, shareReplay, catchError, take } from 'rxjs/operators';
 
 import { EndpointsService } from './endpoints';
 import { ErrorHandlerService } from './errorhandler.service';
+import { saveAs } from 'file-saver';
 
 @Injectable()
 export class FileService {
@@ -33,6 +35,18 @@ export class FileService {
       ));
     }
     return of(null);
+  }
+
+  // Download file.
+  public download(fileID, filename) {
+    if (fileID) {
+      this.http.get(this.endpoints.filePath(fileID), { responseType: 'blob' }).pipe(
+        shareReplay(),
+        catchError(err => throwError(this._error.errorHTTP(err))),
+        take(1),
+        tap(blob => saveAs(blob, filename))
+      ).subscribe();
+    }
   }
 
   // Remove file.

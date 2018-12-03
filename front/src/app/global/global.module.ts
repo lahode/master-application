@@ -21,6 +21,7 @@ import { SidenavListComponent } from './components/sidenav-list/sidenav-list.com
 
 import { Nl2brPipe } from './pipes/nl2br.pipe';
 import { OrderByPipe } from './pipes/orderby.pipe';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 
@@ -55,6 +56,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     PageNotFoundComponent,
     Nl2brPipe,
     OrderByPipe,
+    SafeHtmlPipe,
     SafeUrlPipe,
     TruncatePipe
   ],
@@ -67,6 +69,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     PageNotFoundComponent,
     Nl2brPipe,
     OrderByPipe,
+    SafeHtmlPipe,
     SafeUrlPipe,
     TruncatePipe,
     SidenavListComponent
