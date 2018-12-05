@@ -1,5 +1,5 @@
 .login-page {
-  min-height: 400px;
+  height: calc(100vh - 64px);
 
   i {
     font-size: 15em;
@@ -20,7 +20,8 @@
   }
 
   .standard-login {
-    margin: 50px auto;
+    margin: 0 auto;
+    padding: 50px 0;
     max-width: 600px;
   }
 }
