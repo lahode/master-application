@@ -44,6 +44,7 @@
       "LASTNAME_VALID" : "Insérer un nom au minimum avec 2 caractères.",
       "EMAIL" : "E-mail",
       "EMAIL_VALID" : "Insérer un e-mail valide.",
+      "ACTIVE" : "Actif",
       "CANCEL" : "Annuler",
       "SAVE" : "Sauver"
     }

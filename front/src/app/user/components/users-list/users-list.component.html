@@ -16,20 +16,33 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field fxFlex="60%">
-    <input matInput
-           type="text"
-           [value]="pageFilter?.value"
-           (keyup)="updateList('filterValue', $event.target.value)"
-           [disabled]="!fieldRef.selected">
-    <button mat-icon-button
-            matSuffix
-            #filterResetRef
-            (click)="updateList('filterValue', '')"
-            [disabled]="pageFilter?.value === ''">
-             <mat-icon>clear</mat-icon>
-           </button>
-  </mat-form-field>
+  <ng-container *ngIf="pageFilter?.field === 'active'">
+    <mat-form-field fxFlex="60%">
+      <mat-select (selectionChange)="updateList('filterValue', $event.value ? 'true' : 'false')"
+                  [value]="1">
+        <mat-option *ngFor="let status of statusList; let i = index" [value]="i">{{status}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
+
+  <ng-container *ngIf="pageFilter?.field !== 'active'">
+    <mat-form-field fxFlex="60%">
+      <input matInput
+             #filterRef
+             type="text"
+             [value]="pageFilter?.value"
+             (keyup)="updateList('filterValue', $event.target.value)"
+             [disabled]="!fieldRef.selected">
+      <button mat-icon-button
+              matSuffix
+              #filterResetRef
+              (click)="updateList('filterValue', '')"
+              [disabled]="filterRef.value === ''">
+               <mat-icon>clear</mat-icon>
+             </button>
+    </mat-form-field>
+  </ng-container>
+
 </div>
 
 <div class="mat-elevation-z8" *ngIf="(users$ | async) as users">

@@ -16,7 +16,6 @@ import { User } from '../../../../core/models/user';
 export class UserEffects {
 
   private currentUser: User;
-  private currentRoute: any;
 
   // Listen for the 'USERLIST_LOAD_START' action.
   @Effect() userListAction$ = this._action$
@@ -126,7 +125,6 @@ export class UserEffects {
       map(([action, storeState]) => {
         // Get current user
         this.currentUser = (storeState as any).currentUser;
-        this.currentRoute = (storeState as any).router['state'];
         return action;
       }),
       map<Action, any>((action: Action) => (action as any).payload),
@@ -147,11 +145,8 @@ export class UserEffects {
           catchError((res: any) => of({ type: UserActions.USER_UPDATE_FAILED, payload: res })),
           // Dispatch UserActions.list() to update the list of users and redirect to user (only for user/edit) if profile is on success.
           tap((action) => {
-            if (action.type === UserActions.PROFILE_UPDATE_SUCCESS) {
+            if (action.type === UserActions.PROFILE_UPDATE_SUCCESS || action.type === UserActions.USER_UPDATE_SUCCESS) {
               this._store$.dispatch(UserActions.list());
-              if (this.currentRoute.url === '/user/edit') {
-                this._router.navigate([environment.homepage]);
-              }
             }
           })
         )

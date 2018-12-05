@@ -41,6 +41,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
       firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       email: ['', [<any>Validators.required, Validators.pattern(emailpattern)]],
+      active: [false],
       roles: this._fb.array([]),
     });
 

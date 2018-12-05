@@ -28,7 +28,14 @@ export class AuthEffects {
               }
               // On errors dispatch CHECK_AUTH_FAILED action with result.
             }),
-          catchError(res => of({type: AuthActions.CHECK_AUTH_FAILED, payload: res.message}))
+          catchError(res => {
+            if (res.code === 401) {
+              // Intercept 401 (in this case user exists but is not active) initiate CHECK_AUTH_FAILED.
+              return of({type: AuthActions.CHECK_AUTH_FAILED, payload: res.message});
+            } else {
+              return of({type: AuthActions.CHECK_AUTH_STOP, payload: null});
+            }
+          })
         )
       )
     );

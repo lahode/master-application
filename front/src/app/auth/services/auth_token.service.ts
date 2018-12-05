@@ -43,7 +43,7 @@ export class AuthTokenService extends AuthService {
               catchError(err => {
                 // Destroy existing auth tokens on error.
                 this._destroyTokens();
-                return throwError(this._error.errorHTTP(err));
+                return throwError({code: err.status, message: this._error.errorHTTP(err)});
               })
             );
         })

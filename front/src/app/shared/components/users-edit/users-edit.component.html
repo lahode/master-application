@@ -44,6 +44,10 @@
         </mat-form-field>
       </div>
 
+      <div>
+        <mat-slide-toggle formControlName="active">{{ 'USERS.EDIT.ACTIVE' | translate }}</mat-slide-toggle>
+      </div>
+
       <div formArrayName="roles">
         <div *ngFor="let role of editUserForm.controls.roles.controls; let i=index">
           <br />

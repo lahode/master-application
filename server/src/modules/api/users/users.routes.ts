@@ -111,7 +111,11 @@ export class UsersRoutes {
 
       let search = {};
       if (req.params.field) {
-        search[req.params.field] = new RegExp(req.params.value, "i");
+        if (req.params.field === 'active') {
+          search[req.params.field] = req.params.value === 'true' ? true : false;
+        } else {
+          search[req.params.field] = new RegExp(req.params.value, "i");
+        }
       }
 
       const limit = (parseInt(req.params.limit) - parseInt(req.params.offset) > 0) ? parseInt(req.params.limit) - parseInt(req.params.offset) : 0;

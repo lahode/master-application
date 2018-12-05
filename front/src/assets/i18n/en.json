@@ -44,6 +44,7 @@
       "LASTNAME_VALID" : "Insert a username with at least 2 characters.",
       "EMAIL" : "E-mail",
       "EMAIL_VALID" : "Insert a valid e-mail.",
+      "ACTIVE" : "Active",
       "CANCEL" : "Cancel",
       "SAVE" : "Save"
     }

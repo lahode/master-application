@@ -18,6 +18,7 @@ export class UsersListComponent implements OnInit {
 
   public users$: Observable<User[]>;
   public fields: string[] = ['username', 'actions'];
+  public statusList: Array<string> = ['Désactivé', 'Actif'];
   public filterableFields = Array.from(filterable);
   public pageRange: any;
   public pageFilter: any;
@@ -51,7 +52,7 @@ export class UsersListComponent implements OnInit {
         this.pageFilter = { field: event, value : '' };
         break;
       case 'filterValue' :
-        this.pageFilter.value = event;
+        this.pageFilter = { field: this.pageFilter.field, value : event };
         break;
       case 'sort' :
         this.pageSort = event;
@@ -95,3 +96,4 @@ export class UsersListComponent implements OnInit {
 
 const filterable = new Map();
 filterable.set('username', 'Username');
+filterable.set('active', 'Statut');

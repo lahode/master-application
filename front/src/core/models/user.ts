@@ -9,5 +9,6 @@ export interface User {
   owner: string;
   picture: any;
   description: string;
-  roles: any[];
+  active: boolean;
+  roles: Role[];
 }
