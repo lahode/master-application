@@ -7,7 +7,6 @@ import { filter } from 'rxjs/operators';
 import { Role } from '../../../../core/models/role';
 import { User } from '../../../../core/models/user';
 import { RoleActions } from '../../../user/store';
-import { GLOBAL_PERMISSIONS } from '../../../app.permissions';
 
 @Component({
   selector: 'app-roles-edit',
@@ -16,11 +15,11 @@ import { GLOBAL_PERMISSIONS } from '../../../app.permissions';
 })
 export class RolesEditComponent implements OnInit, OnDestroy {
 
-  editRoleForm: FormGroup;
-  permsOptions: string[];
-  currentUser: User;
-  roleEdit: Role;
-  stateSelect: any;
+  private stateSelect: any;
+  private currentUser: User;
+  public roleEdit: Role;
+  public editRoleForm: FormGroup;
+  public permsOptions: string[];
 
   constructor(private readonly _store: Store<any>,
               private readonly _dialogRef: MatDialogRef<RolesEditComponent>,
@@ -50,11 +49,11 @@ export class RolesEditComponent implements OnInit, OnDestroy {
         // Set role data to role form.
         if (Object.keys(this.roleEdit).length > 0) {
           Object.keys(this.roleEdit).forEach(key => {
-            if (this.editRoleForm.controls.hasOwnProperty(key)) {
+            if (this.editRoleForm['controls'].hasOwnProperty(key)) {
               if (key === 'permissions') {
                 this.initPermissions(this.roleEdit[key]);
               } else {
-                this.editRoleForm.controls[key].setValue(this.roleEdit[key]);
+                this.editRoleForm['controls'][key].setValue(this.roleEdit[key]);
               }
             }
           });

@@ -10,8 +10,8 @@ import { AuthActions } from '../../store';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  private showBlock = 'login';
-  private authType = '';
+  public showBlock = 'login';
+  public authType = '';
 
   constructor(private readonly _store: Store<any>) {}
 

@@ -1,4 +1,4 @@
-<div *ngIf="data; then editFormTitle; else addFormTitle"></div>
+<div *ngIf="roleEdit?._id; then editFormTitle; else addFormTitle"></div>
 <ng-template #editFormTitle><h2 mat-dialog-title>{{ 'ROLES.EDIT.PAGETITLE_EDIT' | translate }}</h2></ng-template>
 <ng-template #addFormTitle><h2 mat-dialog-title>{{ 'ROLES.EDIT.PAGETITLE_ADD' | translate }}</h2></ng-template>
 <div mat-dialog-content>
@@ -11,11 +11,11 @@
                  type="text"
                  placeholder="{{ 'ROLES.EDIT.NAME' | translate }}"
                  formControlName="name">
-          <small *ngIf="!editRoleForm.controls.name.valid">{{ 'ROLES.EDIT.NAME' | translate }}</small>
+          <small *ngIf="!editRoleForm?.get('name').valid">{{ 'ROLES.EDIT.NAME' | translate }}</small>
         </mat-form-field>
       </div>
 
-      <div *ngFor="let perm of editRoleForm.controls.permissions.controls; let i=index">
+      <div *ngFor="let perm of editRoleForm?.get('permissions')?.controls; let i=index">
         <br />
         <mat-checkbox [formControl]="perm">{{ permsOptions[i] }}</mat-checkbox>
       </div>

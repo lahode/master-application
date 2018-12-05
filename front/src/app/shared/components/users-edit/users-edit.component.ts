@@ -16,11 +16,11 @@ import { UserActions, RoleActions } from '../../../user/store';
 })
 export class UsersEditComponent implements OnInit, OnDestroy {
 
+  private currentUser: User;
+  private stateSelect: Subscription;
+  public userEdit: User;
   public editUserForm: FormGroup;
   public rolesOptions: Role[];
-  private currentUser: User;
-  private userEdit: User;
-  private stateSelect: Subscription;
 
   constructor(private readonly _store: Store<any>,
               private readonly _dialogRef: MatDialogRef<UsersEditComponent>,
@@ -58,11 +58,11 @@ export class UsersEditComponent implements OnInit, OnDestroy {
         // Set user data to user form or reset users form.
         if (Object.keys(this.userEdit).length > 0) {
           Object.keys(this.userEdit).forEach(key => {
-            if (this.editUserForm.controls.hasOwnProperty(key)) {
+            if (this.editUserForm['controls'].hasOwnProperty(key)) {
               if (key === 'roles') {
                 this.initRoles(this.userEdit[key]);
               } else {
-                this.editUserForm.controls[key].setValue(this.userEdit[key]);
+                this.editUserForm['controls'][key].setValue(this.userEdit[key]);
               }
             }
           });
