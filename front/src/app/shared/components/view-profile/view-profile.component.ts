@@ -48,8 +48,8 @@ export class ViewProfileComponent implements OnInit {
           }
 
           // Get the current user picture.
-          if (user && user.picture) {
-            this.picture$ = this._file.view(user.picture);
+          if (user) {
+            this.picture$ = user.picture ? this._file.view(user.picture) : null;
           }
           return user;
         })

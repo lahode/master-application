@@ -1,5 +1,3 @@
-import { Role } from './role';
-
 export interface User {
   _id: string;
   firstname: string;
@@ -10,5 +8,5 @@ export interface User {
   picture: any;
   description: string;
   active: boolean;
-  roles: Role[];
+  roles: any[];
 }

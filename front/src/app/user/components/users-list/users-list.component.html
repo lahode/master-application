@@ -1,13 +1,5 @@
-<div fxLayout
-     fxLayoutAlign="start center"
-     fxLayoutGap="12px">
-  <h2>{{ 'USERS.LIST.TITLE' | translate }}</h2>
-</div>
-
-<div fxLayout
-     fxLayoutGap="12px"
-     fxLayoutAlign="start center">
-  <mat-form-field fxFlex="40%">
+<div>
+  <mat-form-field class="filter-field">
     <mat-select #fieldRef
                 [value]="pageFilter?.field"
                 (selectionChange)="updateList('filterField', $event.value)">
@@ -17,7 +9,7 @@
   </mat-form-field>
 
   <ng-container *ngIf="pageFilter?.field === 'active'">
-    <mat-form-field fxFlex="60%">
+    <mat-form-field class="filter-value">
       <mat-select (selectionChange)="updateList('filterValue', $event.value ? 'true' : 'false')"
                   [value]="1">
         <mat-option *ngFor="let status of statusList; let i = index" [value]="i">{{status}}</mat-option>
@@ -26,7 +18,7 @@
   </ng-container>
 
   <ng-container *ngIf="pageFilter?.field !== 'active'">
-    <mat-form-field fxFlex="60%">
+    <mat-form-field class="filter-value">
       <input matInput
              #filterRef
              type="text"
@@ -42,7 +34,6 @@
              </button>
     </mat-form-field>
   </ng-container>
-
 </div>
 
 <div class="mat-elevation-z8" *ngIf="(users$ | async) as users">

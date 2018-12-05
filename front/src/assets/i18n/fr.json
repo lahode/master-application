@@ -22,7 +22,6 @@
   "USERS": {
     "TAB" : "Utilisateurs",
     "LIST": {
-      "TITLE" : "Liste des utilisateurs",
       "USERNAME" : "Nom d'utilisateur",
       "ACTIONS" : "Actions",
       "EDIT" : "MODIFIER",
@@ -73,7 +72,6 @@
   "ROLES": {
     "TAB" : "Rôles",
     "LIST": {
-      "TITLE" : "Liste des rôles",
       "NAME" : "Nom",
       "ACTIONS" : "Actions",
       "EDIT" : "MODIFIER",
