@@ -1,15 +1,16 @@
 <mat-toolbar color="primary" class="main-nav mat-elevation-z4">
-  <div *ngIf="(language$ | async) as language">
-    <mat-select #langSelect (selectionChange)="setLanguage(langSelect.value)" [(ngModel)]="language">
-      <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</mat-option>
-    </mat-select>
-  </div>
-  <button mat-icon-button (click)="start.toggle()" class="icon-padding" *ngIf="(menuLinks$ | async) as menuLinks">
+  <button mat-icon-button
+          class="icon-padding"
+          (click)="start.toggle()"
+          *ngIf="(menuLinks$ | async) as menuLinks">
       <mat-icon aria-hidden="true">menu</mat-icon>
   </button>
-  <div mat-button class="docs-button" routerLink="/">{{ 'APPLICATION.TITLE' | translate }}</div>
-  <button mat-icon-button [mat-menu-trigger-for]="menu" *ngIf="(user$ | async) as user">
-    <mat-icon>more_vert</mat-icon>
+  <button mat-button routerLink="/">TEMET LEARNING</button>
+  <span class="fill-remaining-space"></span>
+  <button mat-icon-button
+          mat-icon-button class="icon-padding"
+          [mat-menu-trigger-for]="menu">
+    <mat-icon aria-hidden="true">more_vert</mat-icon>
   </button>
 </mat-toolbar>
 
@@ -23,7 +24,7 @@
                [mode]="mode"
                #start
                style="width:240px;"
-               *ngIf="(menuLinks$ | async) as menuLinks">
+               *ngIf="(menuLinks$ | async) as menuLinks">
     <div class="header-profile" *ngIf="(user$ | async) as user">
       <a (click)="viewProfile()">
         <img [src]="user.icon" [title]="user.firstname + ' ' + user.lastname" />
@@ -31,6 +32,7 @@
       </a>
     </div>
     <app-sidenav-list [links]="menuLinks" (goto)="moveTo($event)"></app-sidenav-list>
+
   </mat-sidenav>
 
   <main class="container">
@@ -41,10 +43,19 @@
 </mat-sidenav-container>
 
 <mat-menu x-position="before" #menu="matMenu">
-  <button *ngFor="let ml of adminLinks"
-          mat-menu-item
-          [routerLink]="[ml.path]"
-          [routerLinkActive] = "ml.active ? 'active' : ''"
-          [routerLinkActiveOptions]="ml.active ? {exact: true} : ''"
-          (click)="ml.click ? this[ml.click]() : ''">{{ ml.label | translate }}</button>
+  <div *ngIf="(language$ | async) as language"
+       class="choose-language">
+    <span *ngFor="let lang of translate.getLangs()"
+          [class]="'flag-icon flag-icon-' + (lang == 'en' ? 'gb' : lang)"
+          (click)="setLanguage(lang)"></span>
+  </div>
+  <div *ngIf="(user$ | async)"
+       class="admin-menu">
+    <button *ngFor="let ml of adminLinks"
+            mat-menu-item
+            [routerLink]="[ml.path]"
+            [routerLinkActive] = "ml.active ? 'active' : ''"
+            [routerLinkActiveOptions]="ml.active ? {exact: true} : ''"
+            (click)="ml.click ? this[ml.click]() : ''">{{ ml.label | translate }}</button>
+  </div>
 </mat-menu>

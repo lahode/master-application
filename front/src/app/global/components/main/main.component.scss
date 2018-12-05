@@ -1,9 +1,6 @@
-mat-toolbar > * {
-  flex: 1 1 auto;
-}
-
-.mat-select {
-  max-width: 100px;
+.icon-padding {
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 .header-profile {
@@ -23,4 +20,19 @@ mat-toolbar > * {
     font-size: 0.8em;
     margin: 0 auto;
   }
+}
+
+.choose-language {
+  display: flex;
+  justify-content: space-evenly;
+
+  .flag-icon {
+    background-size: cover;
+    cursor: pointer;
+  }
+}
+
+.admin-menu {
+  border-top: 1px solid #ddd;
+  margin-top: 10px;
 }
