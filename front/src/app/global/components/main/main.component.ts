@@ -39,9 +39,9 @@ export class MainComponent implements OnInit, AfterViewInit {
   constructor(private readonly _store: Store<any>,
               private readonly _router: Router,
               private readonly _ngZone: NgZone,
-              public translate: TranslateService,
               private readonly _role: RoleService,
-              private readonly _dialog: MatDialog) {
+              private readonly _dialog: MatDialog,
+              public translate: TranslateService) {
     translate.addLangs(['en', 'fr']);
   }
 
@@ -50,15 +50,9 @@ export class MainComponent implements OnInit, AfterViewInit {
     this._store.dispatch(<Action>AuthActions.checkAuth());
 
     // Find the current user.
-    this.user$ = this._store.select(state => state)
+    this.user$ = this._store.select(state => state.currentUser)
       .pipe(
-        map(state => {
-          const user = state.currentUser;
-          const language = state.language;
-          if (!language) {
-            this.setDefaultLang(user ? user.language : null);
-          }
-
+        map(user => {
           // Init menu links
           this.adminLinks = this.initMenu().filter(m => {
             if (m.permissions) {

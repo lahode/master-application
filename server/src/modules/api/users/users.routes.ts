@@ -22,7 +22,7 @@ export class UsersRoutes {
     if (userInfo) {
       try {
         // Find the user by sub (token) info.
-        let user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1, active: 1, description: 1});
+        let user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1, active: 1, language: 1, description: 1});
 
         // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
         user.roles = await UsersRoutes.populateRoles(user);

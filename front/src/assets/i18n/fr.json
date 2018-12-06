@@ -43,6 +43,7 @@
       "LASTNAME_VALID" : "Insérer un nom au minimum avec 2 caractères.",
       "EMAIL" : "E-mail",
       "EMAIL_VALID" : "Insérer un e-mail valide.",
+      "LANGUAGE": "Langue",
       "ACTIVE" : "Actif",
       "CANCEL" : "Annuler",
       "SAVE" : "Sauver"
@@ -57,6 +58,7 @@
       "CURRENTPASSWORD" : "Mot de passe actuel",
       "NEWPASSWORD" : "Nouveau mot de passe",
       "CONFIRMPASSWORD" : "Confirmer le nouveau mot de passe",
+      "LANGUAGE": "Langue",
       "DESCRIPTION" : "Description",
       "PICTURE" : "Modifier l'image",
       "FILE" : "Fichier",

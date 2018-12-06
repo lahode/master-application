@@ -69,6 +69,13 @@
             </mat-form-field>
 
             <mat-form-field>
+              <mat-select placeholder="{{ 'PROFILE.EDIT.LANGUAGE' | translate }}"
+                          formControlName="language">
+                <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
               <textarea matInput
                         placeholder="{{ 'PROFILE.EDIT.DESCRIPTION' | translate }}"
                         id="description"

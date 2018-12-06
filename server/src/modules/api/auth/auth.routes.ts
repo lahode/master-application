@@ -77,7 +77,7 @@ export class AuthRoutes {
           const userInserted = await userDB.create(credentials);
 
           // Send the e-mail.
-          const sentMail = await Mailer.sendMail(req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
+          const sentMail = await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
 
           return res.json( returnHandler( {user: userInserted} ) );
         } else {
@@ -115,7 +115,7 @@ export class AuthRoutes {
         const userInserted = await userDB.insert(credentials);
 
         // Send the e-mail.
-        const sentMail = await Mailer.sendMail(req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
+        const sentMail = await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
 
         // Create the new token with the user and return the user and the token.
         const userSignedUp = await AuthStrategyToken.signup(userInserted);
@@ -151,7 +151,7 @@ export class AuthRoutes {
         const newToken = await AuthStrategyToken.signup(user, 300);
 
         // Send the e-mail.
-        const sentMail = await Mailer.sendMail(req.body.email, `Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}/reset-password?reset=${newToken.token}">récupérer votre mot de passe.</a>`);
+        const sentMail = await Mailer.sendMail('Récupération du mot de passe', req.body.email, `Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}/reset-password?reset=${newToken.token}">récupérer votre mot de passe.</a>`);
         return res.json( returnHandler( { mailID: sentMail['mailID'] } ) );
       } else {
         return res.status(401).json( returnHandler(null, "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré") );

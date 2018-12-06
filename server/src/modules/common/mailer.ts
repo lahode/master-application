@@ -3,14 +3,14 @@ import { CONFIG } from "../../config";
 
 export class Mailer {
 
-  public static async sendMail(email, message) {
+  public static async sendMail(subject, email, message) {
 
     // Initialize e-mail parameters.
     const transporter = nodemailer.createTransport(CONFIG.MAILER);
     const mailOptions = {
       from: CONFIG.MAILER.host.user,
       to: email,
-      subject: 'Récupération du mot de passe',
+      subject,
       html: ''
     };
 

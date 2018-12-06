@@ -70,6 +70,7 @@ export class AuthEffects {
           tap((action) => {
             if (action.payload) {
               const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
+              this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
               this._router.navigate([`/${returnUrl}`]);
             }
           })
@@ -153,6 +154,7 @@ export class AuthEffects {
           // Redirect to the target page.
           tap((action) => {
             if (action.payload) {
+              this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
               const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
               this._router.navigate([`/${returnUrl}`]);
             }
@@ -189,6 +191,7 @@ export class AuthEffects {
             switch (action.type) {
               case AuthActions.CALLBACK_SUCCESS:
                 const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
+                this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
                 this._router.navigate([`/${returnUrl}`]);
                 break;
               case AuthActions.CALLBACK_STOP:

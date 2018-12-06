@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -25,7 +26,8 @@ export class UsersEditComponent implements OnInit, OnDestroy {
 
   constructor(private readonly _store: Store<any>,
               private readonly _dialogRef: MatDialogRef<UsersEditComponent>,
-              private readonly _fb: FormBuilder) {}
+              private readonly _fb: FormBuilder,
+              public translate: TranslateService) {}
 
   ngOnInit() {
     // Define email validation pattern
@@ -42,6 +44,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
       firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       email: ['', [<any>Validators.required, Validators.pattern(emailpattern)]],
+      language: [this.translate.currentLang],
       active: [false],
       roles: this._fb.array([]),
     });

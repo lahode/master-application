@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
 import { Router } from '@angular/router';
@@ -31,7 +32,8 @@ export class EditProfileComponent implements OnInit {
               private readonly _router: Router,
               private readonly _dialog: MatDialog,
               private readonly _fb: FormBuilder,
-              private readonly _file: FileService) { }
+              private readonly _file: FileService,
+              public translate: TranslateService) { }
 
   ngOnInit() {
     // Initialize edit profile form.
@@ -40,6 +42,7 @@ export class EditProfileComponent implements OnInit {
       username: ['', [<any>Validators.minLength(5)]],
       firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
+      language: [this.translate.currentLang],
       description: [''],
       passwordcurrent: [''],
       passwordnew: [''],
