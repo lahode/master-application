@@ -31,6 +31,8 @@ import { UserStoreModule } from './user/store';
 
 /* Providers */
 import { TokenInterceptor } from './auth/services/auth_token.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 /**
  * Custom Http Loader for translation
@@ -76,6 +78,7 @@ export function tokenGetter() {
     UserStoreModule.forRoot(),
     AppRoutingModule,
     StoreDevtoolsModule.instrument(),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     {
