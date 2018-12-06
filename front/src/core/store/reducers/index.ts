@@ -1,6 +1,7 @@
-import { MetaReducer, ActionReducerMap, combineReducers, ActionReducer, Action } from '@ngrx/store';
+import { MetaReducer, ActionReducerMap } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { routerReducer } from '@ngrx/router-store';
+import { environment } from '../../../environments/environment';
 
 import * as fromLoading from './loading-reducer';
 import * as fromMessage from './message-reducer';
@@ -11,8 +12,6 @@ import * as fromMenuLinks from './menulinks-reducer';
 import * as fromSocket from './socket-reducer';
 
 import { AppStateI, AppReducerStateI } from '../app-states';
-
-declare const process: any;
 
 export const reducer: AppReducerStateI = {
   router: routerReducer,
@@ -26,4 +25,4 @@ export const reducer: AppReducerStateI = {
 };
 
 export const reducers: ActionReducerMap<AppStateI> = reducer;
-export const metaReducers: MetaReducer<AppStateI>[] = process.env.NODE_ENV === 'development' ? [storeFreeze] : [];
+export const metaReducers: MetaReducer<AppStateI>[] = !environment.production ? [storeFreeze] : [];

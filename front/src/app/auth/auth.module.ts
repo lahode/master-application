@@ -18,6 +18,8 @@ import { PasswordRecoverComponent } from './components/password-recover/password
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 import { CallbackComponent } from './components/callback/callback.component';
+import { PermissionCheckDirective } from './directives/permission-check.directive';
+
 
 /* Services */
 import { AuthGuard } from './services/authguard.service';
@@ -31,7 +33,11 @@ import { NoGuard } from './services/noguard.service';
     PasswordRecoverComponent,
     PasswordResetComponent,
     ConfirmationComponent,
-    CallbackComponent
+    CallbackComponent,
+    PermissionCheckDirective
+  ],
+  exports: [
+    PermissionCheckDirective
   ],
   imports: [
     GlobalModule,
