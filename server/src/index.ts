@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as morgan from 'morgan';
 import * as fs from 'fs-extra';
 import * as socketIo from 'socket.io';
+import * as compression from 'compression';
 
 import { RetrieveUser } from "./modules/security/retrieve-user.middleware";
 import { APIRoutes }  from "./modules/routes/api.route";
@@ -22,6 +23,7 @@ export class Server {
 
   constructor() {
     this.app = express();
+    this.app.use(compression());
     this.app.use(RetrieveUser.getUserPayload)
     this.config();
     this.middleware();

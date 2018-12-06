@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
@@ -16,15 +16,16 @@ import { FileService } from '../../../../core/services/file.service';
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.scss']
+  styleUrls: ['./edit-profile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditProfileComponent implements OnInit {
+  private userEdit: User;
   public user$: Observable<any>;
   public editProfileform: FormGroup;
-  private userEdit: User;
   public picture: any;
   public picture$: Observable<any>;
-  private enableAuthChange = false;
+  public enableAuthChange = false;
 
   constructor(private readonly _store: Store<any>,
               private readonly _router: Router,

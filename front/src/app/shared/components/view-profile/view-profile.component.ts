@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,8 @@ import { User } from '../../../../core/models/user';
 @Component({
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
-  styleUrls: ['./view-profile.component.scss']
+  styleUrls: ['./view-profile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewProfileComponent implements OnInit {
 

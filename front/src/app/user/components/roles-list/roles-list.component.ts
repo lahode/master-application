@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
@@ -11,7 +11,8 @@ import { RolesEditComponent } from '../../../shared/components/roles-edit/roles-
 @Component({
   selector: 'app-roles-list',
   templateUrl: './roles-list.component.html',
-  styleUrls: ['./roles-list.component.scss']
+  styleUrls: ['./roles-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RolesListComponent implements OnInit {
 

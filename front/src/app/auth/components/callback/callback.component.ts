@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Store, Action } from '@ngrx/store';
@@ -7,7 +7,8 @@ import { AuthActions } from '../../store';
 @Component({
   selector: 'app-callback',
   templateUrl: './callback.component.html',
-  styleUrls: ['./callback.component.scss']
+  styleUrls: ['./callback.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CallbackComponent implements OnInit {
 

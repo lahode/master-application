@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
@@ -12,7 +12,8 @@ import { UserActions, RoleActions } from '../../../user/store';
 @Component({
   selector: 'app-users-edit',
   templateUrl: './users-edit.component.html',
-  styleUrls: ['./users-edit.component.scss']
+  styleUrls: ['./users-edit.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersEditComponent implements OnInit, OnDestroy {
 

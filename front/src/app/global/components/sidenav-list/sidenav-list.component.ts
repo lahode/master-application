@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-sidenav-list',
   templateUrl: './sidenav-list.component.html',
-  styleUrls: ['./sidenav-list.component.scss']
+  styleUrls: ['./sidenav-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidenavListComponent {
   @Output() goto = new EventEmitter();

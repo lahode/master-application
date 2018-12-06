@@ -1,14 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
-import { Observable } from 'rxjs';
 
 import { AuthActions } from '../../store';
 
 @Component({
   selector: 'app-password-recover',
   templateUrl: './password-recover.component.html',
-  styleUrls: ['./password-recover.component.scss']
+  styleUrls: ['./password-recover.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PasswordRecoverComponent implements OnInit {
 

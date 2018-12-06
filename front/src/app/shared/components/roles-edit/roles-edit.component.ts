@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
@@ -11,7 +11,8 @@ import { RoleActions } from '../../../user/store';
 @Component({
   selector: 'app-roles-edit',
   templateUrl: './roles-edit.component.html',
-  styleUrls: ['./roles-edit.component.scss']
+  styleUrls: ['./roles-edit.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RolesEditComponent implements OnInit, OnDestroy {
 

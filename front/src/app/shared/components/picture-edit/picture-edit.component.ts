@@ -1,4 +1,4 @@
-import { Component, ViewChild, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Inject } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
@@ -8,7 +8,8 @@ import { AppActions } from '../../../../core/store';
 @Component({
   selector: 'app-picture-edit',
   templateUrl: './picture-edit.component.html',
-  styleUrls: ['./picture-edit.component.scss']
+  styleUrls: ['./picture-edit.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PictureEditComponent {
 

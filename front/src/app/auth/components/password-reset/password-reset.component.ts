@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store, Action } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { Router, ActivatedRoute, Params} from '@angular/router';
 
 import { AuthActions } from '../../store';
@@ -10,7 +9,8 @@ import { DoubleValidation } from '../../../../core/services/custom-validation';
 @Component({
   selector: 'app-password-reset',
   templateUrl: './password-reset.component.html',
-  styleUrls: ['./password-reset.component.scss']
+  styleUrls: ['./password-reset.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PasswordResetComponent implements OnInit {
 
