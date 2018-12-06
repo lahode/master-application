@@ -1,6 +1,6 @@
 const root = require('app-root-path').path;
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const ModuleConcatPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 const NodemonPlugin = require( 'nodemon-webpack-plugin' );
 const { CheckerPlugin } = require('awesome-typescript-loader');
@@ -92,7 +92,12 @@ const prodConfig = {
     rules: getProdRules()
   },
   plugins: [
-    new UglifyJsPlugin(),
+    new TerserPlugin({
+      parallel: true,
+      terserOptions: {
+        ecma: 6,
+      },
+    }),
     new webpack.optimize.ModuleConcatenationPlugin()
   ],
 };
