@@ -3,11 +3,12 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 
 /* Custom modules */
 import { GlobalModule } from '../global/global.module';
@@ -35,10 +36,11 @@ export class MatPaginatorIntApp extends MatPaginatorIntl {
     CdkTableModule,
     MatGridListModule,
     MatInputModule,
+    MatPaginatorModule,
+    MatSlideToggleModule,
+    MatSortModule,
     MatTableModule,
     MatTabsModule,
-    MatSortModule,
-    MatPaginatorModule,
     ReactiveFormsModule,
     UserRoutingModule
   ],

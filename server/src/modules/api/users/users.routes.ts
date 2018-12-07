@@ -171,7 +171,7 @@ export class UsersRoutes {
   public static async update(req: Request, res: Response) {
     try {
       let body = Object.assign({}, req.body);
-      const user = await UsersRoutes.updateUser(body, res);
+      const user = await UsersRoutes.updateUser(body, res, true);
       return res.json( returnHandler( { user } ) );
     }
     catch(e) {
@@ -198,7 +198,7 @@ export class UsersRoutes {
   }
 
   // Update the user.
-  public static async updateUser(user, res: Response) {
+  public static async updateUser(user, res: Response, admin = false) {
     // Manage the update
     if (user._id) {
       if (user.owner) {
@@ -234,7 +234,7 @@ export class UsersRoutes {
               const passwordDigest = await PasswordStrategy.getPasswordDigest(passwordnew);
               user.password = passwordDigest;
             }
-          } else {
+          } else if (!admin) {
             if (user.username != checkUser.username || user.passwordnew) {
               throw({status: 400, message: "Le mot de passe actuel est obligatoire pour modifier le nom d'utilisateur ou mot de passe.", error: null});
             }
@@ -268,7 +268,9 @@ export class UsersRoutes {
       }
       catch(e) {
         if (e.status === 403) {
-          throw({status: 403, message: "Mot de passe invalide.", error: e})
+          throw({status: 403, message: "Mot de passe invalide.", error: e});
+        } else if (e.message && e.status) {
+          throw({status: e.status, message: e.message, error: e});
         }
         throw({status: 500, message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", error: e});
       }

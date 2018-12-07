@@ -60,6 +60,7 @@
       "CONFIRMPASSWORD" : "Confirmer le nouveau mot de passe",
       "LANGUAGE": "Langue",
       "DESCRIPTION" : "Description",
+      "EMAILNOTIFY" : "Envoyez-moi un e-mail lorsqu'un message m'est adressé",
       "PICTURE" : "Modifier l'image",
       "FILE" : "Fichier",
       "EDIT": "Modifier",

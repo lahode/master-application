@@ -12,9 +12,9 @@ export const environment: IEnvironment = {
   authentication: {
     type: 'token',
     value : {
-      callback: '', // callback URL
-      domain: '',  // auth0 domain name
-      client_id: ''  // client ID
+      callback: 'http://localhost:4200/callback', // callback URL
+      domain: 'lahode.eu.auth0.com',  // auth0 domain name
+      client_id: 'QcicsFRETTBpTrM3sBMlgC7bmS1p8i5k'  // client ID
     }
   },
   socket: false

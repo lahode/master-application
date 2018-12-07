@@ -60,6 +60,7 @@
       "CONFIRMPASSWORD" : "Confirm new password",
       "LANGUAGE": "Language",
       "DESCRIPTION" : "Description",
+      "EMAILNOTIFY" : "Notify me by e-mail when a message is adressed to me",
       "PICTURE" : "Edit Picture",
       "FILE" : "File",
       "EDIT" : "Change",
