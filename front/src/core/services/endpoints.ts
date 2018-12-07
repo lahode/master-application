@@ -112,4 +112,14 @@ export class EndpointsService {
     return this.url + `/api/secure/files/delete/${id}`;
   }
 
+  // Endpoint for NotificationService
+  sendtoEmail() {
+    return this.url + '/api/secure/notification/emails';
+  }
+
+  // Endpoint for NotificationService
+  sendtoUsers() {
+    return this.url + '/api/secure/notification/users';
+  }
+
 }
