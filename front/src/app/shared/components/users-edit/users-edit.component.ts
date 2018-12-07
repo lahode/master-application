@@ -40,7 +40,7 @@ export class UsersEditComponent implements OnInit, OnDestroy {
     // Initialize edit user form.
     this.editUserForm = this._fb.group({
       _id: [''],
-      username: ['', [Validators.required, <any>Validators.minLength(4)]],
+      username: ['', [<any>Validators.required, <any>Validators.minLength(4), <any>Validators.pattern('^[a-zA-Z0-9-]+$')]],
       firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       email: ['', [<any>Validators.required, Validators.pattern(emailpattern)]],

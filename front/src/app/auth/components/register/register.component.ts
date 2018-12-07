@@ -35,12 +35,12 @@ export class RegisterComponent implements OnInit {
 
     // Initialze register form.
     this.registerForm = this._fb.group({
-      firstname: ['', [Validators.required, <any>Validators.minLength(2)]],
-      lastname: ['', [Validators.required, <any>Validators.minLength(2)]],
-      username: ['', [Validators.required, <any>Validators.minLength(4)]],
-      email: ['', [Validators.required, Validators.pattern(emailpattern)]],
-      emailconfirm: ['', [Validators.required, Validators.pattern(emailpattern)]],
-      password: ['', !this.directLogin ? Validators.required : []],
+      firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
+      lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
+      username: ['', [<any>Validators.minLength(4), <any>Validators.pattern('^[a-zA-Z0-9-]+$')]],
+      email: ['', [<any>Validators.required, <any>Validators.pattern(emailpattern)]],
+      emailconfirm: ['', [<any>Validators.required, <any>Validators.pattern(emailpattern)]],
+      password: ['', !this.directLogin ? <any>Validators.required : []],
     }, {
       validator: DoubleValidation.MatchEmail
     });

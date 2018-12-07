@@ -36,11 +36,11 @@
       "PAGETITLE_EDIT" : "Edit user",
       "PAGETITLE_ADD" : "Add user",
       "USERNAME" : "Username",
-      "USERNAME_VALID" : "Insert a username with at least 5 characters.",
+      "USERNAME_VALID" : "Min. 5 characters and no special chars.",
       "FIRSTNAME" : "First name",
-      "FIRSTNAME_VALID" : "Insert a username with at least 2 characters.",
+      "FIRSTNAME_VALID" : "It should have at least 2 characters.",
       "LASTNAME" : "Last name",
-      "LASTNAME_VALID" : "Insert a username with at least 2 characters.",
+      "LASTNAME_VALID" : "It should have at least 2 characters.",
       "EMAIL" : "E-mail",
       "EMAIL_VALID" : "Insert a valid e-mail.",
       "LANGUAGE": "Language",
@@ -52,7 +52,7 @@
   "PROFILE": {
     "EDIT" : {
       "USERNAME" : "Username",
-      "USERNAME_VALID" : "Insert a username with at least 5 characters.",
+      "USERNAME_VALID" : "Min. 5 characters and no special chars.",
       "FIRSTNAME" : "First name",
       "LASTNAME" : "Last name",
       "CURRENTPASSWORD" : "Current password",
@@ -89,7 +89,7 @@
       "PAGETITLE_EDIT" : "Edit role",
       "PAGETITLE_ADD" : "Add role",
       "NAME" : "name",
-      "NAME_VALID" : "Insert a username with at least 5 characters.",
+      "NAME_VALID" : "It should have at least 5 characters.",
       "CANCEL" : "Cancel",
       "SAVE" : "Save"
     }

@@ -39,7 +39,7 @@ export class EditProfileComponent implements OnInit {
     // Initialize edit profile form.
     this.editProfileform = this._fb.group({
       _id: [''],
-      username: ['', [<any>Validators.minLength(4)]],
+      username: ['', [<any>Validators.minLength(4), <any>Validators.pattern('^[a-zA-Z0-9-]+$')]],
       firstname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       lastname: ['', [<any>Validators.required, <any>Validators.minLength(2)]],
       language: [this.translate.currentLang],
