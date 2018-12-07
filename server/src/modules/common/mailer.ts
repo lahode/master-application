@@ -8,7 +8,8 @@ export class Mailer {
     // Initialize e-mail parameters.
     const transporter = nodemailer.createTransport(CONFIG.MAILER);
     const mailOptions = {
-      from: CONFIG.MAILER.host.user,
+      from: CONFIG.MAILER.sender,
+      replyTo: CONFIG.MAILER.sender,
       to: email,
       subject,
       html: ''

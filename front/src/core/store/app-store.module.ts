@@ -10,6 +10,7 @@ import { AppEffects } from './effects/app.effects';
 import { EndpointsService } from '../services/endpoints';
 import { ErrorHandlerService } from '../services/errorhandler.service';
 import { FileService } from '../services/file.service';
+import { NotificationService } from '../services/notification.service';
 import { PagerService } from '../services/pager.service';
 import { SocketService } from '../services/socket.service';
 import { StorageService } from '../services/storage.service';
@@ -41,6 +42,7 @@ export const AppProviders = [
   EndpointsService,
   ErrorHandlerService,
   FileService,
+  NotificationService,
   PagerService,
   SocketService,
   StorageService,

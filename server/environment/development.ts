@@ -30,6 +30,7 @@ export const devVariables:IEnvironment = {
     auth: {
       user: '',
       pass: ''
-    }
+    },
+    sender: ''
   }
 };

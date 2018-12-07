@@ -30,6 +30,7 @@ export const prodVariables:IEnvironment = {
     auth: {
       user: '',
       pass: ''
-    }
+    },
+    sender: ''
   }
 };

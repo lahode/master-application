@@ -3,6 +3,7 @@ import { AuthRoutes }  from "../api/auth/auth.routes";
 import { UsersRoutes }  from "../api/users/users.routes";
 import { RolesRoutes }  from "../api/roles/roles.routes";
 import { FilesRoutes }  from "../api/files/files.routes";
+import { NotificationRoutes }  from "../api/notification/notification.routes";
 import { Permissions } from "../permissions";
 
 import { checkIfAuthenticated } from "../security/authentication.middleware";
@@ -49,6 +50,10 @@ export class APIRoutes {
     this.callRoute('post', "/api/secure/files/upload", FilesRoutes.uploadFile);
     this.callRoute('get', "/api/secure/files/delete/:id", FilesRoutes.deleteFile, ["manage files"]);
     this.callRoute('get', "/api/secure/files/view/:id", FilesRoutes.viewFile);
+
+    // Notification
+    this.callRoute('post', "/api/secure/notification/emails", NotificationRoutes.emails);
+    this.callRoute('post', "/api/secure/notification/users", NotificationRoutes.users);
 
     return app;
   }
