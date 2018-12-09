@@ -8,5 +8,6 @@ export const environment: IEnvironment = {
     type: 'token',
     value : {}
   },
-  socket: false
+  socket: false,
+  emailNotification: true
 };

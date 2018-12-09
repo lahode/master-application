@@ -27,6 +27,7 @@ export class EditProfileComponent implements OnInit {
   public picture: any;
   public picture$: Observable<any>;
   public enableAuthChange = false;
+  public emailNotification = environment.emailNotification;
 
   constructor(private readonly _store: Store<any>,
               private readonly _router: Router,
@@ -104,6 +105,11 @@ export class EditProfileComponent implements OnInit {
   // Save the user form.
   save(): void {
     const model = this.editProfileform.value;
+
+    // Remove e-mail notification options if disabled.
+    if (!this.emailNotification) {
+      delete(model.emailNotify);
+    }
 
     // Set form updates to the original user object.
     if (this.userEdit) {

@@ -17,5 +17,6 @@ export const environment: IEnvironment = {
       client_id: 'QcicsFRETTBpTrM3sBMlgC7bmS1p8i5k'  // client ID
     }
   },
-  socket: false
+  socket: false,
+  emailNotification: false
 };

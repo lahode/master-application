@@ -7,4 +7,5 @@ export interface IEnvironment {
     value: {}
   };
   socket: boolean;
+  emailNotification: boolean;
 }
