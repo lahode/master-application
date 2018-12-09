@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, NgZone, AfterViewInit, View
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, delay, filter } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
 
@@ -23,14 +23,17 @@ const DEFAULT_LANGUAGE = 'en';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainComponent implements OnInit, AfterViewInit {
+  private start: ViewContainerRef;
   private widthScreen: number;
+  private navState = new BehaviorSubject<any>({
+    mode: 'side',
+    open: 'true'
+  });
   public menuLinks$: Observable<SidenavLink[]>;
-  public mode = 'side';
-  public open = 'true';
+  public navState$: Observable<any>;
   public user$: Observable<boolean>;
   public language$: Observable<any>;
   public adminLinks: MenuLink[];
-  private start: ViewContainerRef;
 
   @ViewChild('start') set sideNavSetter(theElementRef: ViewContainerRef) {
     this.start = theElementRef;
@@ -42,6 +45,7 @@ export class MainComponent implements OnInit, AfterViewInit {
               private readonly _role: RoleService,
               private readonly _dialog: MatDialog,
               public translate: TranslateService) {
+    this.navState$ = this.navState.asObservable();
     translate.addLangs(['en', 'fr']);
   }
 
@@ -98,7 +102,10 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   // Navigate to course detail with folder
-  public moveTo(path: string = null) {
+  public moveTo(path: string, nav: any) {
+    if (nav.mode === 'over') {
+      (this.start as any).toggle();
+    }
     this._router.navigate([path]);
   }
 
@@ -106,12 +113,16 @@ export class MainComponent implements OnInit, AfterViewInit {
   private changeMode() {
     this.widthScreen = window.innerWidth;
     if (this.widthScreen <= 800) {
-        this.mode = 'over';
-        this.open = 'false';
+      this.navState.next({
+        mode: 'over',
+        open: 'false'
+      });
     }
     if (this.widthScreen > 800) {
-        this.mode = 'side';
-        this.open = 'true';
+      this.navState.next({
+        mode: 'side',
+        open: 'true'
+      });
     }
   }
 

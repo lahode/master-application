@@ -11,7 +11,7 @@
     <p [innerHTML]="profile.description | nl2br"></p>
     <a (click)="editProfile()"
       *ngIf="canEdit"
-      class="btn btn-sm btn-outline-secondary action-btn">
+      mat-button>
       <i class="ion-gear-a"></i> {{ 'PROFILE.EDIT.SETTINGS' | translate }}
     </a>
   </div>
