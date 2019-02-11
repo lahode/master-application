@@ -22,15 +22,22 @@
   "USERS" : {
     "TAB" : "Users",
     "LIST": {
+      "TITLE" : "Users list",
       "USERNAME" : "Username",
       "ACTIONS" : "Actions",
       "EDIT" : "EDIT",
       "DELETE" : "DELETE",
-      "ADD" : "Add a user"
+      "ADD" : "Add a user",
+      "RESETAUTH" : "RESET"
     },
     "DELETE" : {
       "TITLE" : "Delete a user",
       "MESSAGE" : "Are you sure to delete the user"
+    },
+    "RESETAUTH" : {
+      "TITLE" : "Reset user authentication",
+      "MESSAGE" : "Are you sure to send a request to reset authentication for user",
+      "CONFIRM" : "An e-mail has been sent to the user to reset his account."
     },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Edit user",
@@ -77,6 +84,7 @@
   "ROLES": {
     "TAB" : "Roles",
     "LIST": {
+      "TITLE" : "Roles list",
       "NAME" : "Name",
       "ACTIONS" : "Actions",
       "EDIT" : "EDIT",
@@ -132,6 +140,10 @@
       "NEWPASSWORD" : "New password",
       "CONFIRMPASSWORD" : "Confirm new password",
       "SAVE" : "Save"
+    },
+    "RESETPASSWORDCONFIRM": {
+      "TITLE": "Password reset",
+      "MESSAGE": "A new password request has been sent to your e-mail"
     },
     "CONFIRMATIONFORM" : {
       "EMAIL" : "Email",

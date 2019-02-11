@@ -93,6 +93,16 @@ export class UsersListComponent implements OnInit {
     this._store.dispatch(<Action>UserActions.confirm(confirmMessage));
   }
 
+  resetAuth(user: User) {
+    const confirmMessage = {
+      title: 'USERS.RESETAUTH.TITLE',
+      message: 'USERS.RESETAUTH.MESSAGE',
+      name: user.username,
+      action: <Action>UserActions.reset(user._id)
+    };
+    this._store.dispatch(<Action>UserActions.confirm(confirmMessage));
+  }
+
 }
 
 const filterable = new Map();

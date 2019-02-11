@@ -84,9 +84,11 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.menuLinks$ = this._store.select(state => state.menuLinks).pipe(
       map(menuLinks => {
         const links: SidenavLink[] = [];
-        menuLinks.map((menuLink: MenuLink) => {
-          links.push(new SidenavLink(menuLink.label, menuLink.path, menuLink.icon));
-        });
+        if (menuLinks) {
+          menuLinks.map((menuLink: MenuLink) => {
+            links.push(new SidenavLink(menuLink.label, menuLink.path, menuLink.icon));
+          });
+        }
         return links.length > 0 ? links : null;
       }),
       delay(0)
@@ -101,7 +103,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     };
   }
 
-  // Navigate to course detail with folder
+  // Navigate to main application page
   public moveTo(path: string, nav: any) {
     if (nav.mode === 'over') {
       (this.start as any).toggle();

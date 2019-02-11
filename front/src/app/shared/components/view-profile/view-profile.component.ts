@@ -29,7 +29,7 @@ export class ViewProfileComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public userID: any) {}
 
   ngOnInit() {
-    // Load all activities from course.
+    // Load all activities from profile.
     if (this.userID) {
       this._store.dispatch(<Action>UserActions.load(this.userID));
     }

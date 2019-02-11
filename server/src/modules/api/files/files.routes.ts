@@ -26,24 +26,36 @@ export class FilesRoutes {
         })
         .catch((e) => res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la sauvegarde du fichier dans la base de données", e) ) );
     });
-
   }
-   // View a file by its ID
+
+  // View a file by its ID
   public static async viewFile(req: Request, res: Response) {
+    if (!req.params.id) {
+      return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
+    }
     try {
       // Find the file in the database.
       const file = await fileDB.findOne({ _id: req.params.id });
+
       if (file) {
-        const filePath = file.path;
-        let fileToLoad = fs.readFileSync(filePath);
-        res.writeHead(200, {'Content-Type' : file.mimetype});
-        return res.end(fileToLoad);
+        // Check if file exists in path.
+        if (!fs.existsSync(file.path)) {
+          return res.status(404).json( returnHandler(null, "Aucun fichier n'a été trouvé.") );
+        }
+
+        res.setHeader('Content-disposition', 'attachment; filename=' + file.originalname);
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+        res.setHeader('Content-type', file.mimetype);
+
+        var filestream = fs.createReadStream(file.path);
+        filestream.pipe(res).on('error', error => {process.exit(-1);throw(error);});
+        return;
       } else {
-        return res.status(404).json( returnHandler(null, "Aucune fichier n'a été trouvé.") );
+        return res.status(404).json( returnHandler(null, "Aucun fichier n'a été trouvé.") );
       }
     }
     catch(e) {
-      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération du fichier.", e) );  // Get all permissions.
+      return res.status(500).json( returnHandler(e, "Une erreur s'est produite lors de la récupération du fichier.", e) );
     }
   }
 

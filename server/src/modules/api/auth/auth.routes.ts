@@ -6,6 +6,7 @@ import { AuthStrategyToken } from "../../security/authentication-token-strategy"
 import { PasswordStrategy } from "../../security/password-strategy";
 import { UsersRoutes } from "../users/users.routes";
 import { returnHandler } from '../../common/return-handlers';
+import { decodeJwt } from "../../security/security.utils";
 
 const Datastore = require('nedb-promises');
 const userDB = new Datastore(CONFIG.DATABASE.USERS);
@@ -14,18 +15,39 @@ export class AuthRoutes {
 
   // Check authentication route.
   public static async checkAuth(req: Request, res: Response) {
-    // Check if the user exists.
-    const data = await UsersRoutes.findUserBySub(req['user']);
-    if (data.success) {
-      if (data.user.active) {
-        return res.json( returnHandler( { user: data.user } ) );
-      } else {
-        return res.status(401).json( returnHandler(null, "Votre compte n'est pas actif pour le moment.") );
+
+    try {
+      // Get auth token from reset authenticate or standard user payload.
+      const payload = req.params.resetauth ? await decodeJwt(`${req.params.resetauth}|jwt`) : req['user'];
+
+      // Check if the user exists.
+      const data = await UsersRoutes.findUserBySub(payload);
+      if (data.success) {
+
+        // Save user sub if reset authentication token has been sent.
+        if (req.params.resetauth) {
+          data.user['sub'] = req['user'].sub;
+          const updatedUser = await userDB.update({ _id: data.user._id }, data.user);
+        }
+
+        // Check if user is active.
+        if (data.user.active) {
+          return res.json( returnHandler( { user: data.user } ) );
+        } else {
+          return res.status(401).json( returnHandler(null, "Votre compte n'est pas actif pour le moment.") );
+        }
+      }
+      else {
+        return res.status(data.error).json( returnHandler(null, data.message) );
       }
     }
-    else {
-      return res.status(data.error).json( returnHandler(null, data.message) );
+    catch (e) {
+      if (e.status && e.message) {
+        return res.status(e.status).json( returnHandler(null, e.message, e) );
+      }
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la vérification de l'utilisateur.", e) );
     }
+
   }
 
   // Log in route.
@@ -38,10 +60,10 @@ export class AuthRoutes {
       // Find the user in the database.
       let user = await userDB.findOne({ $or: [{ username: credentials.username}, { email: credentials.username }] });
 
-      // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
-      user.roles = await UsersRoutes.populateRoles(user);
-
       if (user) {
+        // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
+        user.roles = await UsersRoutes.populateRoles(user);
+
         // Check if password authentification is ok.
         const result = await AuthStrategyToken.login(credentials.password, user, res);
         if (result) {

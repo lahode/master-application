@@ -20,7 +20,7 @@ export class APIRoutes {
     app.post("/api/init-password", AuthRoutes.initPswRoute);
     app.use("/api/secure", checkIfAuthenticated);
     app.post("/api/secure/logout", AuthRoutes.logoutRoute);
-    app.get("/api/secure/check-auth", AuthRoutes.checkAuth);
+    app.get("/api/secure/check-auth/:resetauth?", AuthRoutes.checkAuth);
 
     // Permission
     app.post("/api/secure/check-permissions", RolesRoutes.checkPermissions);
@@ -33,6 +33,7 @@ export class APIRoutes {
     this.callRoute('post', "/api/secure/users/create", UsersRoutes.create, ["manage users"]);
     this.callRoute('post', "/api/secure/users/update", UsersRoutes.update, ["manage users"]);
     this.callRoute('get', "/api/secure/users/remove/:id", UsersRoutes.remove, ["manage users"]);
+    this.callRoute('get', "/api/secure/users/reset-auth/:id", UsersRoutes.resetAuth, ["manage users"]);
 
     // profile
     this.callRoute('get', "/api/secure/profile/get", UsersRoutes.getProfile);

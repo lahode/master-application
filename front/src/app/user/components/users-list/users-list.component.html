@@ -61,6 +61,7 @@
                 [style.minWidth.px]="100">
         <span class="action" (click)="manageUser(row._id)">[ {{ 'USERS.LIST.EDIT' | translate }} ]</span>
         <span class="action" (click)="deleteUser(row)">[ {{ 'USERS.LIST.DELETE' | translate }} ]</span>
+        <span class="action" (click)="resetAuth(row)">[ {{ 'USERS.LIST.RESETAUTH' | translate }} ]</span>
       </mat-cell>
     </ng-container>
 

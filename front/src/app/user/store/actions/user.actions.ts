@@ -35,6 +35,10 @@ export const UserActions = {
   USER_REMOVE_SUCCESS : 'USER_REMOVE_SUCCESS',
   USER_REMOVE_FAILED : 'USER_REMOVE_FAILED',
 
+  USER_RESET_START: 'USER_RESET_START',
+  USER_RESET_SUCCESS : 'USER_RESET_SUCCESS',
+  USER_RESET_FAILED : 'USER_RESET_FAILED',
+
   PROFILE_LOAD_START: 'PROFILE_LOAD_START',
   PROFILE_LOAD_SUCCESS: 'PROFILE_LOAD_SUCCESS',
   PROFILE_LOAD_FAILED: 'PROFILE_LOAD_FAILED',
@@ -108,6 +112,13 @@ export const UserActions = {
   remove(_credentials) {
     return <Action>{
       type: UserActions.USER_REMOVE_START,
+      payload: _credentials
+    };
+  },
+
+  reset(_credentials) {
+    return <Action>{
+      type: UserActions.USER_RESET_START,
       payload: _credentials
     };
   },

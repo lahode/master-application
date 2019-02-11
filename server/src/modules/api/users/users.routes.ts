@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { CONFIG } from "../../../config";
+import { Mailer } from '../../common/mailer';
 import { AuthRoutes } from "../auth/auth.routes";
 import { PasswordStrategy } from "../../security/password-strategy";
 import { ImageProcessing } from "../files/images-processing";
@@ -148,8 +149,8 @@ export class UsersRoutes {
     if (!user._id) {
       try {
         // Set the user owner.
-        // const data = await UsersRoutes.findUserBySub(req['user']);
-        // user.owner = data.user._id;
+        const data = await UsersRoutes.findUserBySub(req['user']);
+        user.owner = data.user._id;
 
         // Set Default Image Profile.
         user.icon = defaultImageProfile;
@@ -298,6 +299,36 @@ export class UsersRoutes {
       }
     } catch(e) {
       return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la suppression de l'utilisateur.", e) );
+    }
+  }
+
+  // Send a token to create an authentication for the selected user.
+  public static async resetAuth(req, res) {
+    // Check if an user ID has been given.
+    if (!req.params.id) {
+      return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
+    }
+    try {
+      // Find the user in the database.
+      const user = await userDB.findOne({ _id: req.params.id });
+      if (user) {
+        // Create a new token and attach it to the message.
+        const maxtime = 24 * 60 * 60; // 24 hours
+        user.sub = 'reset' + '|' + Date.now();
+        const newToken = await AuthStrategyToken.signup(user, maxtime);
+
+        // Update user with new token.
+        const updatedUser = await userDB.update({ _id: user._id }, user);
+
+        // Send the e-mail.
+        const sentMail = await Mailer.sendMail(`Authentification à la plateforme: ${CONFIG.APPNAME}`, user.email, `<p>Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}?connect=${newToken.token}">vous y connecter.</a></p><p>Attention, ce lien est uniquement valable pendant ${(maxtime / 3600)} heures.</p>`);
+        return res.json( returnHandler( { mailID: sentMail['mailID'] } ) );
+      } else {
+        return res.status(401).json( returnHandler(null, "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré") );
+      }
+    }
+    catch (e) {
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la récupération de l'utilisateur", e) );
     }
   }
 

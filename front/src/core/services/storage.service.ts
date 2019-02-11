@@ -11,7 +11,12 @@ export class StorageService {
 
   public get(itemName: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      resolve(JSON.parse(localStorage.getItem(itemName)));
+      const result = localStorage.getItem(itemName);
+      if (result !== 'undefined') {
+        resolve(JSON.parse(result));
+      } else {
+        resolve(null);
+      }
     });
   }
 

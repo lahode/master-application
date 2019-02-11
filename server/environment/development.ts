@@ -3,6 +3,7 @@ const root = require('app-root-path').path;
 
 export const devVariables:IEnvironment = {
   environmentName: 'Development Environment',
+  APPNAME: 'Master Application',
   DATABASE: {
     USERS: `${root}/data/users.json`,
     ROLES: `${root}/data/roles.json`,

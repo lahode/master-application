@@ -1,5 +1,6 @@
 export interface IEnvironment {
   environmentName: string,
+  APPNAME: string,
   DATABASE: any,
   LOGNAME: string,
   FRONTEND: string,

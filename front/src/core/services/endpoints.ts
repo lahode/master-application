@@ -9,7 +9,10 @@ export class EndpointsService {
   private url = environment.server;
 
   // Endpoint for AuthService
-  checkAuth() {
+  checkAuth(auth_reset: string) {
+    if (auth_reset) {
+      return this.url + `/api/secure/check-auth/${auth_reset}`;
+    }
     return this.url + '/api/secure/check-auth';
   }
 
@@ -72,6 +75,10 @@ export class EndpointsService {
 
   userRemove(id: string) {
     return this.url + `/api/secure/users/remove/${id}`;
+  }
+
+  userReset(id: string) {
+    return this.url + `/api/secure/users/reset-auth/${id}`;
   }
 
   // Endpoint for RoleService

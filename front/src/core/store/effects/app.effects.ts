@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, Action } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 
@@ -12,8 +12,8 @@ export class AppEffects {
 
   // Listen for the 'SOCKET_CONNECT' action
   @Effect() appSocketConnectAction$ = this.action$
-    .ofType(AppActions.SOCKET_CONNECT)
     .pipe(
+      ofType(AppActions.SOCKET_CONNECT),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: any) => this._socket.connect()
         .pipe(
@@ -30,8 +30,8 @@ export class AppEffects {
 
   // Listen for the 'SOCKET_DISCONNECT' action
   @Effect() appSocketDisconnectAction$ = this.action$
-    .ofType(AppActions.SOCKET_DISCONNECT)
     .pipe(
+      ofType(AppActions.SOCKET_DISCONNECT),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap(() => this._socket.connect()
         .pipe(

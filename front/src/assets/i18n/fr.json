@@ -22,15 +22,22 @@
   "USERS": {
     "TAB" : "Utilisateurs",
     "LIST": {
+      "TITLE" : "Liste des utilisateurs",
       "USERNAME" : "Nom d'utilisateur",
       "ACTIONS" : "Actions",
       "EDIT" : "MODIFIER",
       "DELETE" : "SUPPRIMER",
-      "ADD" : "Ajouter un utilisateur"
+      "ADD" : "Ajouter un utilisateur",
+      "RESETAUTH" : "REINITIALISER"
     },
     "DELETE" : {
       "TITLE" : "Supprimer un utilisateur",
       "MESSAGE" : "Êtes-vous sûr de vouloir supprimer l'utilisateur"
+    },
+    "RESETAUTH" : {
+      "TITLE" : "Réinitialiser l'authentification d'un utilisateur",
+      "MESSAGE" : "Êtes-vous sûr de vouloir envoyer une demande de réinitialer l'authentication de l'utilisateur",
+      "CONFIRM" : "Un e-mail a été envoyé à l'utilisateur pour la réinitialisation de son compte."
     },
     "EDIT" : {
       "PAGETITLE_EDIT" : "Modifier l'utilisateur",
@@ -54,7 +61,9 @@
       "USERNAME" : "Nom d'utilisateur",
       "USERNAME_VALID" : "Min. 5 caractères et pas de caract. spéciaux.",
       "FIRSTNAME" : "Prénom",
+      "FIRSTNAME_VALID" : "Le prénom est obligatoire.",
       "LASTNAME" : "Nom",
+      "LASTNAME_VALID" : "Le nom de famille est obligatoire.",
       "CURRENTPASSWORD" : "Mot de passe actuel",
       "NEWPASSWORD" : "Nouveau mot de passe",
       "CONFIRMPASSWORD" : "Confirmer le nouveau mot de passe",
@@ -75,6 +84,7 @@
   "ROLES": {
     "TAB" : "Rôles",
     "LIST": {
+      "TITLE" : "Liste des rôles",
       "NAME" : "Nom",
       "ACTIONS" : "Actions",
       "EDIT" : "MODIFIER",
@@ -113,9 +123,7 @@
       "TITLE" : "Bienvenue",
       "INFO" : "Merci d'entrer vos informations pour vous enregistrer.",
       "FIRSTNAME" : "Prénom",
-      "FIRSTNAME_VALID" : "Le prénom est obligatoire.",
       "LASTNAME" : "Nom",
-      "LASTNAME_VALID" : "Le nom de famille est obligatoire.",
       "USERNAME" : "Nom d'utilisateur",
       "EMAIL" : "E-mail",
       "EMAILCONFIRM" : "E-mail de confirmation",
@@ -132,6 +140,10 @@
       "NEWPASSWORD" : "Nouveau mot de passe",
       "CONFIRMPASSWORD" : "Confirmer le nouveau mot de passe",
       "SAVE" : "Enregistrer"
+    },
+    "RESETPASSWORDCONFIRM": {
+      "TITLE": "Réinitialisation du mot de passe",
+      "MESSAGE": "Une nouvelle demande de mot de passe vous a été envoyée par e-mail"
     },
     "CONFIRMATIONFORM" : {
       "EMAIL" : "E-mail",
@@ -152,5 +164,4 @@
       "CONFIRMATION_REQUEST_FAILED" : "Une erreur s'est produite lors de la demande de confirmation par e-mail."
     }
   }
-
 }

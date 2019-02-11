@@ -109,4 +109,13 @@ export class UserService {
       );
   }
 
+  // Reset the authentication method of a user by ID.
+  public reset(id: string): Observable<any> {
+    return this._http.get(this._endpoints.userReset(id))
+      .pipe(
+        shareReplay(),
+        catchError(err => throwError(this._error.errorHTTP(err)))
+      );
+  }
+
 }

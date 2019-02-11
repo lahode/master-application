@@ -3,6 +3,10 @@
     margin-right: 3px;
 }
 
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
 .header-profile {
   display: flex;
   align-items: center;

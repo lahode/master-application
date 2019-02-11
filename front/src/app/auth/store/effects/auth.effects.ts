@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthActions } from '../actions/auth.actions';
 import { AuthService } from '../../services/auth.service';
 import { AppActions } from '../../../../core/store';
+import { StorageService } from '../../../../core/services/storage.service';
 import { environment } from '../../../../environments/environment';
 
 @Injectable()
@@ -15,8 +16,8 @@ export class AuthEffects {
 
   // Listen for the 'CHECK_AUTH_START' action.
   @Effect() checkAuthAction$ = this._action$
-    .ofType(AuthActions.CHECK_AUTH_START)
     .pipe(
+      ofType(AuthActions.CHECK_AUTH_START),
       switchMap(() => this._auth.checkAuth(false)
         .pipe(
           map<Action, any>((_result: any) => {
@@ -42,8 +43,8 @@ export class AuthEffects {
 
   // Listen for the 'CHECK_PERMISSIONS_START' action.
   @Effect() checkPermissionsAction$ = this._action$
-    .ofType(AuthActions.CHECK_PERMISSIONS_START)
     .pipe(
+      ofType(AuthActions.CHECK_PERMISSIONS_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: string[]) => this._auth.checkPermissions(payload)
         .pipe(
@@ -57,8 +58,8 @@ export class AuthEffects {
 
   // Listen for the 'LOGIN_START' action.
   @Effect() loginAction$ = this._action$
-    .ofType(AuthActions.LOGIN_START)
     .pipe(
+      ofType(AuthActions.LOGIN_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: Observable<any>) => this._auth.login(payload)
         .pipe(
@@ -80,8 +81,8 @@ export class AuthEffects {
 
   // Listen for the 'LOGOUT_START' action
   @Effect() logoutAction$ = this._action$
-    .ofType(AuthActions.LOGOUT_START)
     .pipe(
+      ofType(AuthActions.LOGOUT_START),
       switchMap<Action, any>(() => this._auth.logout()
         .pipe(
           // If successful, dispatch LOGOUT_SUCCESS action with result
@@ -96,8 +97,8 @@ export class AuthEffects {
 
   // Listen for the 'GET_PASSWORD_START' action
   @Effect() getPasswordAction$ = this._action$
-    .ofType(AuthActions.GET_PASSWORD_START)
     .pipe(
+      ofType(AuthActions.GET_PASSWORD_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: Observable<any>) => this._auth.retrievePassword(payload)
         .pipe(
@@ -121,8 +122,8 @@ export class AuthEffects {
 
   // Listen for the 'RESET_PASSWORD_START' action
   @Effect() resetPasswordAction$ = this._action$
-    .ofType(AuthActions.RESET_PASSWORD_START)
     .pipe(
+      ofType(AuthActions.RESET_PASSWORD_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: Observable<any>) => this._auth.resetPassword(payload)
         .pipe(
@@ -142,8 +143,8 @@ export class AuthEffects {
 
   // Listen for the 'CREATE_USER_START' action.
   @Effect() createUserAction$ = this._action$
-    .ofType(AuthActions.CREATE_USER_START)
     .pipe(
+      ofType(AuthActions.CREATE_USER_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: Observable<any>) => this._auth.signup(payload)
         .pipe(
@@ -165,8 +166,8 @@ export class AuthEffects {
 
   // Listen for the 'CALLBACK_START' action.
   @Effect() callbackAction$ = this._action$
-    .ofType(AuthActions.CALLBACK_START)
     .pipe(
+      ofType(AuthActions.CALLBACK_START),
       switchMap(() => this._auth.checkAuth(true)
         .pipe(
           map<Action, any>((_result: any) => {
@@ -174,25 +175,31 @@ export class AuthEffects {
               if (_result) {
                 return <Action>{ type: AuthActions.CALLBACK_SUCCESS, payload: _result };
               } else {
-                return <Action>{ type: AuthActions.CALLBACK_STOP, payload: _result };
+                return <Action>{type: AuthActions.CALLBACK_FAILED, payload: 'Erreur d\'authentication'};
+                // return <Action>{ type: AuthActions.CALLBACK_STOP, payload: _result };
               }
               // On errors dispatch CHECK_AUTH_FAILED action with result.
             }),
           catchError(res => {
+            return of({type: AuthActions.CALLBACK_FAILED, payload: 'Erreur d\'authentication'});
+/*
             if (res.code === 401) {
               // Intercept 401 (in this case user exists but is not active) initiate CALLBACK_FAILED.
               return of({type: AuthActions.CALLBACK_FAILED, payload: res.message});
             } else {
               return of({type: AuthActions.CALLBACK_STOP, payload: null});
             }
+*/
           }),
           // Redirect to the target page.
           tap((action) => {
             switch (action.type) {
               case AuthActions.CALLBACK_SUCCESS:
-                const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
-                this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
-                this._router.navigate([`/${returnUrl}`]);
+                this._storage.remove('reset_auth').then(() => {
+                  const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
+                  this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
+                  this._router.navigate([`${returnUrl}`]);
+                });
                 break;
               case AuthActions.CALLBACK_STOP:
                 this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });
@@ -211,7 +218,8 @@ export class AuthEffects {
     private readonly _store: Store<Action>,
     private readonly _auth: AuthService,
     private readonly _router: Router,
-    private readonly _route: ActivatedRoute
+    private readonly _route: ActivatedRoute,
+    private readonly _storage: StorageService
   ) {}
 
 }

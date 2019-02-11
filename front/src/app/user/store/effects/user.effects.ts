@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { from, of } from 'rxjs';
 import { Store, Action } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
 import { mergeMap, map, withLatestFrom, switchMap, catchError, tap } from 'rxjs/operators';
 
 import { environment } from '../../../../environments/environment';
+import { AppActions } from '../../../../core/store';
 import { UserActions } from '../actions/user.actions';
 import { UserService } from '../../services/user.service';
 import { PagerService } from '../../../../core/services/pager.service';
@@ -19,8 +20,8 @@ export class UserEffects {
 
   // Listen for the 'USERLIST_LOAD_START' action.
   @Effect() userListAction$ = this._action$
-    .ofType(UserActions.USERLIST_LOAD_START)
     .pipe(
+      ofType(UserActions.USERLIST_LOAD_START),
       withLatestFrom(this._store$),
       map(([action, storeState]) => {
         // If action payload is empty, get the previous pageIndex and pageSize to set the payload.
@@ -47,8 +48,8 @@ export class UserEffects {
 
   // Listen for the 'USERLIST_CHANGE_PAGE' action.
   @Effect() userChangePageAction$ = this._action$
-    .ofType(UserActions.USERLIST_CHANGE_PAGE)
     .pipe(
+      ofType(UserActions.USERLIST_CHANGE_PAGE),
       map<Action, any>((action: Action) => (action as any).payload),
       map((payload: any) => {
         // dispatch USERLIST_LOAD_START and return USERLIST_CHANGE_PAGE_SUCCESS.
@@ -59,8 +60,8 @@ export class UserEffects {
 
   // Listen for the 'USERS_LOAD_START' action.
   @Effect() userAllAction$ = this._action$
-    .ofType(UserActions.USERS_LOAD_START)
     .pipe(
+      ofType(UserActions.USERS_LOAD_START),
       switchMap(() => this._user.all()
         .pipe(
           // If successful, dispatch USERS_LOAD_SUCCESS.
@@ -73,8 +74,8 @@ export class UserEffects {
 
   // Listen for the 'USER_LOAD_START' action.
   @Effect() userLoadAction$ = this._action$
-    .ofType(UserActions.USER_LOAD_START)
     .pipe(
+      ofType(UserActions.USER_LOAD_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: string) => this._user.get(payload)
         .pipe(
@@ -88,8 +89,8 @@ export class UserEffects {
 
   // Listen for the 'PROFILE_LOAD_START' action.
   @Effect() userProfileLoadAction$ = this._action$
-    .ofType(UserActions.PROFILE_LOAD_START)
     .pipe(
+      ofType(UserActions.PROFILE_LOAD_START),
       switchMap(() => this._user.getProfile()
         .pipe(
           // If successful, dispatch PROFILE_LOAD_SUCCESS.
@@ -102,8 +103,8 @@ export class UserEffects {
 
   // Listen for the 'USER_CREATE_START' action.
   @Effect() userCreateAction$ = this._action$
-    .ofType(UserActions.USER_CREATE_START)
     .pipe(
+      ofType(UserActions.USER_CREATE_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: any) => this._user.create(payload)
         .pipe(
@@ -119,8 +120,8 @@ export class UserEffects {
 
   // Listen for the 'USER_UPDATE_START' action.
   @Effect() userUpdateAction$ = this._action$
-    .ofType(UserActions.USER_UPDATE_START)
     .pipe(
+      ofType(UserActions.USER_UPDATE_START),
       withLatestFrom(this._store$),
       map(([action, storeState]) => {
         // Get current user
@@ -155,8 +156,8 @@ export class UserEffects {
 
   // Listen for the 'PROFILE_UPDATE_START' action.
   @Effect() profileUpdateAction$ = this._action$
-    .ofType(UserActions.PROFILE_UPDATE_START)
     .pipe(
+      ofType(UserActions.PROFILE_UPDATE_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: any) => this._user.updateProfile(payload)
         .pipe(
@@ -178,8 +179,8 @@ export class UserEffects {
 
     // Listen for the 'USER_REMOVE_START' action.
     @Effect() userRemoveAction$ = this._action$
-      .ofType(UserActions.USER_REMOVE_START)
       .pipe(
+        ofType(UserActions.USER_REMOVE_START),
         map<Action, any>((action: Action) => (action as any).payload),
         switchMap((payload: string) => this._user.remove(payload)
           .pipe(
@@ -189,6 +190,30 @@ export class UserEffects {
             catchError((res: any) => of({ type: UserActions.USER_REMOVE_FAILED, payload: res })),
             // Dispatch UserActions.list() to update the list of users.
             tap(() => this._store$.dispatch(UserActions.list()))
+          )
+        )
+      );
+
+    // Listen for the 'USER_RESET_START' action.
+    @Effect() userResetAction$ = this._action$
+      .pipe(
+        ofType(UserActions.USER_RESET_START),
+        map<Action, any>((action: Action) => (action as any).payload),
+        switchMap((payload: string) => this._user.reset(payload)
+          .pipe(
+            // If successful, dispatch USER_RESET_SUCCESS.
+            map<Action, any>((_result: any) => <Action>{ type: UserActions.USER_RESET_SUCCESS, payload: _result }),
+              // On errors dispatch USER_RESET_FAILED action with result.
+            catchError((res: any) => of({ type: UserActions.USER_RESET_FAILED, payload: res })),
+            // Dispatch UserActions.list() to update the list of users.
+            tap((action) => {
+              if (action.type === UserActions.USER_RESET_SUCCESS) {
+                this._store$.dispatch(<Action>AppActions.setMessage({
+                  title: 'Réinitialiser l\'authentification d\'un utilisateur',
+                  message: 'Un e-mail a été envoyé à l\'utilisateur pour la réinitialisation de son compte.'
+                }));
+              }
+            })
           )
         )
       );

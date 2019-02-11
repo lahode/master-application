@@ -12,6 +12,8 @@ import { ErrorHandlerService } from '../../../core/services/errorhandler.service
 
 const STORAGE_ITEM = 'access_token';
 const STORAGE_TYPE = 'jwt';
+const ACCESS_TYPE = 'access_type';
+const RESETAUTH = 'reset_auth';
 
 @Injectable()
 export class AuthTokenService extends AuthService {
@@ -36,14 +38,19 @@ export class AuthTokenService extends AuthService {
           }
 
           // Check if user is authenticate in the backend.
-          return this._http.get(this._endpoints.checkAuth())
+          return fromPromise(this._storage.get(RESETAUTH))
             .pipe(
-              shareReplay(),
-              map(response => (response as any).data.user),
-              catchError(err => {
-                // Destroy existing auth tokens on error.
-                this._destroyTokens();
-                return throwError({code: err.status, message: this._error.errorHTTP(err)});
+              mergeMap(reset_auth => {
+                return this._http.get(this._endpoints.checkAuth(reset_auth))
+                  .pipe(
+                    shareReplay(),
+                    map(response => (response as any).data.user),
+                    catchError(err => {
+                      // Destroy existing auth tokens on error.
+                      this._destroyTokens();
+                      return throwError({code: err.status, message: this._error.errorHTTP(err)});
+                    })
+                  );
               })
             );
         })
@@ -120,7 +127,8 @@ export class AuthTokenService extends AuthService {
   // Destroy tokens and deconnect.
   private _destroyTokens() {
     this._storage.remove(STORAGE_ITEM).then(() => true);
-    this._storage.remove('access_type').then(() => true);
+    this._storage.remove(ACCESS_TYPE).then(() => true);
+    this._storage.remove(RESETAUTH).then(() => true);
   }
 
   public handleAuthentication(): Promise<any> { return Promise.resolve(null); }
@@ -137,7 +145,7 @@ export class AuthTokenService extends AuthService {
             () => user,
             (err) => throwError(this._error.errorHTTP(err))
           ),
-        this._storage.set('access_type', STORAGE_TYPE)
+        this._storage.set(ACCESS_TYPE, STORAGE_TYPE)
           .then(
             () => null,
             (err) => throwError(this._error.errorHTTP(err))
@@ -151,7 +159,7 @@ export class AuthTokenService extends AuthService {
     return fromPromise(
       Promise.all([
         StorageService.getItem(STORAGE_ITEM),
-        StorageService.getItem('access_type')
+        StorageService.getItem(ACCESS_TYPE)
       ]).then(result => result.join('|'))
     );
   }

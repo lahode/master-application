@@ -15,8 +15,10 @@ import { environment } from '../../../environments/environment';
 
 const STORAGE_ITEM = 'access_token';
 const STORAGE_TYPE = 'auth0';
+const ACCESS_TYPE = 'access_type';
 const TOKEN_STORAGE = 'token_id';
 const EXPIREAT = 'expireat';
+const RESETAUTH = 'reset_auth';
 
 @Injectable()
 export class AuthAuth0Service extends AuthService {
@@ -49,20 +51,27 @@ export class AuthAuth0Service extends AuthService {
           }
 
           // Check if user is authenticate in the backend.
-          return this._http.get(this._endpoints.checkAuth())
+          return fromPromise(this._storage.get(RESETAUTH))
             .pipe(
-              shareReplay(),
-              map(response => (response as any).data.user),
-              catchError(err => {
-                // Destroy existing auth tokens on error (if skipDestroyToken is false).
-                if (!skipDestroyToken || err.status !== 404) {
-                  this._destroyTokens();
-                }
-                return throwError({code: err.status, message: this._error.errorHTTP(err)});
+              mergeMap(reset_auth => {
+                return this._http.get(this._endpoints.checkAuth(reset_auth))
+                  .pipe(
+                    shareReplay(),
+                    map(response => (response as any).data.user),
+                    catchError(err => {
+                      // Destroy existing auth tokens on error (if skipDestroyToken is false).
+                      if (!skipDestroyToken || err.status !== 404) {
+                        this._destroyTokens();
+                      }
+                      return throwError({code: err.status, message: this._error.errorHTTP(err)});
+                    })
+                  );
               })
             );
+
         })
       );
+
   }
 
   // Check permissions.
@@ -130,7 +139,7 @@ export class AuthAuth0Service extends AuthService {
   private _destroyTokens() {
     this._storage.remove(TOKEN_STORAGE).then(() => true);
     this._storage.remove(STORAGE_ITEM).then(() => true);
-    this._storage.remove('access_type').then(() => true);
+    this._storage.remove(ACCESS_TYPE).then(() => true);
     this._storage.remove(EXPIREAT).then(() => true);
   }
 
@@ -140,7 +149,7 @@ export class AuthAuth0Service extends AuthService {
     return Promise.all([
       this._storage.set(TOKEN_STORAGE, authResult.accessToken).then(() => true),
       this._storage.set(STORAGE_ITEM, authResult.idToken).then(() => true),
-      this._storage.set('access_type', STORAGE_TYPE).then(() => true),
+      this._storage.set(ACCESS_TYPE, STORAGE_TYPE).then(() => true),
       this._storage.set(EXPIREAT, expiresAt).then(() => true)
     ]);
   }

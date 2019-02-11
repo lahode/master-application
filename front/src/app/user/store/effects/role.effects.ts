@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Action } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 
@@ -13,8 +13,8 @@ export class RoleEffects {
 
   // Listen for the 'ROLELIST_LOAD_START' action.
   @Effect() roleListAction$ = this._action$
-      .ofType(RoleActions.ROLELIST_LOAD_START)
       .pipe(
+        ofType(RoleActions.ROLELIST_LOAD_START),
         switchMap<Action, any>(() => this._role.list()
           .pipe(
             // If successful, dispatch ROLELIST_LOAD_SUCCESS.
@@ -27,8 +27,8 @@ export class RoleEffects {
 
   // Listen for the 'PERMISSIONLIST_LOAD_START' action.
   @Effect() permissionListAction$ = this._action$
-    .ofType(RoleActions.PERMISSIONLIST_LOAD_START)
     .pipe(
+      ofType(RoleActions.PERMISSIONLIST_LOAD_START),
       switchMap<Action, any>(() => this._role.getPermissions()
         .pipe(
           // If successful, dispatch PERMISSIONLIST_LOAD_SUCCESS.
@@ -41,8 +41,8 @@ export class RoleEffects {
 
   // Listen for the 'ROLE_LOAD_START' action.
   @Effect() roleLoadAction$ = this._action$
-    .ofType(RoleActions.ROLE_LOAD_START)
     .pipe(
+      ofType(RoleActions.ROLE_LOAD_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: string) => this._role.get(payload)
         .pipe(
@@ -56,8 +56,8 @@ export class RoleEffects {
 
   // Listen for the 'ROLE_CREATE_START' action.
   @Effect() roleCreateAction$ = this._action$
-    .ofType(RoleActions.ROLE_CREATE_START)
     .pipe(
+      ofType(RoleActions.ROLE_CREATE_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: any) => this._role.create(payload)
         .pipe(
@@ -71,8 +71,8 @@ export class RoleEffects {
 
   // Listen for the 'ROLE_UPDATE_START' action.
   @Effect() roleUpdateAction$ = this._action$
-    .ofType(RoleActions.ROLE_UPDATE_START)
     .pipe(
+      ofType(RoleActions.ROLE_UPDATE_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: any) => this._role.update(payload)
         .pipe(
@@ -86,8 +86,8 @@ export class RoleEffects {
 
   // Listen for the 'ROLE_REMOVE_START' action.
   @Effect() roleRemoveAction$ = this._action$
-    .ofType(RoleActions.ROLE_REMOVE_START)
     .pipe(
+      ofType(RoleActions.ROLE_REMOVE_START),
       map<Action, any>((action: Action) => (action as any).payload),
       switchMap((payload: any) => this._role.remove(payload)
         .pipe(
