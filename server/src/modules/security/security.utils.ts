@@ -30,8 +30,13 @@ function getKey(header, callback) {
     jwksUri: 'https://' + CONFIG.AUTH.domain + '/.well-known/jwks.json'
   });
   client.getSigningKey(header.kid, (err, key) => {
-    var signingKey = key.publicKey || key.rsaPublicKey;
-    callback(null, signingKey);
+    try {
+      var signingKey = key.publicKey || key.rsaPublicKey;
+      callback(null, signingKey);
+    }
+    catch(err) {
+      callback(err);
+    }
   });
 }
 

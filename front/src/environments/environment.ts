@@ -11,11 +11,7 @@ export const environment: IEnvironment = {
   server: 'http://localhost:4300',
   authentication: {
     type: 'token',
-    value : {
-      callback: 'http://localhost:4200/callback', // callback URL
-      domain: 'lahode.eu.auth0.com',  // auth0 domain name
-      client_id: 'QcicsFRETTBpTrM3sBMlgC7bmS1p8i5k'  // client ID
-    }
+    value : {}
   },
   socket: false,
   emailNotification: false

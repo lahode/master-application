@@ -34,4 +34,5 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 server/dist
+server/uploads
 dist/

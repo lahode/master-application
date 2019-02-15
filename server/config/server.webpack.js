@@ -64,7 +64,7 @@ const devConfig = {
               silent: true,
               useBabel: true,
               babelOptions: {
-                compact: process.env.NODE_ENV === 'production',
+                compact: false,
                 highlightCode: true,
               },
               babelCore: '@babel/core',
@@ -77,7 +77,12 @@ const devConfig = {
   },
   plugins: [
     new CheckerPlugin(),
-    new NodemonPlugin(NodemonOptions)
+    new NodemonPlugin(NodemonOptions),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('development'),
+      }
+    })
   ]
 };
 
@@ -98,14 +103,19 @@ const prodConfig = {
         ecma: 6,
       },
     }),
-    new webpack.optimize.ModuleConcatenationPlugin()
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      }
+    })
   ],
 };
 
 // export webpack config
-module.exports = env => {
+module.exports = (env, options) => {
   // define production check const
-  const isProduction = env.NODE_ENV === 'production';
+  const isProduction = options.mode === 'production';
   console.log('[info] Webpack build production mode-> ', isProduction);
   // return new object assign with commonConfig + {env}Config
   return (isProduction)

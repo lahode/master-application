@@ -2,9 +2,9 @@
   "name": "master-application-server",
   "private": true,
   "scripts": {
-    "prod": "npm run build:server && node ./dist/server-prod.js ",
-    "dev": "webpack --watch --config ./config/server.webpack.js --env.NODE_ENV=development",
-    "build:server": "webpack --config ./config/server.webpack.js --env.NODE_ENV=production"
+    "prod": "npm run build:server && node ./dist/server-prod.js",
+    "dev": "webpack --watch --config ./config/server.webpack.js --mode development",
+    "build:server": "webpack --config ./config/server.webpack.js --mode production"
   },
   "engines": {
     "node": "~8.5.0"

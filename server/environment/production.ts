@@ -12,7 +12,7 @@ export const prodVariables:IEnvironment = {
   LOGNAME: 'LOG_MASTER_PROD',
   FRONTEND: 'https://localhost:4200',
   UPLOAD_DIRECTORY: `${root}/uploads`,
-  PORT: 4300,
+  PORT: 4301,
   SOCKET_ACTIVE: false,
   SECURITY: {
     HTTPS: true,

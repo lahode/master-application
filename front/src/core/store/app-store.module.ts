@@ -6,9 +6,11 @@ import { Params, RouterStateSnapshot } from '@angular/router';
 
 import { reducers, metaReducers } from './reducers';
 import { AppEffects } from './effects/app.effects';
+import { MenuLinksEffects } from './effects/menulinks.effects';
 
 import { EndpointsService } from '../services/endpoints';
 import { ErrorHandlerService } from '../services/errorhandler.service';
+import { ExportService } from '../services/export.service';
 import { FileService } from '../services/file.service';
 import { NotificationService } from '../services/notification.service';
 import { PagerService } from '../services/pager.service';
@@ -41,6 +43,7 @@ export class CustomSerializer implements RouterStateSerializer<RouterStateUrl> {
 export const AppProviders = [
   EndpointsService,
   ErrorHandlerService,
+  ExportService,
   FileService,
   NotificationService,
   PagerService,
@@ -52,7 +55,7 @@ export const AppProviders = [
 @NgModule({
   imports: [
     StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([AppEffects]),
+    EffectsModule.forRoot([AppEffects, MenuLinksEffects]),
     StoreRouterConnectingModule
   ],
 })
