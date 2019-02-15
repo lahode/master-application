@@ -68,7 +68,7 @@ export function tokenGetter() {
         tokenGetter: tokenGetter
       }
     }),
-    NgProgressModule.forRoot(),
+    NgProgressModule,
     MatDialogModule,
     BrowserAnimationsModule,
     AuthModule,
