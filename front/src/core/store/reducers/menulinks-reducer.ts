@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import { AppActions } from '../actions/app.actions';
 
 import { MenuLink } from '../../models/menu-link';

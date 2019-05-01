@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import { RoleActions } from '../actions/role.actions';
 
 import { Role } from '../../../../core/models/role';

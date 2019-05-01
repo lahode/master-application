@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import { AppActions } from '../actions/app.actions';
 
 export interface IConfirmState extends String {}

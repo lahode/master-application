@@ -3,12 +3,12 @@ import * as argon2 from 'argon2';
 
 import { decodeJwt } from "./security.utils";
 import { createSessionToken } from './security.utils';
-import { User } from '../models/user';
+import { User } from '../api/users/user';
 
 export class AuthStrategyToken {
 
   // Login strategy.
-  public static async login(passwordInput:string, user:User,  res: Response) {
+  public static async login(passwordInput:string, user:User, res: Response) {
     try {
       const token = await AuthStrategyToken.attemptLogin(passwordInput, user);
       return {user, token};

@@ -34,12 +34,7 @@ export const AuthActions = {
   RESET_PASSWORD_SUCCESS : 'RESET_PASSWORD_SUCCESS',
   RESET_PASSWORD_FAILED : 'RESET_PASSWORD_FAILED',
 
-  CALLBACK_START : 'CALLBACK_START',
-  CALLBACK_SUCCESS : 'CALLBACK_SUCCESS',
-  CALLBACK_FAILED : 'CALLBACK_FAILED',
-  CALLBACK_STOP : 'CALLBACK_STOP',
-
-  login(_credentials) {
+  login(_credentials: any) {
     return <Action>{
       type: AuthActions.LOGIN_START,
       payload: _credentials
@@ -52,7 +47,7 @@ export const AuthActions = {
     };
   },
 
-  checkPermission(_credentials) {
+  checkPermission(_credentials: any) {
     return <Action>{
       type: AuthActions.CHECK_PERMISSIONS_START,
       payload: _credentials
@@ -65,31 +60,25 @@ export const AuthActions = {
     };
   },
 
-  signup(_credentials)  {
+  signup(_credentials: any)  {
     return <Action>{
       type: AuthActions.CREATE_USER_START,
       payload: _credentials
     };
   },
 
-  getPassword(_credentials)  {
+  getPassword(_credentials: any)  {
     return <Action>{
       type: AuthActions.GET_PASSWORD_START,
       payload: _credentials
     };
   },
 
-  resetPassword(_credentials)  {
+  resetPassword(_credentials: any)  {
     return <Action>{
       type: AuthActions.RESET_PASSWORD_START,
       payload: _credentials
     };
   },
-
-  callback()  {
-    return <Action>{
-      type: AuthActions.CALLBACK_START,
-    };
-  }
 
 };

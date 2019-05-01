@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import { UserActions } from '../actions/user.actions';
 
 import { User } from '../../../../core/models/user';
@@ -13,10 +12,12 @@ export function reducer (state: IUserState = initialState, action: any): IUserSt
       return Object.assign({}, null);
     }
 
+    case UserActions.PROFILE_LOAD_START:
     case UserActions.USER_LOAD_START: {
       return Object.assign({}, state);
     }
 
+    case UserActions.PROFILE_LOAD_SUCCESS:
     case UserActions.USER_LOAD_SUCCESS: {
       return Object.assign({}, action.payload);
     }

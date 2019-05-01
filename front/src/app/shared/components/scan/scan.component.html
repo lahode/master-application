@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="file-field input-field">
+    <webcam [width]="width"
+            [height]="height"
+            [trigger]="triggerObservable"
+            (imageCapture)="handleImage($event)"
+            [allowCameraSwitch]="true"
+            [videoOptions]="data.options"
+            [imageQuality]="1"
+            (initError)="handleCameraInitError($event)"></webcam>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button color="warn"
+          mat-button
+          (click)="triggerSnapshot()">Capturer</button>
+  <button mat-button mat-dialog-close>Annuler</button>
+</mat-dialog-actions>

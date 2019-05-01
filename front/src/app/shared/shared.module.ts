@@ -6,19 +6,19 @@ import { MatDatepickerModule, MatNativeDateModule, DateAdapter } from '@angular/
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { WebcamModule } from 'ngx-webcam';
 
 /* Format de la date  */
 import { DateFormat } from './date-format';
 
 /* Custom modules */
 import { GlobalModule } from '../global/global.module';
-import { PictureEditComponent } from './components/picture-edit/picture-edit.component';
 import { RolesEditComponent } from './components/roles-edit/roles-edit.component';
+import { ScanComponent } from './components/scan/scan.component';
 import { UsersEditComponent } from './components/users-edit/users-edit.component';
 import { ViewProfileComponent } from './components/view-profile/view-profile.component';
 
 @NgModule({
-
   imports: [
     GlobalModule,
     MatCheckboxModule,
@@ -27,7 +27,8 @@ import { ViewProfileComponent } from './components/view-profile/view-profile.com
     MatInputModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    WebcamModule
   ],
   exports: [
     GlobalModule,
@@ -36,18 +37,21 @@ import { ViewProfileComponent } from './components/view-profile/view-profile.com
     MatDialogModule,
     MatInputModule,
     MatNativeDateModule,
-    ReactiveFormsModule
-  ],
-  declarations: [
-    PictureEditComponent,
+    ReactiveFormsModule,
     RolesEditComponent,
     UsersEditComponent,
     ViewProfileComponent
   ],
+  declarations: [
+    RolesEditComponent,
+    ScanComponent,
+    UsersEditComponent,
+    ViewProfileComponent
+  ],
   entryComponents: [
-    PictureEditComponent,
     RolesEditComponent,
     UsersEditComponent,
+    ScanComponent,
     ViewProfileComponent
   ],
   providers: [

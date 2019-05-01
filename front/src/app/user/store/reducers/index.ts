@@ -1,5 +1,4 @@
-import { ActionReducerMap, combineReducers, ActionReducer, Action } from '@ngrx/store';
-import { storeFreeze } from 'ngrx-store-freeze';
+import { ActionReducerMap } from '@ngrx/store';
 
 import * as fromUsersList from './userslist-reducer';
 import * as fromUsers from './users-reducer';
@@ -9,8 +8,6 @@ import * as fromRole from './role-reducer';
 import * as fromPermissions from './permissions-reducer';
 
 import { UserStateI, UserRecucerStateI } from '../user-state';
-
-declare const process: any;
 
 export const reducer: UserRecucerStateI = {
   usersList: fromUsersList.reducer,

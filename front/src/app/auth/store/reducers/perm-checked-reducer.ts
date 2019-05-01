@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import { AuthActions } from '../actions/auth.actions';
 
 export interface IPermCheckedState extends Boolean {}

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -15,14 +16,14 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
 import { MessageComponent } from './components/message/message.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { MainComponent } from './components/main/main.component';
-import { LoadingComponent } from './components/loading/loading.component';
+import { LoaderComponent } from './components/loader/loader.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
 
-import { Nl2brPipe } from './pipes/nl2br.pipe';
 import { OrderByPipe } from './pipes/orderby.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { Nl2brPipe } from './pipes/nl2br.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
@@ -33,6 +34,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     MatIconModule,
     MatListModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatToolbarModule,
     MatSidenavModule,
@@ -45,6 +47,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     MatButtonModule,
     MatIconModule,
     MatListModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     RouterModule,
     TranslateModule,
@@ -52,7 +55,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     ConfirmComponent,
     MessageComponent,
     MainComponent,
-    LoadingComponent,
+    LoaderComponent,
     PageNotFoundComponent,
     Nl2brPipe,
     OrderByPipe,
@@ -65,14 +68,14 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     ConfirmComponent,
     MessageComponent,
     MainComponent,
-    LoadingComponent,
+    LoaderComponent,
     PageNotFoundComponent,
+    SidenavListComponent,
     Nl2brPipe,
     OrderByPipe,
     SafeHtmlPipe,
     SafeUrlPipe,
-    TruncatePipe,
-    SidenavListComponent
+    TruncatePipe
   ],
   entryComponents: [
     ConfirmComponent,

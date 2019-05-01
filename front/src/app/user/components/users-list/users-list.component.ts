@@ -47,7 +47,7 @@ export class UsersListComponent implements OnInit {
   }
 
   // Update the list of users.
-  updateList(type, event = null) {
+  updateList(type: string, event = null) {
     switch (type) {
       case 'filterField' :
         this.pageFilter = { field: event, value : '' };

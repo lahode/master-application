@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import { AppActions } from '../actions/app.actions';
 
 import { Breadcrumb } from '../../models/breadcrumb';

@@ -4,15 +4,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material';
 import { Store, Action } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, take } from 'rxjs/operators';
 
+import { ScanComponent } from '../../../shared/components/scan/scan.component';
 import { environment } from '../../../../environments/environment';
 import { User } from '../../../../core/models/user';
-import { PictureEditComponent } from '../../../shared/components/picture-edit/picture-edit.component';
 import { DoubleValidation } from '../../../../core/services/custom-validation';
 import { UserActions } from '../../../user/store';
-import { FileService } from '../../../../core/services/file.service';
+import { AppActions } from '../../../../core/store';
+import { FileService, ImageDataConverterService } from '../../../../core/services/file.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -24,16 +25,18 @@ export class EditProfileComponent implements OnInit {
   private userEdit: User;
   public user$: Observable<any>;
   public editProfileform: FormGroup;
-  public picture: any;
-  public picture$: Observable<any>;
   public enableAuthChange = false;
   public emailNotification = environment.emailNotification;
+  private _picture: string;
+  private _pictureToUpload: Subject<any> = new Subject<any>();
+  public picture$: Observable<any> = this._pictureToUpload.asObservable();
 
   constructor(private readonly _store: Store<any>,
               private readonly _router: Router,
               private readonly _dialog: MatDialog,
               private readonly _fb: FormBuilder,
               private readonly _file: FileService,
+              private readonly _imgDataConvert: ImageDataConverterService,
               public translate: TranslateService) { }
 
   ngOnInit() {
@@ -60,9 +63,11 @@ export class EditProfileComponent implements OnInit {
         map(state => {
           // Set user data to user form or reset users form.
           this.userEdit = state.currentUser;
-          this.picture = state.currentUser ? state.currentUser.picture : null;
-          if (this.picture) {
-            this.picture$ = this._file.view(this.picture);
+
+          // Load picture if existing.
+          this._picture = state.currentUser ? state.currentUser.picture : null;
+          if (this._picture) {
+            this._file.view(this._picture).pipe(take(1)).subscribe(p => this._pictureToUpload.next(p));
           }
           // Check if user connection type is by token.
           const tokenCheck = this.userEdit['sub'].split('|');
@@ -88,20 +93,6 @@ export class EditProfileComponent implements OnInit {
     this._router.navigate([environment.homepage]);
   }
 
-  // Open a modal to change the picture.
-  editPicture() {
-    const dialogRef = this._dialog.open(PictureEditComponent, {
-      width: '75%',
-      data: { pictureID: this.picture }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.picture = (result !== -1) ? result : '';
-        this.picture$ = this._file.view(this.picture);
-      }
-    });
-  }
-
   // Save the user form.
   save(): void {
     const model = this.editProfileform.value;
@@ -121,14 +112,90 @@ export class EditProfileComponent implements OnInit {
     }
     // Remove password confirm field.
     delete(model.passwordconfirm);
+
     // Update the picture if it has been changed.
-    if (this.picture) {
-      model.picture = this.picture;
-    }
+    model.picture = this._picture || null;
+
     this.userEdit = model;
 
     // Update the user in the back-end.
     this._store.dispatch(<Action>UserActions.updateProfile(this.userEdit));
+  }
+
+  // Scan the image.
+  public scanImage(event: Event) {
+    event.preventDefault();
+    const dialogRef = this._dialog.open(ScanComponent, {
+      width: '75%',
+      data: {
+        title: 'Capturez votre image de profil',
+        options: {
+          video: {
+            facingMode: 'user',
+            width: { ideal: 640 },
+            height: { ideal: 640 },
+          }
+        }
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.success) {
+          // Tranform image to blob.
+          const blob = this._imgDataConvert.dataURItoBlob(result.data);
+          if (blob) {
+
+            // Set temporary filename and add blob to formData.
+            const fileName = `profile.${blob.type.split('/')[1]}`;
+            const formData = new FormData(document.forms[0]);
+            formData.append('file', blob, fileName);
+
+            // Upload the file to the server and add it to the existing attachments.
+            this._file.upload(formData, 'profiles').subscribe((resultFile: any) => {
+              if (resultFile['success']) {
+                this._picture = resultFile.file;
+                this._pictureToUpload.next(result.data);
+              }
+            }, err => {
+              this._store.dispatch(<Action>AppActions.setError(err));
+            });
+          }
+        } else {
+          this._store.dispatch(<Action>AppActions.setError(result.data));
+        }
+      }
+    });
+  }
+
+  // Upload a file.
+  public uploadFile(event: Event) {
+    if (event.target['files'] && event.target['files'].length > 0) {
+
+      // Append file to formData.
+      const file = event.target['files'][0];
+      const formData: any = new FormData();
+      formData.append('file', file);
+
+      // Upload the file to the server and add it to the existing attachments.
+      this._file.upload(formData, 'profiles').subscribe(result => {
+        if (result['success']) {
+          this._picture = result.file;
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            this._pictureToUpload.next(reader.result);
+          };
+        }
+      }, err => {
+        this._store.dispatch(<Action>AppActions.setError(err));
+      });
+    }
+  }
+
+  // Remove the picture.
+  public deletePicture() {
+    this._picture = null;
+    this._pictureToUpload.next(null);
   }
 
 }

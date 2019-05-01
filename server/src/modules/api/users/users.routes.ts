@@ -1,32 +1,31 @@
 import { Request, Response } from 'express';
+import * as moment from 'moment';
+import { ObjectID } from 'mongodb';
 
 import { CONFIG } from "../../../config";
 import { Mailer } from '../../common/mailer';
 import { AuthRoutes } from "../auth/auth.routes";
 import { PasswordStrategy } from "../../security/password-strategy";
 import { ImageProcessing } from "../files/images-processing";
+import { FilesRoutes } from '../files/files.routes';
 import { returnHandler } from '../../common/return-handlers';
 
-const Datastore = require('nedb-promises');
-const userDB = new Datastore(CONFIG.DATABASE.USERS);
-const roleDB = new Datastore(CONFIG.DATABASE.ROLES);
-const fileDB = new Datastore(CONFIG.DATABASE.FILES);
-
-const defaultImageProfile = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABYWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS41LjAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iL1VzZXJzL2xhcGkvYW5ndWxhci90ZW1ldC1sZWFybmluZy9mcm9udC9zcmMvYXNzZXRzL2ltYWdlcy9wcm9maWxlLnBuZyIvPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KPD94cGFja2V0IGVuZD0iciI/Pi4vmREAAAGFaUNDUHNSR0IgSUVDNjE5NjYtMi4xAAAokXWRvy9DURTHP4pUKB10IDF0EIMglDSYqIgfaZqmSFos7esvSX+8vNdGxGiwGgx+xELEYmYT/4BEIsFkYBUDiUWa59xWUhE9N/fez/3ec86991ywhTNa1mwYhGyuYIRmfO5wZNltf6aFTtppYzyqmfpkMOinpn3eU6fmu36Vq7bfv9YST5ga1DUJT2i6URCeFQ6sF3TFe8IuLR2NC58L9xlyQeFHpccq/Ko4VWabyukyFkNTwi5hd+oXx36xljaywiPC3dlMUfu5j3qJI5FbWlC69C5MQszgw80c00zhZYgxGb3042FAVtSI95TjA+QlVpNRZwODNVKkKdAnalGyJ2ROip6QlhEPMfUHf2trJoc9lRMc89D4YlkfvWA/hNK2ZX0dW1bpBOqlLte71fj8Loy+ib5T1bqPwLkFF1dVLXYKlzvQ8aRHjWhZqpduSybh/QxaI9B+C80rlbr97HPyAIub4L+B/QPoEX/n6jdPF2dbzdmmvgAAAAlwSFlzAAALEwAACxMBAJqcGAAAA25JREFUWIWtl8tvW1UQxn8z99ox5SEkHiUpScSuEmx4SGXHBliwipSHHJENqH9AWUCCEYuqjXHqgkRLEeqiC5JIiYSEkPI3IBSKQlh4QxZVShMeVVpLbdPE955h4dpNZPveY9Wzuvec0fd955yZM3OELi3IqpsrnhMzwzkHqpjC/v4uV658z7U/N6QbPC/nt04c33pv5IN+pw5FW+ZjQMwwhdAcIhmu/rG+vbywMPBIAr65VLTq3ZCsu4+TPh+th2S5QLj5X5Uv50odeTpOlM6VTcx1SdrOIu7c2+fM6dNtudoOzs6dtYwpJkEPBDSIYj6ZLrTwtQycLX1hGWk9516Y2T4zM58f4jz0U5wtWhAEiZEhIogIIyMjZLNZwjAkiiKWlpYQEcwsQUKMi2I+/eyhiObH5cvf2a1b1ZQVGOPj42Sz2bbzURSxvLyMSHJy/frLz/zw408CPMypm7d3UslHR0c7kgOEYUg+n0/EAXj1zRPN74aAPdHkgDMzcrlcKriqphwDiIUAd5sCyuVSVuNk4DTQJrgIYRgm+gRilMvnjzQF1DzyPQj8UzKOU1YDOFf3USAOXO/yvQ6evqAHO7qnpz7+CMRve3spQET48OTJUI89e1SdB79vDID/cb38ynHVmjjMs4Cm5Td0JzS6H6NCxusERITV1dVUv93dXS+hAIahdFHxNjY2Un1WVla88VQV3f5r05mnYkg/hlqt5oUTS8ztatXphYuX1JfezJifn+84X6lUvLcfoDg7qwqI4R84SRVvfX3dGyewAKBe+AP1r/9JK+wmA5zWY08Bvj5fMrH067OXdvHCt9YUsPXPjkYp7ZeqoqpMTU119JmcnGRsbCw1DlSUrevXFQ40JGZm5fIZauQIH2ylmZHJZJiYmPDodg6biLC4uNgUYwcw337nXd54/TU5JABgpnDKnnx6gNCMIAjI5/NdkXaySqXC2toaIkIcxxQKhdaWrGGlua/s/fwEIlFvu2IRFhcWmZ6Z7tyUNmx7+2+LIr8LxdecOoaPDbfwtc2//v4XxFGj/uh6VItR1bbkkPI0M7N/N29ce04J8C6ZB4jNlMHBwR0ReaaTV+INJCLPD7/4kty7U72hXV5W+3t7m0NDQ5JEDp6v44N29fff7KnHHqfvyBM03o6miosdfbmQgaMDXWH+D6WHUgUCvYbGAAAAAElFTkSuQmCC';
+import { userDB, DEFAULT_ICON } from './users.db';
+import { fileDB } from '../files/files.db';
 
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
+
+const NBDAYS_EXPIRE_RENEW_TOKEN = 7;
 
 export class UsersRoutes {
 
   // Fetch the user by sub.
-  public static async findUserBySub(userInfo) {
+  public static async findUserBySub(userInfo: any) {
     if (userInfo) {
       try {
         // Find the user by sub (token) info.
-        let user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1, active: 1, language: 1, description: 1});
-
-        // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
-        user.roles = await UsersRoutes.populateRoles(user);
+        const user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1, active: 1, language: 1, emailNotify: 1, description: 1})
+                                 .populate('roles.role', 'permissions');
 
         // Return the user.
         if (user) {
@@ -44,22 +43,39 @@ export class UsersRoutes {
     }
   }
 
-  // Populate roles (only usefull if using nedDB).
-  public static async populateRoles(user) {
-    if (!user.roles) {
-      return [];
+  // Find a user by it's sub token.
+  public static async getCurrent(req: Request, res: Response) {
+    try {
+      // Find the user by sub (token) info.
+      const user = await this.findUserBySub(req['user']);
+
+      // Return the user.
+      if (user) {
+        return res.json( returnHandler( {user: user} ) );
+      } else {
+        return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
+      }
     }
-    let index = 0;
-    for (let userRole of user.roles) {
-      const roleID = userRole.role;
-      const role = await roleDB.findOne({_id: roleID});
-      user.roles[index].role = {
-        _id: roleID,
-        permissions: role.permissions
-      };
-      index++;
+    catch (e) {
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de l'utilisateur.", e) );
     }
-    return user.roles;
+  }
+
+  /**
+   * Retourne tous les utilisateurs.
+   */
+  public static async getLike(req: Request, res: Response) {
+    try {
+      const users = await userDB.find({ $and: [{active: true}, {$or:[ {firstname: new RegExp(req.params.search, "i")}, {lastname: new RegExp(req.params.search, "i")} ] } ] },
+                                        { firstname: 1, lastname: 1 })
+                                  .limit(5)
+                                  .sort('lastname');
+      return res.status(200).json( returnHandler( users ) );
+    }
+    catch(e) {
+      return res.status(400).json( returnHandler(null, "Une erreur est survenue lors de la recherche sur les utilisateurs", e) );
+    }
+
   }
 
   // Get user by ID route.
@@ -152,11 +168,8 @@ export class UsersRoutes {
         const data = await UsersRoutes.findUserBySub(req['user']);
         user.owner = data.user._id;
 
-        // Set Default Image Profile.
-        user.icon = defaultImageProfile;
-
         // Create the user in the database.
-        const userInserted = await userDB.insert(user);
+        const userInserted = await userDB.create(user);
         return res.json( returnHandler( {user: userInserted} ) );
       }
       catch(e) {
@@ -222,7 +235,7 @@ export class UsersRoutes {
             const passwordnew = user.passwordnew || null;
 
             // Check if password authentification is ok.
-            const checkPassword = await AuthStrategyToken.login(passwordcurrent, user, res);
+            await AuthStrategyToken.login(passwordcurrent, user, res);
             if (passwordnew) {
 
               // Check if new password is valid.
@@ -245,23 +258,39 @@ export class UsersRoutes {
           delete(user.passwordnew);
 
           // Update profile icon if changed.
-          if (user.picture !== checkUser.picture) {
-            const imageFile = await fileDB.findOne({ _id: user.picture });
-            const imageResult = await ImageProcessing.scaleAndCrop(imageFile.path, null, 32, 32);
-            if (imageResult.success) {
-              user.icon = `data:${imageFile.mimetype};base64,${imageResult.data}`;
+          if ((checkUser.picture && user.picture !== checkUser.picture.toString()) ||
+              (user.picture && !checkUser.picture)) {
+
+            // Delete the previous picture.
+            if (checkUser.picture) {
+              await FilesRoutes.removeFiles({ _id: checkUser.picture });
+              user.icon = DEFAULT_ICON;
+            }
+
+            // Add the new picture.
+            if (user.picture) {
+
+              // Create a user icon (width: 32, height: 32)
+              const imageFile = await fileDB.findOne({ _id: user.picture });
+
+              if (imageFile) {
+                const root = require('app-root-path').path;
+                const imageResult = await ImageProcessing.scaleAndCrop(`${root}/${imageFile.path}`, null, 32, 32);
+                if (imageResult.success) {
+                  // Add the user icon to the user.
+                  user.icon = `data:${imageFile.mimetype};base64,${imageResult.data}`;
+
+                  // Set the image file as permanent.
+                  imageFile.updated = new Date();
+                  imageFile.active = true;
+                  await fileDB.findByIdAndUpdate(imageFile._id, imageFile);
+                }
+              }
             }
           }
 
-          // Remove permissions on roles.
-          const roles = [];
-          if (user.roles) {
-            user.roles.map(role => roles.push({role: role.role._id}));
-            user.roles = roles;
-          }
-
           // Update user in the database.
-          const updatedUser = await userDB.update({ _id: user._id }, user);
+          await userDB.update({ _id: user._id }, user);
           return user;
         } else {
           throw({status: 404, message: "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.", error: null});
@@ -269,9 +298,9 @@ export class UsersRoutes {
       }
       catch(e) {
         if (e.status === 403) {
-          throw({status: 403, message: "Mot de passe invalide.", error: e});
+          throw({status: 403, message: "Mot de passe invalide.", error: e})
         } else if (e.message && e.status) {
-          throw({status: e.status, message: e.message, error: e});
+          throw({status: e.status, message: e.message, error: e})
         }
         throw({status: 500, message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur.", error: e});
       }
@@ -283,6 +312,7 @@ export class UsersRoutes {
 
   // Delete user route.
   public static async remove(req: Request, res: Response) {
+    // Check if an user ID has been given.
     if (!req.params.id) {
       return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
     }
@@ -291,9 +321,15 @@ export class UsersRoutes {
       const checkUser = await userDB.findOne({ _id: req.params.id });
       if (checkUser) {
 
+        // Supprime tous les fichier attachés à la charge.
+        if (checkUser.picture) {
+          await FilesRoutes.removeFiles({ _id: checkUser.picture });
+        }
+
         //Delete the user in the database.
-        const userDeleted = await userDB.remove({ _id: req.params.id });
+        await userDB.deleteOne({ _id: ObjectID(req.params.id) });
         return res.json(returnHandler( {deleted: req.params.id} ) );
+
       } else {
         return res.status(404).json( returnHandler(null, "Impossible de supprimer cet utilisateur, aucun utilisateur n'a été trouvé.") );
       }
@@ -303,7 +339,7 @@ export class UsersRoutes {
   }
 
   // Send a token to create an authentication for the selected user.
-  public static async resetAuth(req, res) {
+  public static async resetAuth(req: Request, res: Response) {
     // Check if an user ID has been given.
     if (!req.params.id) {
       return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
@@ -313,15 +349,19 @@ export class UsersRoutes {
       const user = await userDB.findOne({ _id: req.params.id });
       if (user) {
         // Create a new token and attach it to the message.
-        const maxtime = 24 * 60 * 60; // 24 hours
+        const maxtime = NBDAYS_EXPIRE_RENEW_TOKEN * 24 * 60 * 60; // 24 hours
         user.sub = 'reset' + '|' + Date.now();
         const newToken = await AuthStrategyToken.signup(user, maxtime);
 
+        // Set End date for e-mail.
+        const endDateTimestamp = (new Date().getTime() / 1000) + maxtime;
+        const formattedEndDate = moment.unix(endDateTimestamp).format("DD.MM.YYYY")
+
         // Update user with new token.
-        const updatedUser = await userDB.update({ _id: user._id }, user);
+        await userDB.update({ _id: user._id }, user);
 
         // Send the e-mail.
-        const sentMail = await Mailer.sendMail(`Authentification à la plateforme: ${CONFIG.APPNAME}`, user.email, `<p>Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}?connect=${newToken.token}">vous y connecter.</a></p><p>Attention, ce lien est uniquement valable pendant ${(maxtime / 3600)} heures.</p>`);
+        const sentMail = await Mailer.sendMail(`Authentification à la plateforme: ${CONFIG.APPNAME}`, user.email, `<p>Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}?connect=${newToken.token}">vous y connecter.</a></p><p>Attention, ce lien doit être utilisé avant le ${formattedEndDate}.</p>`);
         return res.json( returnHandler( { mailID: sentMail['mailID'] } ) );
       } else {
         return res.status(401).json( returnHandler(null, "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré") );

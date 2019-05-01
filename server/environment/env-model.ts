@@ -1,7 +1,6 @@
 export interface IEnvironment {
   environmentName: string,
   APPNAME: string,
-  DATABASE: any,
   LOGNAME: string,
   FRONTEND: string,
   UPLOAD_DIRECTORY: string;
@@ -9,5 +8,6 @@ export interface IEnvironment {
   SOCKET_ACTIVE: boolean,
   SECURITY: any,
   AUTH: any,
-  MAILER: any
+  MAILER: any,
+  MONGODB: string
 }

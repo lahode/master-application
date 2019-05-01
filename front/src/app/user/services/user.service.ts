@@ -60,6 +60,16 @@ export class UserService {
       );
   }
 
+  // Get all users like search value.
+  public getLike(search: string): Observable<any> {
+    return this._http.get(this._endpoints.userAll(search))
+      .pipe(
+        shareReplay(),
+        map(response => <any>(response as any).data),
+        catchError(err => throwError(this._error.errorHTTP(err)))
+      );
+  }
+
   // Get user profile  detail by ID.
   public getProfile(): Observable<any> {
     return this._http.get(this._endpoints.userProfileDetail())

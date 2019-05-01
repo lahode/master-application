@@ -40,38 +40,23 @@ export class AuthAuth0Service extends AuthService {
   }
 
   // Check authentification.
-  public checkAuth(skipDestroyToken = false): Observable<any> {
-    return fromPromise(this._storage.get(STORAGE_ITEM))
-      .pipe(
-        mergeMap(jwt => {
-          // If storage is not found destroy existing auth tokens and return false.
-          if (!jwt || this._jwtHelper.isTokenExpired(jwt)) {
-            this._destroyTokens();
-            return of(false);
-          }
-
-          // Check if user is authenticate in the backend.
-          return fromPromise(this._storage.get(RESETAUTH))
-            .pipe(
-              mergeMap(reset_auth => {
-                return this._http.get(this._endpoints.checkAuth(reset_auth))
-                  .pipe(
-                    shareReplay(),
-                    map(response => (response as any).data.user),
-                    catchError(err => {
-                      // Destroy existing auth tokens on error (if skipDestroyToken is false).
-                      if (!skipDestroyToken || err.status !== 404) {
-                        this._destroyTokens();
-                      }
-                      return throwError({code: err.status, message: this._error.errorHTTP(err)});
-                    })
-                  );
-              })
-            );
-
-        })
-      );
-
+  public checkAuth(): Observable<any> {
+    return fromPromise(this._checkJwtAndGetResetToken()).pipe(
+      mergeMap(reset_auth => {
+        if (reset_auth === -1) {
+          return of(false);
+        }
+        return this._http.get(this._endpoints.checkAuth(reset_auth))
+          .pipe(
+            shareReplay(),
+            map(response => (response as any).data.user),
+            catchError(err => {
+              // Destroy existing auth tokens on error (if skipDestroyToken is false).
+              this._destroyTokens();
+              return throwError({code: err.status, message: this._error.errorHTTP(err)});
+            })
+          );
+      }));
   }
 
   // Check permissions.
@@ -94,6 +79,11 @@ export class AuthAuth0Service extends AuthService {
   public logout(): Observable<any> {
     this._destroyTokens();
     return of(true);
+  }
+
+  // Connect to app.
+  public connect(appID = null): Observable<any> {
+    return of(null);
   }
 
   // Looks for the result of authentication in the URL hash.
@@ -157,6 +147,21 @@ export class AuthAuth0Service extends AuthService {
   // Get authO config in the environment file.
   private _getConfig() {
     return <any>environment.authentication.value;
+  }
+
+  // Check if jwt token exists and is not expired and get reset_auth token if exists.
+  private async _checkJwtAndGetResetToken() {
+    try {
+      const jwt = await this._storage.get(STORAGE_ITEM);
+      if (!jwt || this._jwtHelper.isTokenExpired(jwt)) {
+        this._destroyTokens();
+        return -1;
+      }
+      const reset_auth = await this._storage.get(RESETAUTH);
+      return reset_auth;
+    } catch (e) {
+      return e;
+    }
   }
 
 }

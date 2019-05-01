@@ -58,32 +58,32 @@ export const RoleActions = {
     };
   },
 
-  load(_credentials) {
+  load(_credentials: any) {
     return <Action>{
       type: RoleActions.ROLE_LOAD_START,
       payload: _credentials
     };
   },
 
-  create(_credentials) {
+  create(_credentials: any) {
     return <Action>{
       type: RoleActions.ROLE_CREATE_START,
       payload: _credentials
     };
   },
 
-  update(_credentials) {
+  update(_credentials: any) {
     return <Action>{
       type: RoleActions.ROLE_UPDATE_START,
       payload: _credentials
     };
   },
 
-  remove(_credentials) {
+  remove(_credentials: any) {
     return <Action>{
       type: RoleActions.ROLE_REMOVE_START,
       payload: _credentials
     };
-  },
+  }
 
-}
+};

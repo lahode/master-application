@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { shareReplay, map, catchError } from 'rxjs/operators';
 
+import { User } from '../../../core/models/user';
 import { EndpointsService } from '../../../core/services/endpoints';
 import { ErrorHandlerService } from '../../../core/services/errorhandler.service';
 
@@ -73,12 +74,12 @@ export class RoleService {
   }
 
   // Check if user has permissions.
-  public checkUsersPermission(user, permissions) {
+  public checkUsersPermission(user: User, permissions: string[]) {
     if (!user || !user.roles) {
       return false;
     }
     return user.roles.filter(role =>
-      role.role.permissions.filter(perm => permissions.includes(perm)).length > 0).length > 0;
+      role.role.permissions.filter((perm: string) => permissions.includes(perm)).length > 0).length > 0;
   }
 
 }

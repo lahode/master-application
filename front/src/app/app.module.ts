@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MatDialogModule, } from '@angular/material';
-import { NgProgressModule } from '@ngx-progressbar/core';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -68,7 +67,6 @@ export function tokenGetter() {
         tokenGetter: tokenGetter
       }
     }),
-    NgProgressModule,
     MatDialogModule,
     BrowserAnimationsModule,
     AuthModule,

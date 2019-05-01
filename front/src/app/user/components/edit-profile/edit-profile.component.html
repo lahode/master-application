@@ -4,13 +4,31 @@
       <h4 class="card-title">{{ 'PROFILE.EDIT.EDITPROFILE' | translate }}</h4>
       <div class="picture">
         <div *ngIf="(picture$ | async) as picture; else defaultImage">
+          <span class="delete-icon" (click)="deletePicture()"><mat-icon>delete</mat-icon></span>
           <img [src]="picture | safeUrl" class="user-img" />
         </div>
         <ng-template #defaultImage>
           <img src="assets/images/profile.png" class="user-img" />
         </ng-template>
-        <button mat-raised-button
-                (click)="editPicture()">{{ 'PROFILE.EDIT.PICTURE' | translate }}</button>
+        <div>
+          <a mat-fab
+            color="primary"
+            matTooltip="Capturer une image"
+            (click)="scanImage($event)"
+            matTooltipPosition="left">
+            <mat-icon>photo_camera</mat-icon>
+          </a>
+          <a mat-fab
+            color="primary"
+            matTooltip="Charger un fichier"
+            (click)="$event.preventDefault(); inputFile.click($event)"
+            matTooltipPosition="left">
+            <mat-icon>cloud_upload</mat-icon>
+          </a>
+          <input #inputFile type="file"
+                 [style.display]="'none'"
+                 (change)="uploadFile($event)">
+        </div>
       </div>
       <p class="card-category">{{ 'PROFILE.EDIT.COMPLETE' | translate }}</p>
     </div>

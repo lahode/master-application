@@ -10,7 +10,7 @@ export class RetrieveUser {
       let header = (authorization as string).split(' ');
       RetrieveUser.handleSession(header[1], req, res)
         .then(() => next())
-        .catch(err => {
+        .catch((err: any) => {
           // TODO
           next();
       });

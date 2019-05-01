@@ -9,12 +9,13 @@ var logParams = {
     fileNameDateFormat: "DDMMYYYY",
     fileNamePrefix: (CONFIG.LOGNAME || 'log') + "-"
 };
-var log = require('noogger').init(logParams);
+
+export const log = require('noogger').init(logParams);
 
 /**
  * Ajoute les messages d'erreurs renvoyés par les schémas
  */
-export const returnHandler = (data, defaultMessage = "", err = null) => {
+export const returnHandler = (data: any, defaultMessage = "", err = null) => {
   let errors = defaultMessage || '';
 
   // Log les messages

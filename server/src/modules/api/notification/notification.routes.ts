@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
 
-import { CONFIG } from "../../../config";
 import { Mailer } from '../../common/mailer';
 import { returnHandler } from '../../common/return-handlers';
 
-const Datastore = require('nedb-promises');
-const userDB = new Datastore(CONFIG.DATABASE.USERS);
+import { userDB } from '../users/users.db';
 
 export class NotificationRoutes {
 
@@ -52,7 +50,6 @@ export class NotificationRoutes {
       for (let userID of users) {
         const user = await userDB.findOne({ _id: userID }, {email: 1, emailNotify: 1});
         if (user.emailNotify) {
-          console.log(user.email)
           const sentMail = await Mailer.sendMail('Vous avez reçu une nouvelle notification', user.email, message);
           sentMails.push(sentMail);
         }

@@ -14,7 +14,7 @@ export class NoGuard implements CanActivate {
 
     canActivate(): Observable<boolean> {
       // Dispatch check auth action
-      this._store.dispatch(<Action>AuthActions.checkAuth());
+      this._store.dispatch(<Action>AuthActions.checkAuth()); // TODO: Can't we put it in the interceptor???
 
       // Check Auth on store select
       return this._store.select(state => state)

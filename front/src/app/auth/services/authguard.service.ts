@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
       const queryParams = path.length > 0 ? { queryParams: { returnUrl: path }} : {};
 
       // Dispatch check auth action.
-      this._store.dispatch(<Action>AuthActions.checkAuth());
+      this._store.dispatch(<Action>AuthActions.checkAuth()); // TODO: Can't we put it in the interceptor???
 
       // Dispatch check permissions action.
       const permissions = route.data['perms'];

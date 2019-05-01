@@ -1,23 +1,19 @@
 import { IEnvironment } from "./env-model";
 const root = require('app-root-path').path;
+const args = require('minimist')(process.argv.slice(2)) || [];
 
 export const prodVariables:IEnvironment = {
   environmentName: 'Production Environment',
   APPNAME: 'Master Application',
-  DATABASE: {
-    USERS: `${root}/data/users.json`,
-    ROLES: `${root}/data/roles.json`,
-    FILES: `${root}/data/files.json`,
-  },
   LOGNAME: 'LOG_MASTER_PROD',
-  FRONTEND: 'https://localhost:4200',
-  UPLOAD_DIRECTORY: `${root}/uploads`,
-  PORT: 4301,
+  FRONTEND: args['FRONTPATH'] || 'http://localhost:4200',
+  UPLOAD_DIRECTORY: '/uploads',
+  PORT: args['PORT'] || '4444',
   SOCKET_ACTIVE: false,
   SECURITY: {
-    HTTPS: true,
+    HTTPS: false,
     KEY: `${root}/security/key.pem`,
-    CERT: `${root}/security/cert.pem`
+    CERT: `${root}/security/cert.pem`,
   },
   AUTH: {
     algorithm: 'RS256',
@@ -33,5 +29,6 @@ export const prodVariables:IEnvironment = {
       pass: ''
     },
     sender: ''
-  }
+  },
+  MONGODB: args['MONGODB'] || 'mongodb://localhost:27017/master-prod',
 };

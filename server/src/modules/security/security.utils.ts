@@ -3,14 +3,13 @@ const crypto = require('crypto');
 import * as jwt from 'jsonwebtoken';
 import * as fs from "fs";
 import * as jwksClient from 'jwks-rsa';
-import { User } from "../models/user";
+import { User } from "../api/users/user";
 import { CONFIG } from "../../config";
 
 export const randomBytes = util.promisify(crypto.randomBytes);
 export const signJwt = util.promisify(jwt.sign);
 const RSA_PRIVATE_KEY = fs.readFileSync(CONFIG.SECURITY.KEY);
 const RSA_PUBLIC_KEY = fs.readFileSync(CONFIG.SECURITY.CERT);
-const SESSION_DURATION = 1000;
 
 // Create a session token.
 export async function createSessionToken(user: User, expiresIn = null) {
@@ -29,7 +28,7 @@ function getKey(header, callback) {
   let client = jwksClient({
     jwksUri: 'https://' + CONFIG.AUTH.domain + '/.well-known/jwks.json'
   });
-  client.getSigningKey(header.kid, (err, key) => {
+  client.getSigningKey(header.kid, (err: any, key) => {
     try {
       var signingKey = key.publicKey || key.rsaPublicKey;
       callback(null, signingKey);
@@ -49,7 +48,7 @@ export async function decodeJwt(token:string) {
         return await jwt.verify(tokenPart[0], RSA_PUBLIC_KEY);
       case 'auth0' :
         return new Promise((resolve, reject) => {
-          jwt.verify(tokenPart[0], getKey, [], (err, verified) => {
+          jwt.verify(tokenPart[0], getKey, [], (err: any, verified: any) => {
             if (err) return reject(err)
             resolve(verified)
           })

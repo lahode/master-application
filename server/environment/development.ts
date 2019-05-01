@@ -1,18 +1,14 @@
 import { IEnvironment } from "./env-model";
 const root = require('app-root-path').path;
+const args = require('minimist')(process.argv.slice(2)) || [];
 
 export const devVariables:IEnvironment = {
   environmentName: 'Development Environment',
   APPNAME: 'Master Application',
-  DATABASE: {
-    USERS: `${root}/data/users.json`,
-    ROLES: `${root}/data/roles.json`,
-    FILES: `${root}/data/files.json`
-  },
   LOGNAME: 'LOG_MASTER_DEV',
-  FRONTEND: 'http://localhost:4200',
-  UPLOAD_DIRECTORY: `${root}/uploads`,
-  PORT: 4300,
+  FRONTEND: args['FRONTPATH'] || 'http://localhost:4200',
+  UPLOAD_DIRECTORY: '/uploads',
+  PORT: args['PORT'] || '4300',
   SOCKET_ACTIVE: false,
   SECURITY: {
     HTTPS: false,
@@ -33,5 +29,6 @@ export const devVariables:IEnvironment = {
       pass: ''
     },
     sender: ''
-  }
+  },
+  MONGODB: args['MONGODB'] || 'mongodb://localhost:27017/master-dev',
 };

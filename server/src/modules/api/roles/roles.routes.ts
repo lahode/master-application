@@ -1,17 +1,16 @@
 import { Request, Response } from 'express';
+import { ObjectID } from 'mongodb';
 
-import { CONFIG } from "../../../config";
-import { Permissions } from "../../permissions";
+import { Permissions } from "../../common/permissions";
 import { UsersRoutes } from "../users/users.routes";
 import { returnHandler } from '../../common/return-handlers';
 
-const Datastore = require('nedb-promises');
-const roleDB = new Datastore(CONFIG.DATABASE.ROLES);
+import { roleDB } from './roles.db';
 
 export class RolesRoutes {
 
   // Find or return permission in a user.
-  public static async findPermission(user, perm = null) {
+  public static async findPermission(user: any, perm = null) {
     let results: string[] = [];
     let result = false;
 
@@ -28,7 +27,7 @@ export class RolesRoutes {
 
         // Retrieve each permission on each role.
         if (role.permissions && role.permissions.length > 0) {
-          role.permissions.map((permission) => {
+          role.permissions.map((permission: any) => {
 
             // If a permission has been set in entry, return true whenever the permission is found.
             if (perm && permission.toString() === perm) {
@@ -61,7 +60,7 @@ export class RolesRoutes {
     }
     const data = await UsersRoutes.findUserBySub(req['user']);
     if (data.success) {
-      Permissions.checkPermissionOnUser(data.user, req.body).then(check => {
+      Permissions.checkPermissionOnUser(data.user, req.body).then((check: any) => {
         return res.json( returnHandler( {} ) );
       })
       .catch(e => {
@@ -74,21 +73,26 @@ export class RolesRoutes {
   }
 
   // Get all permissions.
-  public static getPermissions(req: Request, res: Response) {
-    return res.json( returnHandler( { permissions: Permissions.permissionsList} ) );
+  public static async getPermissions(req: Request, res: Response) {
+    try {
+      return res.json( returnHandler( { permissions: Permissions.permissionsList} ) );
+    }
+    catch(e) {
+      return { error: 500, message: "Une erreur s'est produite lors de la récupération des permissions.", success: false };
+    }
   }
 
   // Get role by ID route route.
-  public static get(req, res) {
+  public static get(req: Request, res: Response) {
     if (!req.params.id) {
       return res.status(400).json( returnHandler(null, "Aucun ID n'a été trouvé dans la requête.") );
     }
     // Find a role by it's ID
     roleDB.findOne({ _id: req.params.id })
-      .then((role) => {
+      .then((role: any) => {
         return res.json( returnHandler( {role: role} ) );
       })
-      .catch(e => res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de le rôle.", e) ) );
+      .catch((e: any) => res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de le rôle.", e) ) );
   }
 
   // Get all roles route.
@@ -96,7 +100,7 @@ export class RolesRoutes {
     // Find all roles
     roleDB.find({}, {name: 1, active: 1})
     .sort({title: 1})
-    .then((roles) => {
+    .then((roles: any[]) => {
       if (roles) {
         let results = [];
         // Loop on each roles and limit of "from" and "to" parameters have been set
@@ -115,7 +119,7 @@ export class RolesRoutes {
         return res.status(404).json( returnHandler(null, "Aucun rôle n'a été trouvée." ) );
       }
     })
-    .catch(e => res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération des rôles.", e) ));
+    .catch((e: any) => res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération des rôles.", e) ));
   }
 
   // Create role route
@@ -168,7 +172,7 @@ export class RolesRoutes {
         const checkRole = await roleDB.findOne({ _id: role._id });
         if (checkRole) {
           // Update role to the database.
-          const updated = await roleDB.update({ _id: role._id }, role);
+          await roleDB.update({ _id: role._id }, role);
           return res.json( returnHandler( {role: role} ) );
         } else {
           return res.status(404).json( returnHandler(null, "Impossible de modifier cet rôle, aucun rôle n'a été trouvé.") );
@@ -196,7 +200,7 @@ export class RolesRoutes {
       if (checkRole) {
 
         // Delete the role in the database.
-        const deletedRole = await roleDB.remove({ _id: req.params.id });
+        await roleDB.deleteOne({ _id: ObjectID(req.params.id ) });
         return res.json( returnHandler( {deleted: req.params.id} ) );
       } else {
         return res.status(404).json( returnHandler(null, "Impossible de supprimer cet rôle, aucun rôle n'a été trouvé.") );

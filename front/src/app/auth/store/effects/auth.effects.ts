@@ -8,7 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthActions } from '../actions/auth.actions';
 import { AuthService } from '../../services/auth.service';
 import { AppActions } from '../../../../core/store';
-import { StorageService } from '../../../../core/services/storage.service';
 import { environment } from '../../../../environments/environment';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class AuthEffects {
   @Effect() checkAuthAction$ = this._action$
     .pipe(
       ofType(AuthActions.CHECK_AUTH_START),
-      switchMap(() => this._auth.checkAuth(false)
+      switchMap(() => this._auth.checkAuth()
         .pipe(
           map<Action, any>((_result: any) => {
               // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP.
@@ -71,7 +70,9 @@ export class AuthEffects {
           tap((action) => {
             if (action.payload) {
               const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
-              this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
+              if (action.payload.language) {
+                this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
+              }
               this._router.navigate([`/${returnUrl}`]);
             }
           })
@@ -155,58 +156,11 @@ export class AuthEffects {
           // Redirect to the target page.
           tap((action) => {
             if (action.payload) {
-              this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
               const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
-              this._router.navigate([`/${returnUrl}`]);
-            }
-          })
-        )
-      )
-    );
-
-  // Listen for the 'CALLBACK_START' action.
-  @Effect() callbackAction$ = this._action$
-    .pipe(
-      ofType(AuthActions.CALLBACK_START),
-      switchMap(() => this._auth.checkAuth(true)
-        .pipe(
-          map<Action, any>((_result: any) => {
-              // If successful, dispatch CHECK_AUTH_SUCCESS action with result else CHECK_AUTH_STOP.
-              if (_result) {
-                return <Action>{ type: AuthActions.CALLBACK_SUCCESS, payload: _result };
-              } else {
-                return <Action>{type: AuthActions.CALLBACK_FAILED, payload: 'Erreur d\'authentication'};
-                // return <Action>{ type: AuthActions.CALLBACK_STOP, payload: _result };
+              if (action.payload.language) {
+                this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
               }
-              // On errors dispatch CHECK_AUTH_FAILED action with result.
-            }),
-          catchError(res => {
-            return of({type: AuthActions.CALLBACK_FAILED, payload: 'Erreur d\'authentication'});
-/*
-            if (res.code === 401) {
-              // Intercept 401 (in this case user exists but is not active) initiate CALLBACK_FAILED.
-              return of({type: AuthActions.CALLBACK_FAILED, payload: res.message});
-            } else {
-              return of({type: AuthActions.CALLBACK_STOP, payload: null});
-            }
-*/
-          }),
-          // Redirect to the target page.
-          tap((action) => {
-            switch (action.type) {
-              case AuthActions.CALLBACK_SUCCESS:
-                this._storage.remove('reset_auth').then(() => {
-                  const returnUrl = this._route.snapshot.queryParams['returnUrl'] || environment.homepage;
-                  this._store.dispatch(<Action>AppActions.setLanguage(action.payload.language));
-                  this._router.navigate([`${returnUrl}`]);
-                });
-                break;
-              case AuthActions.CALLBACK_STOP:
-                this._router.navigate(['/register'], { queryParams: { auth: 'direct'} });
-                break;
-              case AuthActions.CALLBACK_FAILED:
-                this._router.navigate(['/signin']);
-                break;
+              this._router.navigate([`/${returnUrl}`]);
             }
           })
         )
@@ -218,8 +172,7 @@ export class AuthEffects {
     private readonly _store: Store<Action>,
     private readonly _auth: AuthService,
     private readonly _router: Router,
-    private readonly _route: ActivatedRoute,
-    private readonly _storage: StorageService
+    private readonly _route: ActivatedRoute
   ) {}
 
 }

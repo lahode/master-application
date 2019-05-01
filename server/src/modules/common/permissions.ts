@@ -1,6 +1,8 @@
-import { RolesRoutes } from "./api/roles/roles.routes";
-import { UsersRoutes } from "./api/users/users.routes";
-import { returnHandler } from './common/return-handlers';
+import { Request, Response } from 'express';
+
+import { RolesRoutes } from "../api/roles/roles.routes";
+import { UsersRoutes } from "../api/users/users.routes";
+import { returnHandler } from './return-handlers';
 
 // Export the permissions class
 export class Permissions {
@@ -18,12 +20,15 @@ export class Permissions {
   }
 
   // Check permission on each route
-  public static async permissionOnRoute(req, res, next) {
+  public static async permissionOnRoute(req: Request, res: Response, next) {
     const url = Permissions.sanitizeUrl(req.originalUrl) || '';
     const permissions = Permissions.findPermissionOnUrl(url) || [];
+
+    // Récupère l'utilisateur courant.
     const data = await UsersRoutes.findUserBySub(req['user']);
+
     if (data.success) {
-      Permissions.checkPermissionOnUser(data.user, permissions).then(check => {
+      Permissions.checkPermissionOnUser(data.user, permissions).then(() => {
         next();
       })
       .catch(e => {
@@ -36,7 +41,7 @@ export class Permissions {
   }
 
   // Find permission on url.
-  public static findPermissionOnUrl(url) {
+  public static findPermissionOnUrl(url: any) {
     let result = '';
     Permissions.permissions.forEach((value, key, map) => {
       if (url.includes(key)) {
@@ -47,7 +52,7 @@ export class Permissions {
   }
 
   // Check if a user has permissions to get further
-  public static async checkPermissionOnUser(user, permissions) {
+  public static async checkPermissionOnUser(user: any, permissions: any) {
     // If no permissions need to be checked, allow user to continue.
     if (!permissions || permissions.length === 0) {
       return true;
@@ -69,6 +74,7 @@ export class Permissions {
     }
   }
 
+  // Sanitize url.
   public static sanitizeUrl(url: string): string {
     const url1 = url.indexOf('?') > 0 ? url.substring(0, url.indexOf('?')) : url;
     const url2 = url1.indexOf(':') > 0 ? url1.substring(0, url1.indexOf(':')) : url1;

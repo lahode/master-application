@@ -8,5 +8,7 @@ export interface User {
   picture: any;
   description: string;
   active: boolean;
+  language: string;
   roles: any[];
+  applications: any[];
 }

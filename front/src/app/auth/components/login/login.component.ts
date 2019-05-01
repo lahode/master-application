@@ -6,6 +6,8 @@ import { ActivatedRoute, Params} from '@angular/router';
 import { AuthActions } from '../../store';
 import { StorageService } from '../../../../core/services/storage.service';
 
+const RESETAUTH = 'reset_auth';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,12 +28,12 @@ export class LoginComponent implements OnInit {
 
     // Check if reset authentication has been set.
     this._router.queryParams.subscribe((params: Params) => {
-      this._storage.set('reset_auth', params['connect']);
+      this._storage.set(RESETAUTH, params['connect']);
     });
   }
 
   // Change block tabulation.
-  public onChangeBlock(block) {
+  public onChangeBlock(block: any) {
     this.showBlock = block;
   }
 

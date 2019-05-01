@@ -1,6 +1,3 @@
-import { Action } from '@ngrx/store';
-import { AppActions } from '../actions/app.actions';
-
 export interface IMessageState extends String {}
 
 export const initialState: IMessageState = null;

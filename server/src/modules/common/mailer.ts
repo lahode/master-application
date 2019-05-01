@@ -3,7 +3,7 @@ import { CONFIG } from "../../config";
 
 export class Mailer {
 
-  public static async sendMail(subject, email, message) {
+  public static async sendMail(subject: string, email: string, message: string) {
 
     // Initialize e-mail parameters.
     const transporter = nodemailer.createTransport(CONFIG.MAILER);

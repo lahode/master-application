@@ -53,56 +53,56 @@ export const AppActions = {
     };
   },
 
-  setError(_credentials)  {
+  setError(_credentials: any)  {
     return <Action>{
       type: AppActions.FAILED,
       payload: _credentials
     };
   },
 
-  setMessage(_credentials)  {
+  setMessage(_credentials: any)  {
     return <Action>{
       type: AppActions.MESSAGE,
       payload: _credentials
     };
   },
 
-  setLanguage(_credentials)  {
+  setLanguage(_credentials: any)  {
     return <Action>{
       type: AppActions.LANGUAGE,
       payload: _credentials
     };
   },
 
-  setBreadcrumb(_credentials)  {
+  setBreadcrumb(_credentials: any)  {
     return <Action>{
       type: AppActions.BREADCRUMB,
       payload: _credentials
     };
   },
 
-  loading(_credentials)  {
+  loading(_credentials: any)  {
     return <Action>{
       type: AppActions.LOADING,
       payload: _credentials
     };
   },
 
-  loaded(_credentials)  {
+  loaded(_credentials: any)  {
     return <Action>{
       type: AppActions.LOADED,
       payload: _credentials
     };
   },
 
-  setMenu(_credentials)  {
+  setMenu(_credentials: any)  {
     return <Action>{
       type: AppActions.SETMENU,
       payload: _credentials
     };
   },
 
-  addToMenu(_credentials)  {
+  addToMenu(_credentials: any)  {
     return <Action>{
       type: AppActions.ADDTOMENU,
       payload: _credentials
@@ -126,8 +126,8 @@ export const AppActions = {
       type: AppActions.SOCKET_DISCONNECT,
     };
   },
-
-  refresh(data) {
+  
+  refresh(data: any) {
     if (data.id) {
       return <Action>{
         type: data.type.toUpperCase() + '_REFRESH',

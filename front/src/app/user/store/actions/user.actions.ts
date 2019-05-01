@@ -17,6 +17,10 @@ export const UserActions = {
   USERS_LOAD_SUCCESS : 'USERS_LOAD_SUCCESS',
   USERS_LOAD_FAILED : 'USERS_LOAD_FAILED',
 
+  USERS_GETLIKE_START : 'USERS_GETLIKE_START',
+  USERS_GETLIKE_SUCCESS : 'USERS_GETLIKE_SUCCESS',
+  USERS_GETLIKE_FAILED : 'USERS_GETLIKE_FAILED',
+
   USER_NEW : 'USER_NEW',
 
   USER_LOAD_START : 'USER_LOAD_START',
@@ -68,7 +72,14 @@ export const UserActions = {
     };
   },
 
-  changePage(_credentials) {
+  getLike(_credentials = null) {
+    return <Action>{
+      type: UserActions.USERS_GETLIKE_START,
+      payload: _credentials
+    };
+  },
+
+  changePage(_credentials: any) {
     return <Action>{
       type: UserActions.USERLIST_CHANGE_PAGE,
       payload: _credentials
@@ -81,42 +92,42 @@ export const UserActions = {
     };
   },
 
-  load(_credentials) {
+  load(_credentials: any) {
     return <Action>{
       type: UserActions.USER_LOAD_START,
       payload: _credentials
     };
   },
 
-  create(_credentials) {
+  create(_credentials: any) {
     return <Action>{
       type: UserActions.USER_CREATE_START,
       payload: _credentials
     };
   },
 
-  update(_credentials) {
+  update(_credentials: any) {
     return <Action>{
       type: UserActions.USER_UPDATE_START,
       payload: _credentials
     };
   },
 
-  updateProfile(_credentials) {
+  updateProfile(_credentials: any) {
     return <Action>{
       type: UserActions.PROFILE_UPDATE_START,
       payload: _credentials
     };
   },
 
-  remove(_credentials) {
+  remove(_credentials: any) {
     return <Action>{
       type: UserActions.USER_REMOVE_START,
       payload: _credentials
     };
   },
 
-  reset(_credentials) {
+  reset(_credentials: any) {
     return <Action>{
       type: UserActions.USER_RESET_START,
       payload: _credentials

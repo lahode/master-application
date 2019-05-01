@@ -8,15 +8,9 @@ export const initialState: IUsersState = null;
 
 export function reducer (state: any = initialState, action: any): IUsersState {
   switch (action.type) {
-    case UserActions.PROFILE_LOAD_SUCCESS:
+    case UserActions.USERS_GETLIKE_SUCCESS:
     case UserActions.USERS_LOAD_SUCCESS: {
       return [...action.payload];
-    }
-
-    case UserActions.USER_CREATE_SUCCESS: {
-      const newState = [...state];
-      newState.push(action.payload);
-      return newState;
     }
 
     case UserActions.USER_UPDATE_SUCCESS: {

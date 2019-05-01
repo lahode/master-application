@@ -5,17 +5,22 @@ import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router
 import { Params, RouterStateSnapshot } from '@angular/router';
 
 import { reducers, metaReducers } from './reducers';
-import { AppEffects } from './effects/app.effects';
-import { MenuLinksEffects } from './effects/menulinks.effects';
 
 import { EndpointsService } from '../services/endpoints';
 import { ErrorHandlerService } from '../services/errorhandler.service';
 import { ExportService } from '../services/export.service';
-import { FileService } from '../services/file.service';
-import { NotificationService } from '../services/notification.service';
+import { FileService, ImageDataConverterService } from '../services/file.service';
+import { LoaderService } from '../services/loader.service';
+import { MediaQueryService } from '../services/media-query.service';
+import { NavigationService } from '../services/navigation.service';
 import { PagerService } from '../services/pager.service';
+import { ScrollPager } from '../services/scrollpager.service';
 import { SocketService } from '../services/socket.service';
 import { StorageService } from '../services/storage.service';
+
+import { AppEffects } from './effects/app.effects';
+import { MenuLinksEffects } from './effects/menulinks.effects';
+import { PreviousNavigationEffects } from './effects/previous-navigation.effects';
 
 export interface RouterStateUrl {
   url: string;
@@ -45,8 +50,12 @@ export const AppProviders = [
   ErrorHandlerService,
   ExportService,
   FileService,
-  NotificationService,
+  ImageDataConverterService,
+  LoaderService,
+  MediaQueryService,
+  NavigationService,
   PagerService,
+  ScrollPager,
   SocketService,
   StorageService,
   { provide: RouterStateSerializer, useClass: CustomSerializer }
@@ -55,7 +64,9 @@ export const AppProviders = [
 @NgModule({
   imports: [
     StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([AppEffects, MenuLinksEffects]),
+    EffectsModule.forRoot([
+      AppEffects, MenuLinksEffects, PreviousNavigationEffects
+    ]),
     StoreRouterConnectingModule
   ],
 })

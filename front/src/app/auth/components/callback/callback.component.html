@@ -1,3 +1,16 @@
-<div class="loading">
-  <img src="assets/images/loading.svg" alt="loading">
+<div *ngIf="(applications$ | async) as applications">
+  <div *ngIf="applications.length > 0; else noApp">
+    <div *ngIf="applications[0] === -1; else listApp">
+      <mat-progress-spinner class="spinner" [color]="color" [mode]="mode" [value]="value">
+      </mat-progress-spinner>
+    </div>
+    <ng-template #listApp>
+      <ul *ngFor="let application of applications">
+        <li class="clickable" (click)="connect(application._id)">{{ application.name }}</li>
+      </ul>
+    </ng-template>
+  </div>
+  <ng-template #noApp>
+    Aucune application n'a été sélectionnée.
+  </ng-template>
 </div>

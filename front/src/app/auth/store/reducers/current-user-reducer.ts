@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import { AuthActions } from '../actions/auth.actions';
 import { UserActions } from '../../../user/store/actions/user.actions';
 

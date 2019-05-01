@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, NgZone, AfterViewInit, ViewContainerRef, ViewChild  } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, NgZone, AfterViewInit, ViewContainerRef, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
@@ -6,9 +6,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, delay, filter } from 'rxjs/operators';
 import { Store, Action } from '@ngrx/store';
 
+import { Subscription } from 'rxjs';
+
+import { User } from '../../../../core/models/user';
+
 import { AuthActions } from '../../../auth/store';
 import { RoleService } from '../../../user/services/role.service';
 import { AppActions } from '../../../../core/store';
+
+import { LoaderService } from '../../../../core/services/loader.service';
+import { FileService } from '../../../../core/services/file.service';
 
 import { ViewProfileComponent } from '../../../shared/components/view-profile/view-profile.component';
 import { SidenavLink } from '../sidenav-list/sidenav-list.component';
@@ -22,7 +29,7 @@ const DEFAULT_LANGUAGE = 'en';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainComponent implements OnInit, AfterViewInit {
+export class MainComponent implements OnInit, OnDestroy, AfterViewInit {
   private start: ViewContainerRef;
   private widthScreen: number;
   private navState = new BehaviorSubject<any>({
@@ -31,9 +38,11 @@ export class MainComponent implements OnInit, AfterViewInit {
   });
   public menuLinks$: Observable<SidenavLink[]>;
   public navState$: Observable<any>;
-  public user$: Observable<boolean>;
+  public user$: Observable<User>;
   public language$: Observable<any>;
   public adminLinks: MenuLink[];
+  private _storeLoadingSubscription: Subscription;
+  private _loadGlobalSettings = false;
 
   @ViewChild('start') set sideNavSetter(theElementRef: ViewContainerRef) {
     this.start = theElementRef;
@@ -44,6 +53,8 @@ export class MainComponent implements OnInit, AfterViewInit {
               private readonly _ngZone: NgZone,
               private readonly _role: RoleService,
               private readonly _dialog: MatDialog,
+              private readonly _loader: LoaderService,
+              private readonly _file: FileService,
               public translate: TranslateService) {
     this.navState$ = this.navState.asObservable();
     translate.addLangs(['en', 'fr']);
@@ -64,6 +75,14 @@ export class MainComponent implements OnInit, AfterViewInit {
             }
             return true;
           });
+
+          if (user && !this._loadGlobalSettings) {
+
+            // Clean existing temporary files.
+            this._file.fileClean();
+
+            this._loadGlobalSettings = true;
+          }
           return user;
         })
       );
@@ -101,6 +120,16 @@ export class MainComponent implements OnInit, AfterViewInit {
         this.changeMode();
       });
     };
+
+    // Managing confirm dialog in app
+    this._storeLoadingSubscription = this._store.select(state => state.loading)
+      .subscribe(loading => {
+        if (loading.length > 0) {
+          this._loader.show();
+        } else {
+          this._loader.hide();
+        }
+      });
   }
 
   // Navigate to main application page
@@ -131,14 +160,13 @@ export class MainComponent implements OnInit, AfterViewInit {
   // Initialize administration menu.
   initMenu(): MenuLink[] {
     return [
-      { path: '/', label: 'HEADER.MENU.HOME', active: true },
       { path: '/user/manage', label: 'HEADER.MENU.MANAGEUSERS', permissions: ['manage users'] },
       { path: '', label: 'HEADER.MENU.LOGOUT', click: 'logout' }
     ];
   }
 
   // Set the language by default.
-  setDefaultLang(userlang) {
+  setDefaultLang(userlang: string) {
     const browserLang = this.translate.getBrowserLang();
     let currentLang = DEFAULT_LANGUAGE;
     if (userlang && userlang.match(/en|fr/)) {
@@ -155,7 +183,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   // Change application language.
-  setLanguage(value) {
+  setLanguage(value: string) {
     this._store.dispatch(<Action>AppActions.setLanguage(value));
   }
 
@@ -167,4 +195,8 @@ export class MainComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // Destroy store subscriptions when leaving component
+  ngOnDestroy() {
+    this._storeLoadingSubscription.unsubscribe();
+  }
 }

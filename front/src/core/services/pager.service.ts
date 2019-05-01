@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { Pager } from '../models/pager';
 import { Range } from '../models/range';
 
 const DEFAULT_PAGESIZE = 100;

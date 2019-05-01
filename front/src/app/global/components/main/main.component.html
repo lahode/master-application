@@ -16,8 +16,6 @@
     </button>
   </mat-toolbar>
 
-  <app-loading></app-loading>
-
   <mat-sidenav-container class="sidenav-container">
 
     <mat-sidenav class="mat-elevation-z10"
@@ -38,6 +36,7 @@
     </mat-sidenav>
 
     <main class="container">
+      <app-loader></app-loader>
       <app-breadcrumb></app-breadcrumb>
       <router-outlet></router-outlet>
     </main>

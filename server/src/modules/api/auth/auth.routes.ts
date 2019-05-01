@@ -8,8 +8,7 @@ import { UsersRoutes } from "../users/users.routes";
 import { returnHandler } from '../../common/return-handlers';
 import { decodeJwt } from "../../security/security.utils";
 
-const Datastore = require('nedb-promises');
-const userDB = new Datastore(CONFIG.DATABASE.USERS);
+import { userDB } from '../users/users.db';
 
 export class AuthRoutes {
 
@@ -27,7 +26,7 @@ export class AuthRoutes {
         // Save user sub if reset authentication token has been sent.
         if (req.params.resetauth) {
           data.user['sub'] = req['user'].sub;
-          const updatedUser = await userDB.update({ _id: data.user._id }, data.user);
+          await userDB.update({ _id: data.user._id }, data.user);
         }
 
         // Check if user is active.
@@ -38,6 +37,9 @@ export class AuthRoutes {
         }
       }
       else {
+        if (data.error === 404) {
+          return res.status(data.error).json( returnHandler(null, "Erreur de connexion, utilisateur inconnu") );
+        }
         return res.status(data.error).json( returnHandler(null, data.message) );
       }
     }
@@ -47,7 +49,6 @@ export class AuthRoutes {
       }
       return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la vérification de l'utilisateur.", e) );
     }
-
   }
 
   // Log in route.
@@ -58,12 +59,9 @@ export class AuthRoutes {
     }
     try {
       // Find the user in the database.
-      let user = await userDB.findOne({ $or: [{ username: credentials.username}, { email: credentials.username }] });
-
+      const user = await userDB.findOne({ $or: [{ username: credentials.username}, { email: credentials.username }] })
+                               .populate('roles.role');;
       if (user) {
-        // Add permissions to user's roles (Can be replaced by .populate('roles.role') when using mongoose).
-        user.roles = await UsersRoutes.populateRoles(user);
-
         // Check if password authentification is ok.
         const result = await AuthStrategyToken.login(credentials.password, user, res);
         if (result) {
@@ -99,7 +97,7 @@ export class AuthRoutes {
           const userInserted = await userDB.create(credentials);
 
           // Send the e-mail.
-          const sentMail = await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
+          await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
 
           return res.json( returnHandler( {user: userInserted} ) );
         } else {
@@ -134,21 +132,21 @@ export class AuthRoutes {
         credentials.active = 0;
 
         // Insert the user into the database.
-        const userInserted = await userDB.insert(credentials);
+        const userInserted = await userDB.create(credentials);
 
         // Send the e-mail.
-        const sentMail = await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
+        await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
 
         // Create the new token with the user and return the user and the token.
         const userSignedUp = await AuthStrategyToken.signup(userInserted);
         delete(userSignedUp.user.password);
         return res.json( returnHandler( userSignedUp ) );
       } else {
-        return res.status(403).json( returnHandler(null, "L'utilisateur existe déjà.") );
+        return res.status(403).json( returnHandler(null, "L'utilisateur existe déjà avec cet identifiant ou e-mail.") );
       }
     }
     catch (e) {
-      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur", e) );
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur.", e) );
     }
   }
 
@@ -159,7 +157,7 @@ export class AuthRoutes {
   }
 
   // Send new password route
-  public static async sendPswRoute(req, res) {
+  public static async sendPswRoute(req: Request, res: Response) {
     // Check if an e-mail has been given.
     if (!req.body.email || !req.body.email) {
       return res.status(400).json( returnHandler(null, "Aucun e-mail valide n'a été inséré." ) );
@@ -185,7 +183,7 @@ export class AuthRoutes {
   }
 
   // Reinitialize the new password route
-  public static async initPswRoute(req, res) {
+  public static async initPswRoute(req: Request, res: Response) {
     const credentials = req.body;
 
     // Check if an e-mail has been given.
@@ -208,7 +206,7 @@ export class AuthRoutes {
         const passwordDigest = await PasswordStrategy.getPasswordDigest(credentials.password);
         const user = data.user;
         user.password = passwordDigest;
-        const updatedUser = await userDB.update({ _id: user._id }, user);
+        await userDB.update({ _id: user._id }, user);
         delete(user.password);
 
         // Create the new token with the user and return the user and the token.
@@ -224,11 +222,11 @@ export class AuthRoutes {
   }
 
   // Check password validity.
-  public static checkPasswordStrategy(password): string {
+  public static checkPasswordStrategy(password: string): string {
     const errors = PasswordStrategy.validate(password);
     if (errors.length > 0) {
       const err:string[] = [];
-      errors.map(e => {
+      errors.map((e: string) => {
         switch (e) {
           case 'min' : err.push('au minimum 10 caractères');break;
           case 'uppercase' : err.push('des majuscules');break;

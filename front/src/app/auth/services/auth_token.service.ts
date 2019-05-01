@@ -85,6 +85,11 @@ export class AuthTokenService extends AuthService {
     return fromPromise(this._storage.remove(STORAGE_ITEM).then(() => true));
   }
 
+  // Connect to app.
+  public connect(): Observable<any> {
+    return of(null);
+  }
+
   // Sign up.
   public signup(values: any): Observable<any> {
     return this._http.post(this._endpoints.signup(), values)
