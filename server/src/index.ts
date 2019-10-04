@@ -12,7 +12,7 @@ import * as socketIo from 'socket.io';
 
 import { RetrieveUser } from "./modules/security/retrieve-user.middleware";
 import { APIRoutes }  from "./modules/routes/api.route";
-import { log }  from "./modules/common/log";
+import { starterLog }  from "./modules/common/loggers";
 import { CONFIG } from "./config";
 import { database } from "./modules/common/database";
 
@@ -30,7 +30,7 @@ export class Server {
     this.middleware();
     this.defaultServerRoute();
     this._app.use( new APIRoutes().routes());
-    database.connect();
+    database.initDB();
   }
 
   // Set configuration parameters.
@@ -65,7 +65,7 @@ export class Server {
 
   // Default server route.
   private defaultServerRoute() {
-    this._app.get('/', log, (req: Request, res: Response) => {
+    this._app.get('/', starterLog, (req: Request, res: Response) => {
       res.json({
         code: 200,
         message: `master-application server work 👌`

@@ -1,16 +1,4 @@
-import { CONFIG } from "../../config";
-
-var logParams = {
-    consoleOutput : false,
-    consoleOutputLevel: ['DEBUG','ERROR','WARNING', 'NOTICE'],
-
-    dateTimeFormat: "DD-MM-YYYY HH:mm:ss.S",
-    outputPath: "logs/",
-    fileNameDateFormat: "DDMMYYYY",
-    fileNamePrefix: (CONFIG.LOGNAME || 'log') + "-"
-};
-
-export const log = require('noogger').init(logParams);
+import { nooggerLog, winstonLog } from './loggers';
 
 /**
  * Ajoute les messages d'erreurs renvoyés par les schémas
@@ -20,10 +8,10 @@ export const returnHandler = (data: any, defaultMessage = "", err = null) => {
 
   // Log les messages
   if (defaultMessage) {
-    log.notice(defaultMessage);
+    nooggerLog.notice(defaultMessage);
   }
   if (err) {
-    log.error(err);
+    winstonLog.error('error', err);
   }
 
   let success = !(typeof err != 'undefined' && err) && (typeof data != 'undefined' && data) ? true : false;

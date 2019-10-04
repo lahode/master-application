@@ -21,22 +21,29 @@ export class Permissions {
 
   // Check permission on each route
   public static async permissionOnRoute(req: Request, res: Response, next) {
-    const url = Permissions.sanitizeUrl(req.originalUrl) || '';
-    const permissions = Permissions.findPermissionOnUrl(url) || [];
+    try {
+      const url = Permissions.sanitizeUrl(req.originalUrl) || '';
+      const permissions = Permissions.findPermissionOnUrl(url) || [];
 
-    // Récupère l'utilisateur courant.
-    const data = await UsersRoutes.findUserBySub(req['user']);
+      // Récupère l'utilisateur courant.
+      const currentUser = await UsersRoutes.findUserBySub(req);
 
-    if (data.success) {
-      Permissions.checkPermissionOnUser(data.user, permissions).then(() => {
-        next();
-      })
-      .catch(e => {
-        return res.status(403).json( returnHandler(null, "Erreur, vous n'avez pas les droits requis.", e) );
-      });
+      if (currentUser) {
+        Permissions.checkPermissionOnUser(currentUser, permissions).then((check: any) => {
+          next();
+        })
+        .catch(e => {
+          return res.status(403).json( returnHandler(null, "Erreur, vous n'avez pas les droits requis.", e) );
+        });
+      }
+      else {
+        return res.status(400).json( returnHandler(null, "Erreur, aucun utilisateur trouvé.") );
+      }
     }
-    else {
-      return res.status(data.error).json( returnHandler(null, data.message) );
+    catch(err) {
+      if (err.status !== 404) {
+        return res.status(500).json( returnHandler(null, "Une erreur est survenue lors de la vérification des permissions", err) );
+      }
     }
   }
 
@@ -67,10 +74,10 @@ export class Permissions {
           }
         }
       }
-      throw false;
+      return false;
     }
     catch(e) {
-      throw false;
+      return false;
     }
   }
 

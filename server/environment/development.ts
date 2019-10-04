@@ -30,5 +30,5 @@ export const devVariables:IEnvironment = {
     },
     sender: ''
   },
-  MONGODB: args['MONGODB'] || 'mongodb://localhost:27017/master-dev',
+  MONGODB: args['MONGODB'] || 'mongodb://localhost:27017/master-prod',
 };
