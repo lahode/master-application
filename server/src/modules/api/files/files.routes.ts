@@ -13,16 +13,22 @@ export class FilesRoutes {
 
   // Upload a single file, save it into file database and return the new entry
   public static async uploadFile(req: Request, res: Response) {
-    const root = require('app-root-path').path;
-    const uploadedFolder = req.params.folder ? '/' + req.params.folder : '';
-    const data = await UsersRoutes.findUserBySub(req['user']);
-    const upload = promisify(multer({dest: `${root}/${CONFIG.UPLOAD_DIRECTORY}${uploadedFolder}`}).single('file'));
     try {
+
+      // Récupère l'utilisateur courant.
+      const data = await UsersRoutes.findUserBySub(req['user']);
+      const userID = (data.success) ? data.user._id : null;
+
+      // Sauvegarde le flux uploadé.
+      const uploadedFolder = req.params.folder ? '/' + req.params.folder : '';
+      const upload = promisify(multer({dest: `${CONFIG.UPLOAD_DIRECTORY}${uploadedFolder}`}).single('file'));
       await upload(req, res);
+
+      // Insert les informations du fichier dans la base de données.
       const file = req['file'];
       file['path'] = uploadedFolder + '/' + file.filename;
       file['destination'] = uploadedFolder;
-      file['user'] = (data.success) ? data.user._id : null;
+      file['user'] = userID;
       file['originalname'] = file.originalname.replace(/[^a-z0-9 \._-]/gi,'');
       const fileInserted = await fileDB.create(file);
       return res.json( returnHandler( {file: fileInserted._id, success: true} ) );
@@ -42,20 +48,20 @@ export class FilesRoutes {
 
       if (file) {
         // Check if file exists in path.
-        const root = require('app-root-path').path;
-        if (!fs.existsSync(`${root}${CONFIG.UPLOAD_DIRECTORY}${file.path}`)) {
-          return res.status(404).json( returnHandler(null, "Aucun fichier n'a été trouvé.") );
+        const path = `${CONFIG.UPLOAD_DIRECTORY}${file.path}`;
+        if (!fs.existsSync(path)) {
+          return res.status(404).json( returnHandler(null, `Aucun fichier n'a été trouvé dans ${path}.`) );
         }
 
         res.setHeader('Content-disposition', 'attachment; filename=' + file.originalname);
         res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
         res.setHeader('Content-type', file.mimetype);
 
-        const filestream = fs.createReadStream(`${root}${CONFIG.UPLOAD_DIRECTORY}${file.path}`);
+        const filestream = fs.createReadStream(`${CONFIG.UPLOAD_DIRECTORY}${file.path}`);
         filestream.pipe(res).on('error', (error: Error) => {process.exit(-1);throw(error);});
         return;
       } else {
-        return res.status(404).json( returnHandler(null, "Aucun fichier n'a été trouvé.") );
+        return res.status(404).json( returnHandler(null, "Aucun fichier correspondant n'a été trouvé dans la base de données.") );
       }
     }
     catch(e) {
@@ -80,8 +86,10 @@ export class FilesRoutes {
   // Clean the non-active files of a user.
   public static async cleanTempFiles(req: Request, res: Response) {
     try {
+      // Récupère l'utilisateur courant.
       const data = await UsersRoutes.findUserBySub(req['user']);
       const userID = (data.success) ? data.user._id : null;
+
       if (userID) {
         const filesDeleted = await FilesRoutes.removeFiles({ user: userID, active: false });
         return res.json( returnHandler( filesDeleted ) );
@@ -103,15 +111,14 @@ export class FilesRoutes {
         // Remove the file in the database
         await fileDB.deleteOne({ _id: ObjectID(file._id) });
         // Delete the file in the upload directory
-        const root = require('app-root-path').path;
-        await fs.remove(`${root}/${CONFIG.UPLOAD_DIRECTORY}${file.path}`);
+        await fs.remove(`${CONFIG.UPLOAD_DIRECTORY}${file.path}`);
       }
       // Return a confirmation.
-      const message = files.length > 1 ? "Le fichier a été supprimé." : files.length === 1 ? "Le fichier a été supprimé." : "Aucun fichier n'a été supprimé";
+      const message = files.length > 1 ? "Le fichier a été supprimé." : files.length === 1 ? "Le fichier a été supprimé." : "Aucun fichier n'a pu être supprimé";
       return {message, success: true};
     }
     catch(e) {
-      return Promise.reject({message: "Une erreur est survenue lors de la suppression des fichiers.", status: 500});
+      return Promise.reject(e);
     }
   }
 

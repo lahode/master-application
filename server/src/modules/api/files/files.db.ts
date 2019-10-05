@@ -26,8 +26,7 @@ const fileSchema = new Schema({
     required: true
   },
   destination: {
-    type: String,
-    required: true
+    type: String
   },
   filename: {
     type: String,
