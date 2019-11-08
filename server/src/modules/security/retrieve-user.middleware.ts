@@ -8,12 +8,14 @@ export class RetrieveUser {
     if (req.headers && req.headers.authorization) {
       var authorization = req.headers.authorization, decoded;
       let header = (authorization as string).split(' ');
-      RetrieveUser.handleSession(header[1], req, res)
+      if (header[0] === 'Bearer') {
+        RetrieveUser.handleUserSession(header[1], req, res)
         .then(() => next())
         .catch((err: any) => {
-          // TODO
-          next();
-      });
+            // TODO
+            next();
+        });
+      }
     }
     else {
       next();
@@ -21,7 +23,7 @@ export class RetrieveUser {
   }
 
   // Decode the token and attach it's payload to req['user'].
-  public static async handleSession(jwt:string, req: Request, res: Response) {
+  public static async handleUserSession(jwt:string, req: Request, res: Response) {
     try {
       const payload = await decodeJwt(jwt);
       req["user"] = payload;
@@ -31,4 +33,5 @@ export class RetrieveUser {
       return Promise.reject();
     }
   }
+
 }

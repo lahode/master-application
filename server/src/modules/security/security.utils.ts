@@ -28,10 +28,12 @@ function getKey(header, callback) {
   let client = jwksClient({
     jwksUri: 'https://' + CONFIG.AUTH.domain + '/.well-known/jwks.json'
   });
-  client.getSigningKey(header.kid, (err: any, key) => {
+  client.getSigningKey(header.kid, (err, key: jwksClient.SigningKey) => {
     try {
-      var signingKey = key.publicKey || key.rsaPublicKey;
-      callback(null, signingKey);
+      const signingKey =
+        (key as jwksClient.CertSigningKey).publicKey ||
+        (key as jwksClient.RsaSigningKey).rsaPublicKey
+      callback(null, signingKey)
     }
     catch(err) {
       callback(err);

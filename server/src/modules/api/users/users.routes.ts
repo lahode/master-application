@@ -274,8 +274,7 @@ export class UsersRoutes {
               const imageFile = await fileDB.findOne({ _id: user.picture });
 
               if (imageFile) {
-                const root = require('app-root-path').path;
-                const imageResult = await ImageProcessing.scaleAndCrop(`${root}/${imageFile.path}`, null, 32, 32);
+                const imageResult = await ImageProcessing.scaleAndCrop(`${CONFIG.UPLOAD_DIRECTORY}${imageFile.path}`, null, 32, 32);
                 if (imageResult.success) {
                   // Add the user icon to the user.
                   user.icon = `data:${imageFile.mimetype};base64,${imageResult.data}`;
@@ -283,14 +282,14 @@ export class UsersRoutes {
                   // Set the image file as permanent.
                   imageFile.updated = new Date();
                   imageFile.active = true;
-                  await fileDB.findByIdAndUpdate(imageFile._id, imageFile);
+                  await fileDB.findOneAndUpdate({_id: imageFile._id}, imageFile);
                 }
               }
             }
           }
 
           // Update user in the database.
-          await userDB.update({ _id: user._id }, user);
+          await userDB.findOneAndUpdate({ _id: user._id }, user);
           return user;
         } else {
           throw({status: 404, message: "Impossible de modifier cet utilisateur, aucun utilisateur n'a été trouvé.", error: null});
@@ -358,7 +357,7 @@ export class UsersRoutes {
         const formattedEndDate = moment.unix(endDateTimestamp).format("DD.MM.YYYY")
 
         // Update user with new token.
-        await userDB.update({ _id: user._id }, user);
+        await userDB.findOneAndUpdate({ _id: user._id }, user);
 
         // Send the e-mail.
         const sentMail = await Mailer.sendMail(`Authentification à la plateforme: ${CONFIG.APPNAME}`, user.email, `<p>Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}?connect=${newToken.token}">vous y connecter.</a></p><p>Attention, ce lien doit être utilisé avant le ${formattedEndDate}.</p>`);
@@ -368,7 +367,7 @@ export class UsersRoutes {
       }
     }
     catch (e) {
-      return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la récupération de l'utilisateur", e) );
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la récupération du compte de l'utilisateur", e) );
     }
   }
 

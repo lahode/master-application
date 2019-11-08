@@ -23,7 +23,7 @@ export class Mailer {
       return { mailID: sendmail.response, success:true };
     }
     catch (e) {
-      throw { error: 500, message: "Une erreur s'est produite lors de l'envoi du mail", success: false };
+      throw (e);
     }
   }
 }

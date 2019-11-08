@@ -63,13 +63,17 @@ export class Server {
       .use(cors(corsOptions))
   }
 
-  // Default server route.
+  // Default app route.
   private defaultServerRoute() {
     this._app.get('/', starterLog, (req: Request, res: Response) => {
-      res.json({
-        code: 200,
-        message: `master-application server work 👌`
-      });
+      try {
+        res.json({
+          code: 200,
+          message: `app server works 👌`
+        });
+      } catch(e) {
+        res.status(400).send(`database is down :(`);
+      }
     });
   }
 

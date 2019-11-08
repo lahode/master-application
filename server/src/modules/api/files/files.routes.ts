@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as multer from 'multer';
 import * as fs from 'fs-extra';
+import * as filenamify  from 'filenamify';
 import { promisify } from 'util';
 import { ObjectID } from 'mongodb';
 import { UsersRoutes } from "../users/users.routes";
@@ -20,7 +21,11 @@ export class FilesRoutes {
       const userID = (data.success) ? data.user._id : null;
 
       // Sauvegarde le flux uploadé.
-      const uploadedFolder = req.params.folder ? '/' + req.params.folder : '';
+      let uploadedFolder = '';
+      if (req.params.folder) {
+        const folderArray = req.params.folder.split('-');
+        uploadedFolder = '/'  + folderArray.join('/');
+      }
       const upload = promisify(multer({dest: `${CONFIG.UPLOAD_DIRECTORY}${uploadedFolder}`}).single('file'));
       await upload(req, res);
 
@@ -29,11 +34,11 @@ export class FilesRoutes {
       file['path'] = uploadedFolder + '/' + file.filename;
       file['destination'] = uploadedFolder;
       file['user'] = userID;
-      file['originalname'] = file.originalname.replace(/[^a-z0-9 \._-]/gi,'');
+      file['originalname'] = filenamify(file.originalname);
       const fileInserted = await fileDB.create(file);
       return res.json( returnHandler( {file: fileInserted._id, success: true} ) );
     } catch(e) {
-      res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la sauvegarde du fichier dans la base de données", e) );
+      return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la sauvegarde du fichier dans la base de données", e) );
     }
   }
 
@@ -59,7 +64,7 @@ export class FilesRoutes {
 
         const filestream = fs.createReadStream(`${CONFIG.UPLOAD_DIRECTORY}${file.path}`);
         filestream.pipe(res).on('error', (error: Error) => {process.exit(-1);throw(error);});
-        return;
+        return true;
       } else {
         return res.status(404).json( returnHandler(null, "Aucun fichier correspondant n'a été trouvé dans la base de données.") );
       }
@@ -116,6 +121,20 @@ export class FilesRoutes {
       // Return a confirmation.
       const message = files.length > 1 ? "Le fichier a été supprimé." : files.length === 1 ? "Le fichier a été supprimé." : "Aucun fichier n'a pu être supprimé";
       return {message, success: true};
+    }
+    catch(e) {
+      return Promise.reject(e);
+    }
+  }
+
+  // Set file as permanent.
+  public static async setPermanent(fileID: any) {
+    try {
+      // Update the file to set it as active.
+      await fileDB.updateOne({_id: fileID}, { active: true });
+
+      // Return a confirmation.
+      return {success: true};
     }
     catch(e) {
       return Promise.reject(e);
