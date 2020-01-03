@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { ObjectID } from 'mongodb';
 
-import { Permissions } from "../../common/permissions";
-import { UsersRoutes } from "../users/users.routes";
+import { Permissions } from '../../common/permissions';
+import { UsersRoutes } from '../users/users.routes';
 import { returnHandler } from '../../common/return-handlers';
 
 import { roleDB } from './roles.db';
@@ -26,8 +26,8 @@ export class RolesRoutes {
         const role = roleLine.role;
 
         // Retrieve each permission on each role.
-        if (role.permissions && role.permissions.length > 0) {
-          role.permissions.map((permission: any) => {
+        if (role['permissions'] && role['permissions'].length > 0) {
+          role['permissions'].map((permission: any) => {
 
             // If a permission has been set in entry, return true whenever the permission is found.
             if (perm && permission.toString() === perm) {
@@ -54,21 +54,25 @@ export class RolesRoutes {
 
   // Check permissions route.
   public static async checkPermissions(req: Request, res: Response) {
-    // Check if permissions has been set
-    if (!Array.isArray(req.body)) {
-      return res.json( returnHandler( {} ) );
-    }
-    const data = await UsersRoutes.findUserBySub(req['user']);
-    if (data.success) {
-      Permissions.checkPermissionOnUser(data.user, req.body).then((check: any) => {
+    try {
+      // Check if permissions has been set
+      if (!Array.isArray(req.body)) {
         return res.json( returnHandler( {} ) );
-      })
-      .catch(e => {
-        res.status(405).json( returnHandler(null, "Vous n'êtes pas autorisé à accéder.", e) );
-      });
+      }
+      const currentUser = await UsersRoutes.findUserBySub(req);
+      if (currentUser) {
+        Permissions.checkPermissionOnUser(currentUser, req.body).then((check: any) => {
+          return res.json( returnHandler( {} ) );
+        })
+        .catch(e => {
+          res.status(405).json( returnHandler(null, "Vous n'êtes pas autorisé à accéder.", e) );
+        });
+      } else {
+        res.status(401).json( returnHandler(null, "Aucun utilisateur n'a ét trouvé.") );
+      }
     }
-    else {
-      res.status(data.error).json( returnHandler(null, data.message) );
+    catch(e) {
+      res.status(404).json( returnHandler(null, e) );
     }
   }
 
@@ -172,7 +176,7 @@ export class RolesRoutes {
         const checkRole = await roleDB.findOne({ _id: role._id });
         if (checkRole) {
           // Update role to the database.
-          await roleDB.update({ _id: role._id }, role);
+          await roleDB.findOneAndUpdate({ _id: role._id }, role);
           return res.json( returnHandler( {role: role} ) );
         } else {
           return res.status(404).json( returnHandler(null, "Impossible de modifier cet rôle, aucun rôle n'a été trouvé.") );

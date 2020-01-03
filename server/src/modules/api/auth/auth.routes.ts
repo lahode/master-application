@@ -6,7 +6,6 @@ import { AuthStrategyToken } from "../../security/authentication-token-strategy"
 import { PasswordStrategy } from "../../security/password-strategy";
 import { UsersRoutes } from "../users/users.routes";
 import { returnHandler } from '../../common/return-handlers';
-import { decodeJwt } from "../../security/security.utils";
 
 import { userDB } from '../users/users.db';
 
@@ -17,30 +16,26 @@ export class AuthRoutes {
 
     try {
       // Get auth token from reset authenticate or standard user payload.
-      const payload = req.params.resetauth ? await decodeJwt(`${req.params.resetauth}|jwt`) : req['user'];
+      if (req.params.resetauth) {
+        req['user'] = await AuthStrategyToken.getPayloadByToken(`${req.params.resetauth}|jwt`);
+      }
 
       // Check if the user exists.
-      const data = await UsersRoutes.findUserBySub(payload);
-      if (data.success) {
+      let currentUser = await UsersRoutes.findUserBySub(req);
+      if (currentUser) {
 
         // Save user sub if reset authentication token has been sent.
         if (req.params.resetauth) {
-          data.user['sub'] = req['user'].sub;
-          await userDB.update({ _id: data.user._id }, data.user);
+          currentUser['sub'] = req['user'].sub;
+          await userDB.findOneAndUpdate({ _id: currentUser._id }, currentUser);
         }
 
         // Check if user is active.
-        if (data.user.active) {
-          return res.json( returnHandler( { user: data.user } ) );
+        if (currentUser.active) {
+          return res.json( returnHandler( { user: currentUser } ) );
         } else {
           return res.status(401).json( returnHandler(null, "Votre compte n'est pas actif pour le moment.") );
         }
-      }
-      else {
-        if (data.error === 404) {
-          return res.status(data.error).json( returnHandler(null, "Erreur de connexion, utilisateur inconnu") );
-        }
-        return res.status(data.error).json( returnHandler(null, data.message) );
       }
     }
     catch (e) {
@@ -87,6 +82,7 @@ export class AuthRoutes {
 
     // Register with auth0.
     if (req["user"] && req["user"].sub) {
+      let userInserted = null;
       try {
         const user = await userDB.findOne({$or: [{ username: credentials.username }, { email: credentials.email }]}, { password: 0 });
         if (!user) {
@@ -94,18 +90,22 @@ export class AuthRoutes {
           credentials.active = 0;
 
           // Insert the user into the database.
-          const userInserted = await userDB.create(credentials);
-
-          // Send the e-mail.
-          await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
-
-          return res.json( returnHandler( {user: userInserted} ) );
+          userInserted = await userDB.create(credentials);
         } else {
           return res.status(403).json( returnHandler(null, "L'utilisateur existe déjà avec cet identifiant ou e-mail.") );
         }
       }
       catch (e) {
         return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur.", e) );
+      }
+
+      // Send a mail.
+      try {
+        await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
+        return res.json( returnHandler( {user: userInserted} ) );
+      }
+      catch (e) {
+        return res.status(500).json( returnHandler(null, "Impossible d'envoyer un mail, vérifier la configuration de votre boîte.", e) );
       }
     }
 
@@ -121,6 +121,7 @@ export class AuthRoutes {
     }
 
     // Sign up the new user.
+    let userSignedUp = null;
     try {
       const user = await userDB.findOne({$or: [{ username: credentials.username }, { email: credentials.email }]}, { password: 0 });
       if (!user) {
@@ -134,19 +135,24 @@ export class AuthRoutes {
         // Insert the user into the database.
         const userInserted = await userDB.create(credentials);
 
-        // Send the e-mail.
-        await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
-
         // Create the new token with the user and return the user and the token.
-        const userSignedUp = await AuthStrategyToken.signup(userInserted);
+        userSignedUp = await AuthStrategyToken.signup(userInserted);
         delete(userSignedUp.user.password);
-        return res.json( returnHandler( userSignedUp ) );
       } else {
         return res.status(403).json( returnHandler(null, "L'utilisateur existe déjà avec cet identifiant ou e-mail.") );
       }
     }
     catch (e) {
       return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la création de l'utilisateur.", e) );
+    }
+
+    // Send a mail.
+    try {
+      await Mailer.sendMail('Création de compte', req.body.email, `<p>Votre compte a été créé.</p><p>Il vous faut cependant attendre la validation de l'administrateur pour activer ce dernier.</p><p>Merci de votre compréhension</p>`);
+      return res.json( returnHandler( userSignedUp ) );
+    }
+    catch (e) {
+      return res.status(500).json( returnHandler(null, "Impossible d'envoyer un mail, vérifier la configuration de votre boîte.", e) );
     }
   }
 
@@ -162,23 +168,29 @@ export class AuthRoutes {
     if (!req.body.email || !req.body.email) {
       return res.status(400).json( returnHandler(null, "Aucun e-mail valide n'a été inséré." ) );
     }
+    let newToken = null;
 
     try {
       // Find the user in the database.
       const user = await userDB.findOne({ email: req.body.email});
       if (user) {
         // Create a new token and attach it to the message.
-        const newToken = await AuthStrategyToken.signup(user, 300);
-
-        // Send the e-mail.
-        const sentMail = await Mailer.sendMail('Récupération du mot de passe', req.body.email, `Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}/reset-password?reset=${newToken.token}">récupérer votre mot de passe.</a>`);
-        return res.json( returnHandler( { mailID: sentMail['mailID'] } ) );
+        newToken = await AuthStrategyToken.signup(user, 300);
       } else {
         return res.status(401).json( returnHandler(null, "Aucun compte n'a été trouvé avec l'e-mail que vous avez inséré") );
       }
     }
     catch (e) {
       return res.status(500).json( returnHandler(null, "Une erreur s'est produit lors de la récupération de l'utilisateur", e) );
+    }
+
+    // Send a mail.
+    try {
+      const sentMail = await Mailer.sendMail('Récupération du mot de passe', req.body.email, `Veuillez cliquer sur ce lien pour <a href="${CONFIG.FRONTEND}/reset-password?reset=${newToken.token}">récupérer votre mot de passe.</a>`);
+      return res.json( returnHandler( { mailID: sentMail['mailID'] } ) );
+    }
+    catch (e) {
+      return res.status(500).json( returnHandler(null, "Impossible d'envoyer un mail, vérifier la configuration de votre boîte.", e) );
     }
   }
 
@@ -199,21 +211,19 @@ export class AuthRoutes {
 
     try {
       // Find the user in the database.
-      const payload = await AuthStrategyToken.getPayloadByToken(`${credentials.token}|jwt`);
-      const data = await UsersRoutes.findUserBySub(payload);
-      if (data.success) {
+      req['user'] = await AuthStrategyToken.getPayloadByToken(`${credentials.token}|jwt`);
+      const currentUser = await UsersRoutes.findUserBySub(req);
+      if (currentUser) {
         // Get an encrypted password and update it in the database.
         const passwordDigest = await PasswordStrategy.getPasswordDigest(credentials.password);
-        const user = data.user;
+        const user = currentUser;
         user.password = passwordDigest;
-        await userDB.update({ _id: user._id }, user);
+        await userDB.findOneAndUpdate({ _id: user._id }, user);
         delete(user.password);
 
         // Create the new token with the user and return the user and the token.
         const newToken = await AuthStrategyToken.signup(user);
         return res.json( returnHandler( {user: newToken.user, token: newToken.token} ) );
-      } else {
-        return res.status(data.error).json( returnHandler(null, data.message) );
       }
     }
     catch (e) {

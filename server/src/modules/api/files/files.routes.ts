@@ -17,8 +17,8 @@ export class FilesRoutes {
     try {
 
       // Récupère l'utilisateur courant.
-      const data = await UsersRoutes.findUserBySub(req['user']);
-      const userID = (data.success) ? data.user._id : null;
+      const currentUser = await UsersRoutes.findUserBySub(req);
+      const userID = currentUser._id;
 
       // Sauvegarde le flux uploadé.
       let uploadedFolder = '';
@@ -92,8 +92,8 @@ export class FilesRoutes {
   public static async cleanTempFiles(req: Request, res: Response) {
     try {
       // Récupère l'utilisateur courant.
-      const data = await UsersRoutes.findUserBySub(req['user']);
-      const userID = (data.success) ? data.user._id : null;
+      const currentUser = await UsersRoutes.findUserBySub(req);
+      const userID = currentUser ? currentUser._id : null;
 
       if (userID) {
         const filesDeleted = await FilesRoutes.removeFiles({ user: userID, active: false });

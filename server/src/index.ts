@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
 import * as express from 'express';
 import * as http  from 'http';
-import * as https from 'https';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as path from 'path';
 import * as morgan from 'morgan';
-import * as fs from 'fs-extra';
 import * as compression from 'compression';
 import * as socketIo from 'socket.io';
 
@@ -47,7 +45,7 @@ export class Server {
   private middleware() {
     // Set cors Options.
     const corsOptions = {
-      origin: CONFIG.FRONTEND,
+      origin: '*',
       credentials: true,
     }
 
@@ -63,15 +61,15 @@ export class Server {
       .use(cors(corsOptions))
   }
 
-  // Default app route.
+  // Default server route.
   private defaultServerRoute() {
     this._app.get('/', starterLog, (req: Request, res: Response) => {
-      try {
+      if (database.check()) {
         res.json({
           code: 200,
-          message: `app server works 👌`
+          message: `core server works 👌`
         });
-      } catch(e) {
+      } else {
         res.status(400).send(`database is down :(`);
       }
     });
@@ -103,33 +101,21 @@ export class Server {
     else return false;
   }
 
-  // Bootstrap the application with HTTPS or HTTP depending if the "--secure" option has been set.
+  // Bootstrap the application.
   bootstrap():void {
-    let server: any;
-    if (CONFIG.SECURITY.HTTPS) {
-      const httpsServer = https.createServer({
-        key: fs.readFileSync(CONFIG.SECURITY.KEY),
-        cert: fs.readFileSync(CONFIG.SECURITY.CERT)
-      }, this._app);
-      httpsServer.on('error', this.onError);
+    const httpServer = http.createServer(this._app);
+    httpServer.on('error', this.onError);
 
-      // Launch an HTTPS Server.
-      server = httpsServer.listen(this._port, () => console.log("HTTPS Secure Server running at https://localhost:" + this._port));
-    }
-    else {
-      const httpServer = http.createServer(this._app);
-      httpServer.on('error', this.onError);
+    // Launch an HTTP Server.
+    const server = httpServer.listen(this._port, () => console.log("HTTP Server running at http://localhost:" + this._port));
 
-      // Launch an HTTP Server.
-      server = httpServer.listen(this._port, () => console.log("HTTP Server running at http://localhost:" + this._port));
-    }
-
+    // Start socket IO.
     if (server && CONFIG.SOCKET_ACTIVE) {
       this.sockets(server);
     }
-
   }
 
+  // Initialize SocketIO.
   private sockets(server): void {
     const io = socketIo(server, { serveClient: false });
     io.on('connect', (socket: any) => {
@@ -138,11 +124,9 @@ export class Server {
         console.log('[server](refresh): %s', JSON.stringify(m));
         io.emit('refresh', m);
       });
-
       socket.on('disconnect', () => {
         console.log('Client disconnected');
       });
     });
   }
-
 }

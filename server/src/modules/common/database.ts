@@ -15,7 +15,8 @@ export const database = {
       keepAlive: 30000,
       reconnectInterval: RETRY_TIMEOUT,
       reconnectTries: 10000,
-      useFindAndModify: false
+      useFindAndModify: false,
+      useUnifiedTopology: true
     }
 
     let isConnectedBefore = false

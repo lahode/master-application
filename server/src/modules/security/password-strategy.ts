@@ -1,7 +1,7 @@
-import * as passwordValidator from 'password-validator';
 import * as argon2 from 'argon2';
 
 // Create a schema
+const passwordValidator = require('password-validator');
 const schema = new passwordValidator();
 
 // Add properties to it

@@ -1,15 +1,20 @@
 import { IEnvironment } from "./env-model";
+import * as env from 'env-var';
+
 const root = require('app-root-path').path;
-const args = require('minimist')(process.argv.slice(2)) || [];
 
 export const prodVariables:IEnvironment = {
   environmentName: 'Production Environment',
   APPNAME: 'Master Application',
   LOGNAME: 'LOG_MASTER_PROD',
-  FRONTEND: args['FRONTPATH'] || 'http://localhost:4200',
+  FRONTEND: env.get('FRONTPATH', 'http://localhost:4200').asUrlString(),
   UPLOAD_DIRECTORY: '/uploads',
-  PORT: args['PORT'] || '4444',
+  PORT: env.get('PORT', '4444').asIntPositive(),
   SOCKET_ACTIVE: false,
+  REDIS: {
+    host: env.get('REDIS_HOST', 'localhost').asString(),
+    port: env.get('REDIS_PORT', '6379').asIntPositive()
+  },
   SECURITY: {
     HTTPS: false,
     KEY: `${root}/security/key.pem`,
@@ -30,5 +35,5 @@ export const prodVariables:IEnvironment = {
     },
     sender: ''
   },
-  MONGODB: args['MONGODB'] || 'mongodb://localhost:27017/master-prod',
+  MONGODB: env.get('MONGODB', 'mongodb://localhost:27017/master-prod').asString(),
 };

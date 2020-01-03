@@ -5,7 +5,9 @@ declare const process: any; // Typescript compiler will complain without this
 
 function environmentConfig():any {
   let env = devVariables;
-  if(process.env.NODE_ENV === 'production'){env = prodVariables}
+  if(process.env.NODE_ENV === 'production') {
+    env = prodVariables
+  }
   return env;
 }
 

@@ -12,6 +12,7 @@ log.txt
 .vscode/
 npm-debug.log*
 
+.awcache
 .idea/
 .sass-cache/
 .tmp/
@@ -33,10 +34,13 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 
+# Prod folders
+db/
 dist/
 backup/
-*/uploads/*
+logs/
+uploads/
+mariadb/
 
-db
-uploads
-.awcache
+# Redis
+dump.rdb

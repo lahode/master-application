@@ -9,8 +9,10 @@ import { PasswordStrategy } from "../../security/password-strategy";
 import { ImageProcessing } from "../files/images-processing";
 import { FilesRoutes } from '../files/files.routes';
 import { returnHandler } from '../../common/return-handlers';
+import { AppCache } from '../../common/cache';
 
 import { userDB, DEFAULT_ICON } from './users.db';
+import { appDB } from '../applications/applications.db';
 import { fileDB } from '../files/files.db';
 
 import { AuthStrategyToken } from "../../security/authentication-token-strategy";
@@ -19,27 +21,32 @@ const NBDAYS_EXPIRE_RENEW_TOKEN = 7;
 
 export class UsersRoutes {
 
-  // Fetch the user by sub.
-  public static async findUserBySub(userInfo: any) {
-    if (userInfo) {
+  // Récupère l'utilisateur par sa valeur "sub".
+  public static async findUserBySub(req: Request) {
+    if (req['user']) {
       try {
-        // Find the user by sub (token) info.
-        const user = await userDB.findOne({sub: userInfo.sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1, active: 1, language: 1, emailNotify: 1, description: 1})
-                                 .populate('roles.role', 'permissions');
+        // Vérifie si l'utilisateur existe dans le cache.
+        let user = await AppCache.getUserFromCache(req['user']);
 
-        // Return the user.
-        if (user) {
-          return {user: user, success:true};
-        } else {
-          return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
+        // Récupère l'utilisateur sur nodeJS core s'il n'est pas disponible dans le cache.
+        if (!user) {
+          user = await userDB.findOne({sub: req['user'].sub}, {sub: 1, username: 1, firstname: 1, lastname: 1, email: 1, roles: 1, icon: 1, picture: 1, active: 1, language: 1, emailNotify: 1, description: 1})
+            .populate('roles.role', 'permissions')
+            .populate('applications', 'name');
+
+          // Set user detail in Redis.
+          AppCache.setUser(user.sub, user);
         }
+
+        // Retourne l'utilisateur.
+        return user;
       }
       catch (e) {
-        return {error: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", success: false};
+        throw ({status: 500, message: "Une erreur s'est produite lors de la récupération de l'utilisateur.", error: e});
       }
     }
     else {
-      return {error: 404, message: "Aucun utilisateur n'a été trouvé.", success: false};
+      throw({status: 404, message: "Aucun utilisateur n'a été trouvé."});
     }
   }
 
@@ -97,8 +104,8 @@ export class UsersRoutes {
   // Get profile route.
   public static async getProfile(req: Request, res: Response) {
     try {
-      const data = await UsersRoutes.findUserBySub(req['user']);
-      return res.json( returnHandler( {user: data.user} ) );
+      const currentUser = await UsersRoutes.findUserBySub(req);
+      return res.json( returnHandler( {user: currentUser} ) );
     }
     catch(e) {
       return res.status(500).json( returnHandler(null, "Une erreur s'est produite lors de la récupération de l'utilisateur.", e) );
@@ -108,8 +115,19 @@ export class UsersRoutes {
   // Get all users route.
   public static async all(req: Request, res: Response) {
     try {
+      let search = {};
+      if (req.params.currentApp) {
+        if (req['appURL']) {
+          const application = await appDB.findOne({url: req['appURL']});
+          if (application) {
+            search['applications'] = application._id;
+          }
+        }
+      }
+      const query = { $and: [{active: true}, search ] };
+
       // Find all active users in the database.
-      const users = await userDB.find({active:1}, {username: 1, firstname: 1, lastname: 1}).sort('username')
+      const users = await userDB.find(query, {username: 1, firstname: 1, lastname: 1}).sort('username')
       return res.status(200).json( returnHandler( users ) );
     }
     catch(e) {
@@ -165,8 +183,8 @@ export class UsersRoutes {
     if (!user._id) {
       try {
         // Set the user owner.
-        const data = await UsersRoutes.findUserBySub(req['user']);
-        user.owner = data.user._id;
+        const currentUser = await UsersRoutes.findUserBySub(req);
+        user.owner = currentUser._id;
 
         // Create the user in the database.
         const userInserted = await userDB.create(user);
@@ -198,8 +216,8 @@ export class UsersRoutes {
     try {
       let body = Object.assign({}, req.body);
 
-      const data = await UsersRoutes.findUserBySub(req['user']);
-      if (data.user._id.toString() !== body._id) {
+      const currentUser = await UsersRoutes.findUserBySub(req);
+      if (currentUser._id.toString() !== body._id) {
         return res.status(403).json( returnHandler(null, "Impossible de mettre à jour, cet utilisateur ne correspond pas à votre profil.") );
       }
 
