@@ -13,6 +13,8 @@ import { APIRoutes }  from "./modules/routes/api.route";
 import { starterLog }  from "./modules/common/loggers";
 import { CONFIG } from "./config";
 import { database } from "./modules/common/database";
+import { AppProxy } from "./modules/common/proxy";
+import { AppCache } from "./modules/common/cache";
 
 export class Server {
 
@@ -24,11 +26,22 @@ export class Server {
     this._app = express();
     this._app.use(compression());
     this._app.use(RetrieveUser.getUserPayload)
+    this.proxy();
     this.config();
     this.middleware();
     this.defaultServerRoute();
     this._app.use( new APIRoutes().routes());
     database.initDB();
+  }
+
+  // Redirect routes to application.
+  private proxy() {
+    if (CONFIG.PROXY) {
+      this._app.use(AppCache.getAppURL);
+      this._app.get("/api/test/app/*", AppProxy.redirect('http://localhost:4301'));
+      this._app.get("/api/secure/app/*", AppProxy.redirect());
+      this._app.post("/api/secure/app/*", AppProxy.redirect());
+    }
   }
 
   // Set configuration parameters.
@@ -45,7 +58,7 @@ export class Server {
   private middleware() {
     // Set cors Options.
     const corsOptions = {
-      origin: '*',
+      origin: CONFIG.FRONTEND,
       credentials: true,
     }
 
@@ -129,4 +142,5 @@ export class Server {
       });
     });
   }
+
 }

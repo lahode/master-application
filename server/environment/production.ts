@@ -7,10 +7,11 @@ export const prodVariables:IEnvironment = {
   environmentName: 'Production Environment',
   APPNAME: 'Master Application',
   LOGNAME: 'LOG_MASTER_PROD',
-  FRONTEND: env.get('FRONTPATH', 'http://localhost:4200').asUrlString(),
+  FRONTEND: env.get('FRONTPATH', '*').asString(),
   UPLOAD_DIRECTORY: '/uploads',
   PORT: env.get('PORT', '4444').asIntPositive(),
   SOCKET_ACTIVE: false,
+  PROXY: '',
   REDIS: {
     host: env.get('REDIS_HOST', 'localhost').asString(),
     port: env.get('REDIS_PORT', '6379').asIntPositive()

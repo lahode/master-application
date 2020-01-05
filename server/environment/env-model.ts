@@ -6,6 +6,7 @@ export interface IEnvironment {
   UPLOAD_DIRECTORY: string;
   PORT: number,
   SOCKET_ACTIVE: boolean,
+  PROXY: string,
   REDIS: any,
   SECURITY: any,
   AUTH: any,
