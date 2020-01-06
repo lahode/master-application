@@ -18,7 +18,6 @@ export const devVariables:IEnvironment = {
     active: false
   },
   SECURITY: {
-    HTTPS: false,
     KEY: `${root}/security/key.pem`,
     CERT: `${root}/security/cert.pem`,
   },
