@@ -75,7 +75,7 @@ export class ApplicationsRoutes {
       return res.status(200).json( returnHandler(appSaved, "L'application a été créée") );
     }
     catch(err) {
-      return res.status(400).json( returnHandler(null, "Une erreur est survenue lors de la création de l'application", err));
+      return res.status(500).json( returnHandler(null, "Une erreur est survenue lors de la création de l'application", err));
     }
   }
 
@@ -133,7 +133,7 @@ export class ApplicationsRoutes {
         return res.status(200).json( returnHandler(appSaved, "L'application a été mise à jour") );
       }
       catch(err) {
-        return res.status(400).json( returnHandler(null, "Une erreur est survenue lors de la création de l'application", err));
+        return res.status(500).json( returnHandler(null, "Une erreur est survenue lors de la mise à jour de l'application", err));
       }
     }
     else {
@@ -173,7 +173,7 @@ export class ApplicationsRoutes {
       return res.status(200).json( returnHandler(null, "L'application a été supprimée") );
     }
     catch(err) {
-      return res.status(400).json( returnHandler(null, "Une erreur est survenue lors de la suppression de l'application", err) );
+      return res.status(500).json( returnHandler(null, "Une erreur est survenue lors de la suppression de l'application", err) );
     }
   }
 
@@ -197,10 +197,12 @@ export class ApplicationsRoutes {
         } else {
           return res.status(401).json( returnHandler(null, "Votre compte n'est pas actif pour le moment.") );
         }
+      } else {
+        return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
       }
     }
     catch(err) {
-      return res.status(400).json( returnHandler(null, "Une erreur est survenue lors de la suppression de l'application", err) );
+      return res.status(500).json( returnHandler(null, "Une erreur est survenue lors de la connexion à l'application", err) );
     }
   }
 

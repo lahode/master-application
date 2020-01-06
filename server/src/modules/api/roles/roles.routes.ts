@@ -68,13 +68,14 @@ export class RolesRoutes {
           res.status(405).json( returnHandler(null, "Vous n'êtes pas autorisé à accéder.", e) );
         });
       } else {
-        res.status(401).json( returnHandler(null, "Aucun utilisateur n'a ét trouvé.") );
+        return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
       }
     }
     catch(e) {
-      res.status(404).json( returnHandler(null, e) );
+      res.status(500).json( returnHandler(null, e) );
     }
   }
+
 
   // Get all permissions.
   public static async getPermissions(req: Request, res: Response) {

@@ -35,11 +35,11 @@ export class Permissions {
           return res.status(405).json( returnHandler(null, "Vous n'êtes pas autorisé à accéder.", e) );
         });
       } else {
-        return res.status(401).json( returnHandler(null, "Aucun utilisateur n'a ét trouvé.") );
+        return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
       }
     }
     catch(e) {
-      return res.status(404).json( returnHandler(null, e) );
+      return res.status(500).json( returnHandler(null, e) );
     }
   }
 

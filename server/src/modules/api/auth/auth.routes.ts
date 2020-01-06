@@ -36,6 +36,8 @@ export class AuthRoutes {
         } else {
           return res.status(401).json( returnHandler(null, "Votre compte n'est pas actif pour le moment.") );
         }
+      } else {
+        return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
       }
     }
     catch (e) {
@@ -224,6 +226,8 @@ export class AuthRoutes {
         // Create the new token with the user and return the user and the token.
         const newToken = await AuthStrategyToken.signup(user);
         return res.json( returnHandler( {user: newToken.user, token: newToken.token} ) );
+      } else {
+        return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
       }
     }
     catch (e) {
@@ -234,7 +238,7 @@ export class AuthRoutes {
   // Check password validity.
   public static checkPasswordStrategy(password: string): string {
     const errors = PasswordStrategy.validate(password);
-    if (errors.length > 0) {
+    if (errors instanceof Array && errors.length > 0) {
       const err:string[] = [];
       errors.map((e: string) => {
         switch (e) {

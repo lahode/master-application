@@ -12,9 +12,10 @@ export const prodVariables:IEnvironment = {
   PORT: env.get('PORT', '4444').asIntPositive(),
   SOCKET_ACTIVE: false,
   PROXY: '',
-  REDIS: {
+  REDIS: {
     host: env.get('REDIS_HOST', 'localhost').asString(),
-    port: env.get('REDIS_PORT', '6379').asIntPositive()
+    port: env.get('REDIS_PORT', '6379').asIntPositive(),
+    active: false
   },
   SECURITY: {
     HTTPS: false,

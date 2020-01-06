@@ -7,7 +7,7 @@ export interface IEnvironment {
   PORT: number,
   SOCKET_ACTIVE: boolean,
   PROXY: string,
-  REDIS: any,
+  REDIS: any,
   SECURITY: any,
   AUTH: any,
   MAILER: any,

@@ -80,7 +80,7 @@ export class Server {
       if (database.check()) {
         res.json({
           code: 200,
-          message: `core server works 👌`
+          message: `server works 👌`
         });
       } else {
         res.status(400).send(`database is down :(`);
@@ -129,7 +129,7 @@ export class Server {
   }
 
   // Initialize SocketIO.
-  private sockets(server): void {
+  private sockets(server: any): void {
     const io = socketIo(server, { serveClient: false });
     io.on('connect', (socket: any) => {
       console.log('Connected client on port %s.', this._port);
