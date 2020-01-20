@@ -54,7 +54,7 @@ export class UsersRoutes {
   public static async getCurrent(req: Request, res: Response) {
     try {
       // Find the user by sub (token) info.
-      const user = await this.findUserBySub(req['user']);
+      const user = await this.findUserBySub(req);
 
       // Return the user.
       if (user) {

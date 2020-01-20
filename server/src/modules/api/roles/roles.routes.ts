@@ -138,12 +138,16 @@ export class RolesRoutes {
     if (!role._id) {
       try {
         // Set the user owner.
-        const data = await UsersRoutes.findUserBySub(req['user']);
-        role.owner = data.user._id;
+        const currentUser = await UsersRoutes.findUserBySub(req);
+        if (currentUser) {
+          role.owner = currentUser._id;
 
-        // Insert role to the database.
-        const insertedRole = await roleDB.create(role);
-        return res.json( returnHandler( {role: insertedRole} ) );
+          // Insert role to the database.
+          const insertedRole = await roleDB.create(role);
+          return res.json( returnHandler( {role: insertedRole} ) );
+        } else {
+          return res.status(404).json( returnHandler(null, "Aucun utilisateur n'a été trouvé.") );
+        }
       }
       catch (e) {
         return res.status(500).json( returnHandler(null, "Une erreur est survenue au moment de la sauvegarde de le rôle", e) );
@@ -152,7 +156,6 @@ export class RolesRoutes {
     else {
       return res.status(500).json( returnHandler(null, "Impossible d'insérer cet rôle, le rôle existe déjà.") );
     }
-
   }
 
   // Save role route

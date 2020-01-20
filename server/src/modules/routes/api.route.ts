@@ -1,6 +1,7 @@
 import * as express from 'express';
 
 import { AuthRoutes }  from "../api/auth/auth.routes";
+import { ApplicationsRoutes }  from "../api/applications/applications.routes";
 import { UsersRoutes }  from "../api/users/users.routes";
 import { RolesRoutes }  from "../api/roles/roles.routes";
 import { FilesRoutes }  from "../api/files/files.routes";
@@ -20,6 +21,7 @@ export class APIRoutes {
     app.post("/api/retrieve-password", AuthRoutes.sendPswRoute);
     app.post("/api/init-password", AuthRoutes.initPswRoute);
     app.use("/api/secure", checkIfAuthenticated);
+    app.use("/api/secure/connect/:appID", ApplicationsRoutes.connect);
     app.post("/api/secure/logout", AuthRoutes.logoutRoute);
     app.get("/api/secure/check-auth/:resetauth?", AuthRoutes.checkAuth);
 
@@ -27,9 +29,16 @@ export class APIRoutes {
     app.post("/api/secure/check-permissions", RolesRoutes.checkPermissions);
     app.use("/api/secure", Permissions.permissionOnRoute);
 
+    // Applications
+    this.callRoute('get', "/api/secure/applications/list", ApplicationsRoutes.all, ["manage applications"]);
+    this.callRoute('get', "/api/secure/applications/get/:id", ApplicationsRoutes.get, ["manage applications"]);
+    this.callRoute('post', "/api/secure/applications/create", ApplicationsRoutes.create, ["manage applications"]);
+    this.callRoute('post', "/api/secure/applications/update", ApplicationsRoutes.update, ["manage applications"]);
+    this.callRoute('get', "/api/secure/applications/remove/:id", ApplicationsRoutes.remove, ["manage applications"]);
+
     // Users
     this.callRoute('get', "/api/secure/users/list/:offset/:limit/:sort?/:field?/:value?", UsersRoutes.list);
-    this.callRoute('get', "/api/secure/users/all", UsersRoutes.all);
+    this.callRoute('get', "/api/secure/users/all/:currentApp?", UsersRoutes.all);
     this.callRoute('get', "/api/secure/users/like/:search?", UsersRoutes.getLike);
     this.callRoute('get', "/api/secure/users/get/:id", UsersRoutes.get, ["view users"]);
     this.callRoute('get', "/api/secure/users/getcurrent", UsersRoutes.getCurrent);
