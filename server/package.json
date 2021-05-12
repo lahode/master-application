@@ -28,7 +28,7 @@
     "mongoose": "^5.7.8",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
-    "nodemailer": "^6.3.1",
+    "nodemailer": "^6.4.16",
     "noogger": "^0.1.8",
     "password-validator": "^5.0.3",
     "redis": "^2.8.0",
